@@ -1,0 +1,128 @@
+{
+  "node": {
+    "401425bc3861a64246b8e569b62c52941177659849": {
+      "workers": {
+        "app/dashboard/crop-doctor/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/crop-doctor/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/diagnose-crop-disease.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/crop-recommender/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/crop-recommender/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/recommend-crops.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/market-analyst/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/market-analyst/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/analyze-market-prices.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/get-weather-forecast.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/recommend-crops.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/profile/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/profile/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/translate-text.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/crop-doctor/page": "action-browser",
+        "app/dashboard/crop-recommender/page": "action-browser",
+        "app/dashboard/market-analyst/page": "action-browser",
+        "app/dashboard/page": "action-browser",
+        "app/dashboard/profile/page": "action-browser"
+      }
+    },
+    "40991d402102ecd60c29f006badacf6ab9b81d4b02": {
+      "workers": {
+        "app/dashboard/crop-doctor/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/crop-doctor/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/diagnose-crop-disease.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/crop-recommender/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/crop-recommender/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/recommend-crops.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/market-analyst/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/market-analyst/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/analyze-market-prices.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/get-weather-forecast.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/recommend-crops.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/profile/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/profile/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/translate-text.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/crop-doctor/page": "action-browser",
+        "app/dashboard/crop-recommender/page": "action-browser",
+        "app/dashboard/market-analyst/page": "action-browser",
+        "app/dashboard/page": "action-browser",
+        "app/dashboard/profile/page": "action-browser"
+      }
+    },
+    "404641a6b6bd0769505d1a3df704c25ba62551fba3": {
+      "workers": {
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/get-weather-forecast.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/recommend-crops.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/page": "action-browser"
+      }
+    },
+    "40f88e2403c7c481bfd07b3a13496b8f7da2d46a45": {
+      "workers": {
+        "app/dashboard/crop-recommender/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/crop-recommender/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/recommend-crops.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        },
+        "app/dashboard/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/get-weather-forecast.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/recommend-crops.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/crop-recommender/page": "action-browser",
+        "app/dashboard/page": "action-browser"
+      }
+    },
+    "40112dae86ba4010dd54ca46b5109a37034ada8290": {
+      "workers": {
+        "app/dashboard/market-analyst/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/market-analyst/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/analyze-market-prices.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/market-analyst/page": "action-browser"
+      }
+    },
+    "40267f29685f179a7023f6b824c1df5403dff09f11": {
+      "workers": {
+        "app/dashboard/profile/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/profile/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/translate-text.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/profile/page": "action-browser"
+      }
+    },
+    "400376129ad725aab58c7f53fec0212e6cc0cf22e0": {
+      "workers": {
+        "app/dashboard/crop-doctor/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/crop-doctor/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/diagnose-crop-disease.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/crop-doctor/page": "action-browser"
+      }
+    }
+  },
+  "edge": {},
+  "encryptionKey": "8ZtcZ6MyZXZz32gz1HSgb2KTPcfXvtytfOtFvKvGTcU="
+}

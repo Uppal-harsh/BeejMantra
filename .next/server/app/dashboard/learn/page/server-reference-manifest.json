@@ -1,0 +1,49 @@
+{
+  "node": {
+    "401425bc3861a64246b8e569b62c52941177659849": {
+      "workers": {
+        "app/dashboard/learn/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/learn/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/search-youtube-videos.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/summarize-article.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/learn/page": "action-browser"
+      }
+    },
+    "40991d402102ecd60c29f006badacf6ab9b81d4b02": {
+      "workers": {
+        "app/dashboard/learn/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/learn/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/search-youtube-videos.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/summarize-article.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/learn/page": "action-browser"
+      }
+    },
+    "40fe6d361d5300f9ff455eb1f845f2c6210e5cd627": {
+      "workers": {
+        "app/dashboard/learn/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/learn/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/search-youtube-videos.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/summarize-article.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/learn/page": "action-browser"
+      }
+    },
+    "400f5892775659c0fbfb7aec41da62aed3aa89e32c": {
+      "workers": {
+        "app/dashboard/learn/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/learn/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/search-youtube-videos.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/src/ai/flows/summarize-article.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/learn/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}

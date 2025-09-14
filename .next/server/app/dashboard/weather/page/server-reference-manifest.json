@@ -1,0 +1,38 @@
+{
+  "node": {
+    "401425bc3861a64246b8e569b62c52941177659849": {
+      "workers": {
+        "app/dashboard/weather/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/weather/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/get-weather-forecast.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/weather/page": "action-browser"
+      }
+    },
+    "40991d402102ecd60c29f006badacf6ab9b81d4b02": {
+      "workers": {
+        "app/dashboard/weather/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/weather/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/get-weather-forecast.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/weather/page": "action-browser"
+      }
+    },
+    "404641a6b6bd0769505d1a3df704c25ba62551fba3": {
+      "workers": {
+        "app/dashboard/weather/page": {
+          "moduleId": "[project]/.next-internal/server/app/dashboard/weather/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/annapurna-chat-flow.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/src/ai/flows/text-to-speech.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/src/ai/flows/get-weather-forecast.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/dashboard/weather/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}
