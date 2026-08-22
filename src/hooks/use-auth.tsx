@@ -2,11 +2,25 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, getDoc, setDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, Timestamp, query, orderBy } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { auth, db, storage, allConfigured } from "@/lib/firebase-config";
-import { SplashScreen } from "@/components/splash-screen";
+import {
+  AppUser,
+  AuthResult,
+  clearStoredSession,
+  createTransaction as createSupabaseTransaction,
+  deleteTransaction as deleteSupabaseTransaction,
+  restoreStoredSession,
+  signInWithEmail as signInWithEmailRequest,
+  signInWithGoogle as signInWithGoogleRequest,
+  signOut as signOutRequest,
+  signUpWithEmail as signUpWithEmailRequest,
+  supabaseConfigured,
+  Transaction as SupabaseTransaction,
+  TransactionData,
+  updateAuthMetadata,
+  updateTransaction as updateSupabaseTransaction,
+  upsertProfile,
+  uploadProfileImage as uploadProfileImageRequest,
+} from "@/lib/supabase";
 import { toast } from "./use-toast";
 
 export interface UserProfile extends Record<string, any> {
@@ -25,20 +39,12 @@ export interface Transaction {
     amount: number;
     type: 'income' | 'expense';
     category: string;
-    date: Timestamp;
-}
-
-export interface TransactionData {
-    description: string;
-    amount: number;
-    type: 'income' | 'expense';
-    category: string;
-    date: Date;
+    date: SupabaseTransaction["date"];
 }
 
 
 interface AuthContextType {
-  user: User | null;
+  user: AppUser | null;
   userProfile: UserProfile | null;
   transactions: Transaction[];
   loading: boolean;
@@ -56,210 +62,201 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        await getUserProfile(currentUser);
-      } else {
-        setUserProfile(null);
+    let mounted = true;
+
+    const bootstrap = async () => {
+      try {
+        const result = await restoreStoredSession();
+        if (!mounted) return;
+
+        if (result) {
+          setSessionToken(result.session.access_token);
+          setUser(result.user);
+          setUserProfile(result.profile);
+          setTransactions(result.transactions);
+        } else {
+          setSessionToken(null);
+          setUser(null);
+          setUserProfile(null);
+          setTransactions([]);
+        }
+      } catch (error) {
+        console.error("Failed to restore Supabase session", error);
+        if (mounted) {
+          clearStoredSession();
+          setSessionToken(null);
+          setUser(null);
+          setUserProfile(null);
+          setTransactions([]);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
       }
-      setLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
+    bootstrap();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
-  
-   useEffect(() => {
-    if (user) {
-      const q = query(collection(db, "users", user.uid, "transactions"), orderBy("date", "desc"));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const txs: Transaction[] = [];
-        querySnapshot.forEach((doc) => {
-          txs.push({ id: doc.id, ...doc.data() } as Transaction);
-        });
-        setTransactions(txs);
-      });
-      return () => unsubscribe();
-    }
-  }, [user]);
-
-
-  const getUserProfile = async (firebaseUser: User) => {
-    const docRef = doc(db, "users", firebaseUser.uid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      setUserProfile(docSnap.data() as UserProfile);
-    } else {
-      // Create a profile if it doesn't exist
-      const newUserProfile: UserProfile = {
-        uid: firebaseUser.uid,
-        email: firebaseUser.email,
-        displayName: firebaseUser.displayName,
-        photoURL: firebaseUser.photoURL,
-        location: 'Pune, Maharashtra', // Default value
-        language: 'en', // Default value
-        crops: '', // Default value
-      };
-      await setDoc(docRef, newUserProfile);
-      setUserProfile(newUserProfile);
-    }
-  };
 
 
   const signInWithGoogle = async () => {
-    setLoading(true);
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error("Error during Google sign-in", error);
-      setLoading(false);
-      throw error;
-    }
+    await signInWithGoogleRequest();
   };
 
   const signInWithEmail = async (email: string, pass: string) => {
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, pass);
+      const result = await signInWithEmailRequest(email, pass);
+      hydrateAuthState(result);
     } catch (error) {
+      console.error("Error during email sign-in", error);
       setLoading(false);
-      throw error; // Re-throw the error to be caught by the UI
+      throw error;
     }
   };
 
   const signUpWithEmail = async (email: string, pass: string) => {
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-      const user = userCredential.user;
-       // Create a profile for the new user
-      const newUserProfile: UserProfile = {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        location: 'Pune, Maharashtra',
-        language: 'en',
-        crops: '',
-      };
-      await setDoc(doc(db, "users", user.uid), newUserProfile);
-      setUserProfile(newUserProfile);
+      const result = await signUpWithEmailRequest(email, pass);
+      if (result) {
+        hydrateAuthState(result);
+      } else {
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error during email sign-up", error);
-      throw error; // Re-throw the error to be caught by the UI
-    } finally {
-        setLoading(false);
+      setLoading(false);
+      throw error;
     }
   };
 
   const signOut = async () => {
     setLoading(true);
-    await firebaseSignOut(auth);
+    try {
+      await signOutRequest();
+    } catch (error) {
+      console.warn("Best-effort sign-out failed", error);
+    }
     setUser(null);
     setUserProfile(null);
+    setSessionToken(null);
+    setTransactions([]);
     setLoading(false);
   };
   
   const updateUserProfile = async (data: Partial<UserProfile>) => {
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
+    if (!user || !sessionToken) {
        throw new Error("No user is currently signed in.");
     }
-    
-    const authUpdateData: { displayName?: string; photoURL?: string } = {};
-    if (data.displayName !== undefined && data.displayName !== currentUser.displayName) {
-        authUpdateData.displayName = data.displayName;
-    }
-    if (data.photoURL !== undefined && data.photoURL !== currentUser.photoURL) {
-        authUpdateData.photoURL = data.photoURL;
-    }
 
-    if (Object.keys(authUpdateData).length > 0) {
-        await updateProfile(currentUser, authUpdateData);
-    }
+    const nextProfile: UserProfile = {
+      uid: user.id,
+      email: data.email ?? user.email,
+      displayName: data.displayName ?? user.displayName ?? null,
+      photoURL: data.photoURL ?? user.photoURL ?? null,
+      location: data.location ?? userProfile?.location ?? "Pune, Maharashtra",
+      language: data.language ?? userProfile?.language ?? "en",
+      crops: data.crops ?? userProfile?.crops ?? "",
+    };
 
-    const docRef = doc(db, "users", currentUser.uid);
-    const currentProfileSnap = await getDoc(docRef);
-    const existingProfile = currentProfileSnap.exists() ? currentProfileSnap.data() : {};
-    
-    await setDoc(docRef, { ...existingProfile, ...data }, { merge: true });
+    await updateAuthMetadata(sessionToken, {
+      displayName: nextProfile.displayName,
+      photoURL: nextProfile.photoURL,
+    });
 
-    const updatedUser = { ...auth.currentUser }; 
-    setUser(updatedUser as User); 
-    await getUserProfile(updatedUser as User);
+    await upsertProfile(sessionToken, nextProfile);
+    setUser({ ...user, displayName: nextProfile.displayName, photoURL: nextProfile.photoURL });
+    setUserProfile(nextProfile);
   };
 
   const uploadProfileImage = async (file: File): Promise<void> => {
-    if (!allConfigured) {
+    if (!supabaseConfigured) {
        toast({
         variant: "destructive",
-        title: "Firebase Not Configured",
+        title: "Supabase Not Configured",
         description:
-          "Image upload requires a configured Firebase project. Please set up your .env file.",
+          "Image upload requires a configured Supabase project. Please set your .env.local values.",
       });
-      throw new Error("Firebase not configured");
+      throw new Error("Supabase not configured");
     }
 
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
+    if (!user || !sessionToken) {
       throw new Error("No user is currently signed in.");
     }
 
-    const filePath = `profile-images/${currentUser.uid}/${file.name}`;
-    const storageRef = ref(storage, filePath);
-    
     try {
-        await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(storageRef);
+        const downloadURL = await uploadProfileImageRequest(sessionToken, user.id, file);
         await updateUserProfile({ photoURL: downloadURL });
     } catch(error: any) {
         console.error("Error uploading profile image:", error);
-        if (error.code === 'storage/retry-limit-exceeded' || error.code === 'storage/unauthorized') {
-             toast({
-                variant: "destructive",
-                title: "Storage Rules Error",
-                description: "The upload failed due to storage security rules. Please go to the Firebase Console, navigate to Storage -> Rules, and ensure they allow authenticated users to write to their own 'profile-images' directory. Refer to the 'storage.rules' file in the project for the correct rules.",
-             });
-        } else {
-            toast({
-                variant: "destructive",
-                title: "Upload Failed",
-                description: "Could not upload profile image. Please try again later.",
-            });
-        }
+        toast({
+            variant: "destructive",
+            title: "Upload Failed",
+            description: error?.message || "Could not upload profile image. Please try again later.",
+        });
         throw error;
     }
   };
   
   // Transaction Management
   const addTransaction = async (data: TransactionData) => {
-    if (!user) throw new Error("User not authenticated");
-    const txData = { ...data, date: Timestamp.fromDate(data.date) };
-    await addDoc(collection(db, "users", user.uid, "transactions"), txData);
+    if (!user || !sessionToken) throw new Error("User not authenticated");
+    const created = await createSupabaseTransaction(sessionToken, user.id, data);
+    setTransactions((current) => [created, ...current].sort((a, b) => b.date.toMillis() - a.date.toMillis()));
   };
 
   const updateTransaction = async (id: string, data: Partial<TransactionData>) => {
-    if (!user) throw new Error("User not authenticated");
-    const txRef = doc(db, "users", user.uid, "transactions", id);
-    const txData = data.date ? { ...data, date: Timestamp.fromDate(data.date) } : data;
-    await updateDoc(txRef, txData);
+    if (!user || !sessionToken) throw new Error("User not authenticated");
+    const updated = await updateSupabaseTransaction(sessionToken, id, data);
+    setTransactions((current) =>
+      current
+        .map((transaction) => (transaction.id === id ? updated : transaction))
+        .sort((a, b) => b.date.toMillis() - a.date.toMillis()),
+    );
   };
 
   const deleteTransaction = async (id: string) => {
-    if (!user) throw new Error("User not authenticated");
-    await deleteDoc(doc(db, "users", user.uid, "transactions", id));
+    if (!user || !sessionToken) throw new Error("User not authenticated");
+    await deleteSupabaseTransaction(sessionToken, id);
+    setTransactions((current) => current.filter((transaction) => transaction.id !== id));
   };
 
+  const hydrateAuthState = (result: AuthResult) => {
+    setSessionToken(result.session.access_token);
+    setUser(result.user);
+    setUserProfile(result.profile);
+    setTransactions(result.transactions);
+    setLoading(false);
+  };
 
-  const value = { user, userProfile, transactions, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, updateUserProfile, uploadProfileImage, addTransaction, updateTransaction, deleteTransaction };
+  const value = {
+    user,
+    userProfile,
+    transactions,
+    loading,
+    signInWithGoogle,
+    signInWithEmail,
+    signUpWithEmail,
+    signOut,
+    updateUserProfile,
+    uploadProfileImage,
+    addTransaction,
+    updateTransaction,
+    deleteTransaction,
+  };
   
   return (
     <AuthContext.Provider value={value}>

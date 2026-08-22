@@ -8,7 +8,7 @@ import { LanguageProvider } from '@/contexts/language-context';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'KishanBhai',
+  title: 'BeejMantra',
   description: 'AI-powered assistant for modern farming, providing crop diagnosis, market analysis, and scheme navigation.',
 };
 

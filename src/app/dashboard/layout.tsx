@@ -69,11 +69,11 @@ function DashboardPageLayout({ children }: { children: React.ReactNode }) {
                   >
                     <Image 
                       src="/favicon.ico" 
-                      alt="KishanBhai Logo" 
+                      alt="BeejMantra Logo" 
                       width={24} 
                       height={24} 
                     />
-                    <span>KishanBhai</span>
+                    <span>BeejMantra</span>
                   </Link>
                   <MainNav isSheet={true} />
                 </nav>
@@ -83,12 +83,12 @@ function DashboardPageLayout({ children }: { children: React.ReactNode }) {
              <Link href="/dashboard" className="flex items-center gap-2 font-semibold font-headline">
                 <Image 
                   src="/favicon.ico" 
-                  alt="KishanBhai Logo" 
+                  alt="BeejMantra Logo" 
                   width={24} 
                   height={24} 
                   className="text-primary" 
                 />
-                <span>KishanBhai</span>
+                <span>BeejMantra</span>
              </Link>
           )}
 

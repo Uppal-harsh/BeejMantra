@@ -376,8 +376,8 @@
             "system": "System"
         },
         "about": {
-            "title": "About KishanBhai",
-            "description": "KishanBhai is an AI-powered farming assistant designed to support small-scale Indian farmers with real-time crop diagnosis, mandi prices, government schemes, and personalized farming advice in local languages."
+            "title": "About BeejMantra",
+            "description": "BeejMantra is an AI-powered farming assistant designed to support small-scale Indian farmers with real-time crop diagnosis, mandi prices, government schemes, and personalized farming advice in local languages."
         },
         "version": {
             "title": "App Version"
@@ -385,12 +385,12 @@
         "poweredBy": {
             "title": "Powered By",
             "tech1": "Google Cloud Vertex AI",
-            "tech2": "Firebase",
+            "tech2": "Supabase",
             "tech3": "Gemini Multimodal Models"
         },
         "developedBy": {
             "title": "Developed By",
-            "teamName": "Team WinnerBoys"
+            "teamName": "Team BeejMantra"
         },
         "contact": {
             "title": "Contact Us",
@@ -411,7 +411,7 @@
         },
         "introduction": {
             "title": "Introduction",
-            "content": "Welcome to KishanBhai. We are committed to protecting your privacy and handling your data in an open and transparent manner. This privacy policy sets out how we collect, use, and protect your information."
+            "content": "Welcome to BeejMantra. We are committed to protecting your privacy and handling your data in an open and transparent manner. This privacy policy sets out how we collect, use, and protect your information."
         },
         "information": {
             "title": "Information We Collect",
@@ -450,7 +450,7 @@
         },
         "contact": {
             "title": "Contact Us",
-            "content": "If you have any questions about this Privacy Policy, please contact us at support@KishanBhai.in."
+            "content": "If you have any questions about this Privacy Policy, please contact us at support@beejmantra.in."
         }
     },
     "terms": {
@@ -462,7 +462,7 @@
         },
         "acceptance": {
             "title": "Acceptance of Terms",
-            "content": "By accessing and using KishanBhai, you accept and agree to be bound by the terms and provision of this agreement."
+            "content": "By accessing and using BeejMantra, you accept and agree to be bound by the terms and provision of this agreement."
         },
         "useOfService": {
             "title": "Use of Service",
@@ -477,7 +477,7 @@
         },
         "limitation": {
             "title": "Limitation of Liability",
-            "content": "In no event shall KishanBhai or its developers be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+            "content": "In no event shall BeejMantra or its developers be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
         },
         "termination": {
             "title": "Termination",

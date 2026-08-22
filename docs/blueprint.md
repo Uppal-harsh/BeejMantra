@@ -1,4 +1,4 @@
-# **App Name**: KishanBhai AI
+# **App Name**: BeejMantra AI
 
 ## Core Features:
 
@@ -6,7 +6,7 @@
 - Market Analyst: Provide real-time market price analysis by querying mandi prices using voice or text, analyzing trends with Gemini text model, and recommending optimal sell/wait actions.
 - Scheme Navigator: Navigate government schemes by answering voice queries using a fine-tuned LLM with Indian agri scheme data to explain schemes, eligibility, and provide direct application links; the LLM is used as a tool to provide the user the most relevant and up-to-date scheme.
 - Voice Multilingual UI: Enable voice-first, multilingual interaction by using Vertex AI Speech-to-Text for voice queries and Text-to-Speech to speak back easy-to-understand answers in Kannada, Hindi, and English.
-- Farmer Profile: Store the farmer's personal crop history, language, and preferences, enabling personalization using Firebase Auth.
+- Farmer Profile: Store the farmer's personal crop history, language, and preferences, enabling personalization with Supabase Auth and Row Level Security.
 - Live Weather Forecast: Display a live 7-day weather forecast with alerts via API, providing crucial information for crop management.
 - E commerce: Here farmer can also buy agriculture related products etc.
 - eLearning: Farmer can also learn anything about agriculture related thing and also can learn about the disease they detection and also about predicted solution.

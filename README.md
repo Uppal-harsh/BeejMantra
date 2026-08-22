@@ -1,11 +1,11 @@
-# 🌾 KishanBhai – AI-Powered Digital Assistant for Indian Farmers
+# 🌾 BeejMantra – AI-Powered Digital Assistant for Indian Farmers
 
 <div align="center">
 
-![KishanBhai Logo](https://img.shields.io/badge/KishanBhai-AI%20Assistant%20for%20Farmers-green?style=for-the-badge&logo=leaf)
+![BeejMantra Logo](https://img.shields.io/badge/BeejMantra-AI%20Assistant%20for%20Farmers-green?style=for-the-badge&logo=leaf)
 ![Next.js](https://img.shields.io/badge/Next.js-15.3.3-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
-![Firebase](https://img.shields.io/badge/Firebase-11.9.1-orange?style=for-the-badge&logo=firebase)
+![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20Auth-3FCF8E?style=for-the-badge&logo=supabase)
 ![Gemini AI](https://img.shields.io/badge/Gemini%20AI-1.14.1-purple?style=for-the-badge&logo=google)
 
 **Empowering Indian farmers with AI-driven insights, real-time market data, and multilingual support**
@@ -18,7 +18,7 @@
 
 ## 🎯 Overview
 
-KishanBhai is a comprehensive AI-powered digital assistant designed specifically for Indian farmers. It combines cutting-edge AI technology with local agricultural knowledge to provide real-time crop health diagnosis, market insights, government scheme guidance, and educational resources — all accessible in multiple Indian languages including Hindi, Kannada, Bengali, and Bhojpuri.
+BeejMantra is a comprehensive AI-powered digital assistant designed specifically for Indian farmers. It combines cutting-edge AI technology with local agricultural knowledge to provide real-time crop health diagnosis, market insights, government scheme guidance, and educational resources - all accessible in multiple Indian languages including Hindi, Kannada, Bengali, and Bhojpuri.
 
 ### 🌟 Key Highlights
 
@@ -118,12 +118,11 @@ KishanBhai is a comprehensive AI-powered digital assistant designed specifically
 - **Zod** - Schema validation
 
 ### **Backend & AI**
-- **Firebase 11.9.1** - Backend-as-a-Service
-  - Firestore - NoSQL database
+- **Supabase** - Backend-as-a-Service
+  - Postgres - relational data with row-level security
   - Authentication - User management
-  - Functions - Serverless computing
   - Storage - File management
-  - Hosting - Web deployment
+  - Row Level Security - per-user access control
 - **Google Gemini AI** - Advanced AI models
   - Text generation and analysis
   - Image recognition and processing
@@ -160,7 +159,7 @@ KishanBhai is a comprehensive AI-powered digital assistant designed specifically
 ## 🏗️ Project Structure
 
 ```
-KishanBhai/
+BeejMantra/
 ├── 📁 src/
 │   ├── 📁 ai/                    # AI flows and Genkit configuration
 │   │   ├── 📁 flows/            # AI-powered features
@@ -201,7 +200,8 @@ KishanBhai/
 │   │   ├── use-mobile.tsx
 │   │   └── use-toast.ts
 │   ├── 📁 lib/                  # Utility libraries
-│   │   ├── firebase-config.ts
+│   │   ├── app-timestamp.ts
+│   │   ├── supabase.ts
 │   │   └── utils.ts
 │   └── 📁 locales/              # Internationalization
 │       ├── en.json
@@ -213,7 +213,7 @@ KishanBhai/
 ├── 📄 next.config.ts            # Next.js configuration
 ├── 📄 tailwind.config.ts        # Tailwind CSS configuration
 ├── 📄 tsconfig.json             # TypeScript configuration
-├── 📄 firebase.json             # Firebase configuration
+├── 📄 docs/supabase-setup.md     # Supabase schema and setup guide
 └── 📄 README.md                 # Project documentation
 ```
 
@@ -225,15 +225,15 @@ KishanBhai/
 
 - **Node.js** 18.0 or higher
 - **npm** or **yarn** package manager
-- **Firebase** project setup
+- **Supabase** project setup
 - **Google Cloud** project with Vertex AI enabled
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/KishanBhai.git
-   cd KishanBhai
+   git clone https://github.com/your-username/BeejMantra.git
+   cd BeejMantra
    ```
 
 2. **Install dependencies**
@@ -246,13 +246,10 @@ KishanBhai/
 3. **Environment Setup**
    Create a `.env.local` file in the root directory:
    ```env
-   # Firebase Configuration
-   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   # Supabase Configuration
+   NEXT_PUBLIC_SUPABASE_URL=your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=profile-images
 
    # Google AI Configuration
    NEXT_PUBLIC_VERTEX_AI_KEY=your_vertex_ai_key
@@ -263,17 +260,10 @@ KishanBhai/
    WEATHER_API_KEY=your_weather_api_key
    ```
 
-4. **Firebase Setup**
-   ```bash
-   # Install Firebase CLI
-   npm install -g firebase-tools
-
-   # Login to Firebase
-   firebase login
-
-   # Initialize Firebase
-   firebase init
-   ```
+4. **Supabase Setup**
+   - Create a Supabase project
+   - Run the schema in [`docs/supabase-setup.md`](docs/supabase-setup.md)
+   - Create a public storage bucket named `profile-images`
 
 5. **Run Development Server**
    ```bash
@@ -292,12 +282,7 @@ KishanBhai/
 
 ### Deployment
 
-1. **Deploy to Firebase Hosting**
-   ```bash
-   firebase deploy
-   ```
-
-2. **Deploy to Vercel**
+1. **Deploy to Vercel**
    ```bash
    # Connect your GitHub repository to Vercel
    # Vercel will automatically deploy on push
@@ -338,17 +323,11 @@ export const ai = configureGenkit({
 });
 ```
 
-### **Firebase Configuration**
+### **Supabase Configuration**
 ```typescript
-// src/lib/firebase-config.ts
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
+// src/lib/supabase.ts
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 ```
 
 ---
@@ -401,7 +380,7 @@ npm run format
 ## 🔒 Security
 
 ### **Security Features**
-- **Authentication**: Firebase Auth with email/password
+- **Authentication**: Supabase Auth with email/password
 - **Data Encryption**: End-to-end encryption for sensitive data
 - **API Security**: Rate limiting and request validation
 - **Input Validation**: Comprehensive input sanitization
@@ -451,7 +430,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ## 🙏 Acknowledgments
 
 ### **Technology Partners**
-- **Google Firebase** - Backend infrastructure and hosting
+- **Supabase** - Backend infrastructure and hosting
 - **Google Vertex AI** - Advanced AI capabilities
 - **Data.gov.in** - Government market data APIs
 - **Next.js Team** - React framework and tooling
@@ -476,13 +455,13 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - 📧 **Email**: support@kishanbhai.com
 - 💬 **Discord**: [Join our community](https://discord.gg/kishanbhai)
 - 📱 **WhatsApp**: +91-XXXXXXXXXX
-- 🐛 **Issues**: [GitHub Issues](https://github.com/your-username/KishanBhai/issues)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/your-username/BeejMantra/issues)
 
 ### **Stay Connected**
 - 🌐 **Website**: [kishanbhai.com](https://kishanbhai.com)
 - 📱 **Mobile App**: Available on Google Play Store
-- 📺 **YouTube**: [KishanBhai Channel](https://youtube.com/kishanbhai)
-- 📘 **Facebook**: [KishanBhai Page](https://facebook.com/kishanbhai)
+- 📺 **YouTube**: [BeejMantra Channel](https://youtube.com/beejmantra)
+- 📘 **Facebook**: [BeejMantra Page](https://facebook.com/beejmantra)
 
 ---
 
@@ -492,6 +471,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 *Empowering agriculture through technology*
 
-[⬆ Back to Top](#-kishanbhai--ai-powered-digital-assistant-for-indian-farmers)
+[⬆ Back to Top](#-beejmantra--ai-powered-digital-assistant-for-indian-farmers)
 
 </div>
