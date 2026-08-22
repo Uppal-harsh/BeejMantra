@@ -247,7 +247,7 @@ BeejMantra/
    Copy `.env.example` to `.env.local` and fill in your values:
    ```env
    # Supabase Configuration
-   NEXT_PUBLIC_SUPABASE_URL=your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=profile-images
 
@@ -315,7 +315,7 @@ BeejMantra/
 export const ai = genkit({
   plugins: [
     googleAI({
-      apiKey: process.env.GOOGLE_GENAI_API_KEY || "",
+      apiKey: process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY || "",
     }),
   ],
   model: "googleai/gemini-2.0-flash",

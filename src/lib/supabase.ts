@@ -1,6 +1,17 @@
 import { AppTimestamp } from "@/lib/app-timestamp";
 
-const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/$/, "");
+function normalizeSupabaseUrl(rawUrl: string) {
+  const trimmed = rawUrl.trim().replace(/\/$/, "");
+  if (!trimmed) return "";
+
+  try {
+    return new URL(trimmed).toString().replace(/\/$/, "");
+  } catch {
+    return `https://${trimmed}`;
+  }
+}
+
+const SUPABASE_URL = normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL || "");
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const SUPABASE_STORAGE_BUCKET = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET || "profile-images";
 
@@ -200,7 +211,7 @@ async function createPkceChallenge() {
 function buildHeaders(token?: string, isJson = true) {
   if (!supabaseConfigured) {
     throw new Error(
-      "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+      "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, and make sure the URL includes your Supabase project domain.",
     );
   }
 
@@ -238,7 +249,7 @@ async function requestJson<T>(
     isJson = true,
   } = options;
 
-  const url = new URL(`${SUPABASE_URL}${path}`);
+  const url = new URL(path, SUPABASE_URL);
   Object.entries(query || {}).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       url.searchParams.set(key, String(value));
@@ -506,7 +517,7 @@ export async function signInWithGoogle(): Promise<void> {
   }
 
   if (!supabaseConfigured) {
-    throw new Error("Supabase is not configured.");
+    throw new Error("Supabase is not configured. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
   }
 
   const { verifier, challenge } = await createPkceChallenge();

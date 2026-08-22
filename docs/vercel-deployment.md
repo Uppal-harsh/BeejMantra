@@ -7,9 +7,11 @@ BeejMantra is already compatible with Vercel as a Next.js app.
 Set these in the Vercel project settings:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=profile-images
+GOOGLE_API_KEY=your-google-api-key
+# Optional compatibility alias
 GOOGLE_GENAI_API_KEY=your-google-genai-api-key
 MARKET_DATA_API_KEY=your-market-data-key
 WEATHER_API_KEY=your-weather-api-key
