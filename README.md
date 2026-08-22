@@ -244,7 +244,7 @@ BeejMantra/
    ```
 
 3. **Environment Setup**
-   Create a `.env.local` file in the root directory:
+   Copy `.env.example` to `.env.local` and fill in your values:
    ```env
    # Supabase Configuration
    NEXT_PUBLIC_SUPABASE_URL=your-project.supabase.co
@@ -252,8 +252,7 @@ BeejMantra/
    NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=profile-images
 
    # Google AI Configuration
-   NEXT_PUBLIC_VERTEX_AI_KEY=your_vertex_ai_key
-   GOOGLE_APPLICATION_CREDENTIALS=path_to_service_account.json
+   GOOGLE_GENAI_API_KEY=your_google_genai_api_key
 
    # External APIs
    MARKET_DATA_API_KEY=your_data_gov_api_key
@@ -313,13 +312,13 @@ BeejMantra/
 ### **AI Model Configuration**
 ```typescript
 // src/ai/genkit.ts
-export const ai = configureGenkit({
+export const ai = genkit({
   plugins: [
     googleAI({
-      apiKey: process.env.NEXT_PUBLIC_VERTEX_AI_KEY!,
+      apiKey: process.env.GOOGLE_GENAI_API_KEY || "",
     }),
   ],
-  enableTracingAndMetrics: true,
+  model: "googleai/gemini-2.0-flash",
 });
 ```
 
