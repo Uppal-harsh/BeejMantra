@@ -12,6 +12,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Mic, Paperclip, Send, Square, X, ArrowLeft } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useTranslation } from "@/contexts/language-context";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Room {
   id: string;
@@ -43,6 +45,7 @@ const SpeechRecognition =
 
 export default function CommunityPage() {
   const { t, language } = useTranslation();
+  const isMobile = useIsMobile();
 
   const allMessages = useMemo<Record<string, Message[]>>(() => ({
     general: [
@@ -190,30 +193,49 @@ export default function CommunityPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>{t('community.chatRooms')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {rooms.map((room) => (
-                <li key={room.id}>
-                  <Button 
-                    variant={activeRoom.id === room.id ? "secondary" : "ghost"} 
-                    className="w-full justify-start"
-                    onClick={() => handleRoomChange(room)}
-                  >
-                    {room.name}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+        {!isMobile && (
+          <Card className="md:col-span-1">
+            <CardHeader>
+              <CardTitle>{t('community.chatRooms')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                {rooms.map((room) => (
+                  <li key={room.id}>
+                    <Button 
+                      variant={activeRoom.id === room.id ? "secondary" : "ghost"} 
+                      className="w-full justify-start"
+                      onClick={() => handleRoomChange(room)}
+                    >
+                      {room.name}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="md:col-span-3 flex flex-col">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>#{activeRoom.name}</CardTitle>
+            {isMobile && (
+              <Select value={activeRoom.id} onValueChange={(val) => {
+                const selected = rooms.find(r => r.id === val);
+                if (selected) handleRoomChange(selected);
+              }}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder={t('community.chatRooms')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {rooms.map((room) => (
+                    <SelectItem key={room.id} value={room.id}>
+                      {room.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </CardHeader>
           <CardContent className="flex-1 flex flex-col">
             <ScrollArea className="flex-grow pr-4">
