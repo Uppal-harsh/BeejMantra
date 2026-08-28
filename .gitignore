@@ -38,3 +38,4 @@ coverage/
 # Supabase / local backend artifacts
 .supabase/
 
+.env.example
