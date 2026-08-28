@@ -71,8 +71,8 @@ export function CropDoctorClient() {
     recognition.lang = langMap[language] || 'en-IN';
 
     recognition.onstart = () => setIsRecording(true);
-    recognition.onresult = (event) => setDescription(event.results[0][0].transcript);
-    recognition.onerror = (event) => {
+    recognition.onresult = (event: any) => setDescription(event.results[0][0].transcript);
+    recognition.onerror = (event: any) => {
         if (event.error === 'no-speech') {
             toast({ title: t('toast.noSpeechDetected'), description: t('toast.tryAgain'), variant: "destructive" });
         } else {

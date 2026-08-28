@@ -13,7 +13,21 @@ import { Mic, Paperclip, Send, Square, X, ArrowLeft } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useTranslation } from "@/contexts/language-context";
 
-const initialRooms = [
+interface Room {
+  id: string;
+  name: string;
+}
+
+interface Message {
+  user: string;
+  avatar?: string;
+  text: string;
+  attachment?: string | null;
+  isSelf: boolean;
+  hint: string;
+}
+
+const initialRooms: Room[] = [
   { id: "general", name: "General Discussion" },
   { id: "tomato", name: "Tomato Farming" },
   { id: "pest", name: "Pest Control" },
@@ -24,13 +38,13 @@ const initialRooms = [
 
 // Check for SpeechRecognition API
 const SpeechRecognition =
-  (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
+  (typeof window !== 'undefined' && ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition));
 
 
 export default function CommunityPage() {
   const { t, language } = useTranslation();
 
-  const allMessages = useMemo(() => ({
+  const allMessages = useMemo<Record<string, Message[]>>(() => ({
     general: [
       { user: t('community.users.ramesh'), text: t('community.messages.general.0'), isSelf: false, hint: "indian farmer portrait" },
       { user: t('community.users.suresh'), text: t('community.messages.general.1'), isSelf: false, hint: "farmer smiling" },
@@ -53,25 +67,25 @@ export default function CommunityPage() {
     ],
   }), [t]);
 
-  const [rooms] = useState(initialRooms.map(r => ({...r, name: t(`community.rooms.${r.id}`)})));
-  const [activeRoom, setActiveRoom] = useState(rooms[0]);
-  const [messages, setMessages] = useState(allMessages[activeRoom.id].map(m => ({ ...m, avatar: `https://placehold.co/40x40.png` })));
+  const [rooms] = useState<Room[]>(initialRooms.map(r => ({...r, name: t(`community.rooms.${r.id}`)})));
+  const [activeRoom, setActiveRoom] = useState<Room>(rooms[0]);
+  const [messages, setMessages] = useState<Message[]>(allMessages[activeRoom.id].map((m: any) => ({ ...m, avatar: `https://placehold.co/40x40.png` })));
   const [newMessage, setNewMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
   const attachmentInputRef = useRef<HTMLInputElement>(null);
 
 
-  const handleRoomChange = (room) => {
+  const handleRoomChange = (room: Room) => {
     setActiveRoom(room);
-    setMessages(allMessages[room.id].map(m => ({ ...m, avatar: `https://placehold.co/40x40.png` })) || []);
+    setMessages(allMessages[room.id].map((m: any) => ({ ...m, avatar: `https://placehold.co/40x40.png` })) || []);
   };
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (newMessage.trim() === "" && !attachmentPreview) return;
 
-    const messageToSend = {
+    const messageToSend: Message = {
       user: t('community.you'),
       avatar: `https://placehold.co/40x40.png`,
       text: newMessage,
@@ -85,7 +99,7 @@ export default function CommunityPage() {
     
     // This part would be a database call in a real app
     // We update a mutable object for demo purposes
-    const translatedMessages = allMessages[activeRoom.id].map(m => ({ ...m, avatar: `https://placehold.co/40x40.png` }));
+    const translatedMessages = allMessages[activeRoom.id].map((m: any) => ({ ...m, avatar: `https://placehold.co/40x40.png` }));
     allMessages[activeRoom.id] = [...translatedMessages.slice(0, translatedMessages.length), { user: t('community.you'), text: newMessage, isSelf: true, hint: 'farmer looking at phone' }];
     
     setNewMessage("");
@@ -101,15 +115,15 @@ export default function CommunityPage() {
       return;
     }
     
-    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+    const langMap: Record<string, string> = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN', bn: 'bn-IN', bho: 'bho-IN' };
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = langMap[language] || 'en-IN';
 
     recognition.onstart = () => setIsRecording(true);
-    recognition.onresult = (event) => setNewMessage(event.results[0][0].transcript);
-    recognition.onerror = (event) => {
+    recognition.onresult = (event: any) => setNewMessage(event.results[0][0].transcript);
+    recognition.onerror = (event: any) => {
        if (event.error === 'no-speech') {
         toast({
             title: t('toast.noSpeechDetected'),
@@ -204,7 +218,7 @@ export default function CommunityPage() {
           <CardContent className="flex-1 flex flex-col">
             <ScrollArea className="flex-grow pr-4">
               <div className="space-y-4">
-                {messages.map((msg, index) => (
+                {messages.map((msg: Message, index: number) => (
                   <div key={index} className={`flex items-start gap-3 ${msg.isSelf ? "justify-end" : ""}`}>
                     {!msg.isSelf && <Avatar><AvatarImage src={msg.avatar} data-ai-hint={msg.hint}/><AvatarFallback>{msg.user.substring(0, 2)}</AvatarFallback></Avatar>}
                     <div className={`rounded-lg p-3 max-w-xs ${msg.isSelf ? "bg-primary text-primary-foreground" : "bg-muted"}`}>

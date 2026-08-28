@@ -25,6 +25,7 @@ interface MarketPricesResponse {
   data: MarketData[];
   timestamp: string;
   count: number;
+  error?: string;
 }
 
 export function MarketPrices() {

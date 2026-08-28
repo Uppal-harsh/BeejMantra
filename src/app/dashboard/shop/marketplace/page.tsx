@@ -88,15 +88,15 @@ export default function MarketplacePage() {
       return;
     }
     
-    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+    const langMap: Record<string, string> = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN', bn: 'bn-IN', bho: 'bho-IN' };
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = langMap[language] || 'en-IN';
 
     recognition.onstart = () => setIsRecording(true);
-    recognition.onresult = (event) => setSearchQuery(event.results[0][0].transcript);
-    recognition.onerror = (event) => {
+    recognition.onresult = (event: any) => setSearchQuery(event.results[0][0].transcript);
+    recognition.onerror = (event: any) => {
        if (event.error === 'no-speech') {
         toast({ title: t('toast.noSpeechDetected'), description: t('toast.tryAgain'), variant: "destructive" });
       } else {

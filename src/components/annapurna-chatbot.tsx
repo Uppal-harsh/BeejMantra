@@ -208,15 +208,15 @@ export function AnnapurnaChatbot() {
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
-    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+    const langMap: Record<string, string> = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN', bn: 'bn-IN', bho: 'bho-IN' };
     recognition.lang = langMap[language] || 'en-IN';
 
     recognition.onstart = () => setIsRecording(true);
-    recognition.onresult = (event) => {
+    recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         handleSendMessage(undefined, transcript);
     };
-    recognition.onerror = (event) => {
+    recognition.onerror = (event: any) => {
       if (event.error === 'no-speech') {
         toast({ title: t('toast.noSpeechDetected'), description: t('toast.tryAgain'), variant: "destructive" });
       } else {

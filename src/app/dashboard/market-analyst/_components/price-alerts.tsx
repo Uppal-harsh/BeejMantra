@@ -52,7 +52,7 @@ export function PriceAlerts() {
         const response = await fetch('/api/market-prices');
         const result = await response.json();
         if (result.success) {
-          const commodities = Array.from(new Set(result.data.map((item: any) => item.commodity))).sort();
+          const commodities = Array.from(new Set(result.data.map((item: any) => item.commodity as string))).sort() as string[];
           setAvailableCommodities(commodities);
         }
       } catch (error) {

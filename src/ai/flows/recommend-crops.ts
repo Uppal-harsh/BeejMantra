@@ -96,7 +96,7 @@ const recommendCropsFlow = ai.defineFlow(
         recommendations: [
           {
             cropName: "Soybean",
-            icon: "Leaf",
+            icon: "Leaf" as "Leaf" | "Sprout" | "Carrot" | "Wheat" | "Grape",
             plantingDates: "June - July",
             reasoning: "A robust and profitable Kharif crop suitable for many Indian climates.",
             benefits: fallbackBenefits,
@@ -104,7 +104,7 @@ const recommendCropsFlow = ai.defineFlow(
           },
           {
             cropName: "Cotton",
-            icon: "Leaf",
+            icon: "Leaf" as "Leaf" | "Sprout" | "Carrot" | "Wheat" | "Grape",
             plantingDates: "May - June",
             reasoning: "High demand in the textile industry and grows well in drier conditions.",
             benefits: fallbackBenefits,
@@ -112,14 +112,14 @@ const recommendCropsFlow = ai.defineFlow(
           },
           {
             cropName: "Maize",
-            icon: "Wheat",
+            icon: "Wheat" as "Leaf" | "Sprout" | "Carrot" | "Wheat" | "Grape",
             plantingDates: "June - July",
             reasoning: "A versatile crop used for both food and animal feed, with good yield potential.",
             benefits: fallbackBenefits,
             imageHint: "maize corn field",
           }
         ]
-      }
+      };
     }
   }
 );

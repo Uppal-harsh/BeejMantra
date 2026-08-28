@@ -72,7 +72,7 @@ const initialVideosData: Video[] = [
 ];
 
 
-type Video = SearchYoutubeVideosOutput['videos'][0] & { hint?: string };
+type Video = SearchYoutubeVideosOutput['videos'][0] & { hint?: string; thumbnailUrl?: string };
 
 // Check for SpeechRecognition API
 const SpeechRecognition =
@@ -156,12 +156,12 @@ export default function LearnPage() {
         const recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
-        const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN' };
+        const langMap: Record<string, string> = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN', bn: 'bn-IN', bho: 'bho-IN' };
         recognition.lang = langMap[language] || 'en-IN';
     
         recognition.onstart = () => setIsRecording(true);
-        recognition.onresult = (event) => setSearchQuery(event.results[0][0].transcript);
-        recognition.onerror = (event) => {
+        recognition.onresult = (event: any) => setSearchQuery(event.results[0][0].transcript);
+        recognition.onerror = (event: any) => {
              if (event.error === 'no-speech') {
                 toast({
                     title: t('toast.noSpeechDetected'),
@@ -379,7 +379,7 @@ export default function LearnPage() {
                     <Card key={index} className="flex flex-col group">
                         <CardHeader className="p-0">
                         <button onClick={() => playVideo(video.videoId)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
-                            <Image src={video.thumbnailUrl} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint}/>
+                             <Image src={video.thumbnailUrl || "https://placehold.co/600x400.png"} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint}/>
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <PlayCircle className="h-16 w-16 text-white/80"/>
                             </div>

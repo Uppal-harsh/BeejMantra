@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
         });
       }
     } catch (scrapingError) {
-      console.log('Scraping failed, using mock data:', scrapingError.message);
+      console.log('Scraping failed, using mock data:', (scrapingError as any).message);
     }
 
     // Fallback to mock data
