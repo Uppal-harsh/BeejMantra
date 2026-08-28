@@ -12,10 +12,10 @@ function normalizeSupabaseUrl(rawUrl: string) {
 }
 
 const SUPABASE_URL = normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL || "");
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const SUPABASE_STORAGE_BUCKET = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET || "profile-images";
 
-export const supabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+export const supabaseConfigured = Boolean(SUPABASE_URL && supabaseAnonKey);
 export const supabaseProjectUrl = SUPABASE_URL;
 export const supabaseBucket = SUPABASE_STORAGE_BUCKET;
 
@@ -216,8 +216,8 @@ function buildHeaders(token?: string, isJson = true) {
   }
 
   const headers: Record<string, string> = {
-    apikey: SUPABASE_ANON_KEY,
-    Authorization: `Bearer ${token || SUPABASE_ANON_KEY}`,
+    apikey: supabaseAnonKey,
+    Authorization: `Bearer ${token || supabaseAnonKey}`,
   };
 
   if (isJson) {
@@ -723,12 +723,12 @@ export async function exchangeGoogleCodeForSession(
     token_type?: string;
     user: SupabaseAuthUser;
   }>("/auth/v1/token?grant_type=authorization_code", {
-    token: SUPABASE_ANON_KEY,
+    token: supabaseAnonKey,
     body: {
       code,
       code_verifier: flow.verifier,
       redirect_uri: redirectTo,
-      client_id: SUPABASE_ANON_KEY,
+      client_id: supabaseAnonKey,
     },
   });
 

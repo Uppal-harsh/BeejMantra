@@ -47,6 +47,7 @@ interface AuthContextType {
   user: AppUser | null;
   userProfile: UserProfile | null;
   transactions: Transaction[];
+  sessionToken: string | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
@@ -246,6 +247,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     user,
     userProfile,
     transactions,
+    sessionToken,
     loading,
     signInWithGoogle,
     signInWithEmail,
