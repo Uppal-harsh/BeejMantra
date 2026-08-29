@@ -4,48 +4,49 @@
 
 @layer base {
   :root {
-    --background: 220 20% 96%;
-    --foreground: 220 15% 25%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 15% 25%;
+    /* Modern Agricultural-Tech White & Green Theme */
+    --background: 140 20% 99%;       /* #FCFDFC - Crisp Clean White / Off-White */
+    --foreground: 160 28% 12%;       /* #0F2419 - Deep Forest Slate Text */
+    --card: 0 0% 100%;              /* #FFFFFF - Pure White Card */
+    --card-foreground: 160 28% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 25%;
-    --primary: 142 76% 36%;
+    --popover-foreground: 160 28% 12%;
+    --primary: 152 76% 36%;         /* #15803D - Vibrant Emerald Green */
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 15% 90%;
-    --secondary-foreground: 142 76% 36%;
-    --muted: 220 15% 90%;
-    --muted-foreground: 220 10% 45%;
-    --accent: 45 90% 55%;
-    --accent-foreground: 45 90% 15%;
-    --destructive: 0 84.2% 60.2%;
+    --secondary: 142 35% 94%;       /* #E8F5EC - Soft Sage Tint */
+    --secondary-foreground: 152 76% 22%; /* #14532D */
+    --muted: 140 16% 94%;           /* #EEF5F0 */
+    --muted-foreground: 150 12% 42%;/* #5D7266 - Readable Medium Green Slate */
+    --accent: 142 50% 92%;          /* #DCFCE7 - Light Green Highlight */
+    --accent-foreground: 152 76% 22%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 142 76% 36%;
-    --radius: 0.8rem;
+    --border: 145 20% 90%;          /* #E0EBE4 - Soft Subtle Green Border */
+    --input: 145 20% 90%;
+    --ring: 152 76% 36%;
+    --radius: 1.25rem;
   }
 
   .dark {
-    --background: 220 15% 5%;
-    --foreground: 220 15% 95%;
-    --card: 220 15% 10%;
-    --card-foreground: 220 15% 95%;
-    --popover: 220 15% 5%;
-    --popover-foreground: 220 15% 95%;
-    --primary: 142 71% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 15% 15%;
-    --secondary-foreground: 142 71% 45%;
-    --muted: 220 15% 15%;
-    --muted-foreground: 220 10% 65%;
-    --accent: 45 80% 50%;
-    --accent-foreground: 45 90% 10%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 15% 20%;
-    --input: 220 15% 20%;
-    --ring: 142 71% 45%;
+    --background: 140 14% 3%;       /* #070908 */
+    --foreground: 120 10% 96%;      /* #F5F7F5 */
+    --card: 150 4% 9%;             /* #151817 */
+    --card-foreground: 120 10% 96%;
+    --popover: 150 4% 9%;
+    --popover-foreground: 120 10% 96%;
+    --primary: 146 78% 44%;        /* #19C866 */
+    --primary-foreground: 140 14% 3%;
+    --secondary: 150 7% 7%;        /* #101312 */
+    --secondary-foreground: 120 10% 96%;
+    --muted: 150 4% 13%;           /* #1F2422 */
+    --muted-foreground: 144 5% 62%;/* #9AA39E */
+    --accent: 146 78% 44%;
+    --accent-foreground: 140 14% 3%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 6% 16%;          /* #262B29 */
+    --input: 150 6% 16%;
+    --ring: 146 78% 44%;
   }
 }
 
@@ -54,11 +55,45 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground bg-card/50 backdrop-blur-sm;
-    background-color: hsl(var(--background));
-    background-image: radial-gradient(circle at 25% 25%, hsl(var(--secondary)) 0%, transparent 50%), 
-                      radial-gradient(circle at 75% 75%, hsl(var(--secondary)) 0%, transparent 40%);
+    @apply text-foreground bg-background;
+    background-color: #FAFCFA;
+    color: #0F2419;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F4F9F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBDDD2;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #15803D;
+}
+
+/* Micro Animations */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.04); }
+}
+
+@keyframes float-subtle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float-subtle 6s ease-in-out infinite;
 }

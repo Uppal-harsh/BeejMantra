@@ -1,5 +1,6 @@
 
 import type { Metadata } from 'next';
+import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
@@ -7,9 +8,24 @@ import { AuthProvider } from '@/hooks/use-auth';
 import { LanguageProvider } from '@/contexts/language-context';
 import { ThemeProvider } from '@/components/theme-provider';
 
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-space-grotesk',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'BeejMantra',
-  description: 'AI-powered assistant for modern farming, providing crop diagnosis, market analysis, and scheme navigation.',
+  title: 'BeejMantra — AI Assistant for Indian Farmers',
+  description: 'Your Kheti Partner, Har Kadam Saath. AI-powered assistant for modern farming, crop diagnosis, mandi rates, and schemes.',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
@@ -18,12 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="en" className={cn(inter.variable, spaceGrotesk.variable)} suppressHydrationWarning>
       <body className={cn('font-body antialiased')} suppressHydrationWarning>
          <ThemeProvider
             attribute="class"
@@ -41,5 +52,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-
 }

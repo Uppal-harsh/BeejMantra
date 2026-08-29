@@ -10,9 +10,11 @@ import bn from '@/locales/bn.json';
 import bho from '@/locales/bho.json';
 import { SplashScreen } from '@/components/splash-screen';
 
-const translations = { en, hi, kn, bn, bho };
+const translations: Record<string, any> = { en, hi, kn, bn, bho };
 
-type Language = 'en' | 'hi' | 'kn' | 'bn' | 'bho';
+export type Language = 'en' | 'hi' | 'kn' | 'bn' | 'bho';
+
+const LANGUAGE_STORAGE_KEY = 'beejmantra_preferred_lang';
 
 interface LanguageContextType {
   language: Language;
@@ -24,34 +26,65 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const { userProfile, loading: authLoading } = useAuth();
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>('hi');
   const [isLoading, setIsLoading] = useState(true);
 
+  // 1. Initial hydration from localStorage on client
+  useEffect(() => {
+    try {
+      const savedLang = localStorage.getItem(LANGUAGE_STORAGE_KEY) as Language | null;
+      if (savedLang && ['en', 'hi', 'kn', 'bn', 'bho'].includes(savedLang)) {
+        setLanguageState(savedLang);
+      }
+    } catch {
+      // Storage access blocked or SSR
+    }
+  }, []);
+
+  // 2. Sync with userProfile language if available
   useEffect(() => {
     if (!authLoading) {
       const preferredLanguage = userProfile?.language as Language | undefined;
       if (preferredLanguage && ['en', 'hi', 'kn', 'bn', 'bho'].includes(preferredLanguage)) {
-        setLanguage(preferredLanguage);
-      } else {
-        setLanguage('en');
+        setLanguageState(preferredLanguage);
+        try {
+          localStorage.setItem(LANGUAGE_STORAGE_KEY, preferredLanguage);
+        } catch {}
       }
       setIsLoading(false);
     }
   }, [userProfile, authLoading]);
 
+  // 3. Central setLanguage that updates state and localStorage
+  const setLanguage = useCallback((newLang: Language) => {
+    setLanguageState(newLang);
+    try {
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, newLang);
+    } catch {}
+  }, []);
+
   const t = useCallback((key: string, replacements: Record<string, string | number> = {}): string => {
-    const langFile = translations[language] || translations.en;
+    const langFile = translations[language] || translations.hi || translations.en;
     
     const keys = key.split('.');
     let result = keys.reduce((acc, currentKey) => {
-        if (acc && typeof acc === 'object' && acc[currentKey]) {
+        if (acc && typeof acc === 'object' && acc[currentKey] !== undefined) {
             return acc[currentKey];
         }
         return undefined;
     }, langFile as any);
 
+    // Fallback to English if missing in current language
+    if (result === undefined && language !== 'en') {
+      result = keys.reduce((acc, currentKey) => {
+        if (acc && typeof acc === 'object' && acc[currentKey] !== undefined) {
+          return acc[currentKey];
+        }
+        return undefined;
+      }, translations.en as any);
+    }
+
     if (result === undefined) {
-        console.warn(`Translation key not found: ${key}`);
         return key;
     }
     
@@ -65,14 +98,13 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     return result;
   }, [language]);
 
-
   const value = {
     language,
     setLanguage,
     t
   };
 
-  if (isLoading || authLoading) {
+  if (isLoading && authLoading) {
     return <SplashScreen />;
   }
 

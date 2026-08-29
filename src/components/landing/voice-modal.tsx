@@ -1,0 +1,214 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { Mic, Volume2, Sparkles, ArrowRight } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/contexts/language-context";
+
+interface VoiceModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const langVoiceMap: Record<string, string> = {
+  hi: "hi-IN",
+  kn: "kn-IN",
+  bn: "bn-IN",
+  bho: "hi-IN",
+  en: "en-IN",
+};
+
+export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
+  const { t, language } = useTranslation();
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState("");
+  const [response, setResponse] = useState<string | null>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const sampleQueries = [
+    t("landing.chatCard.userQuery"),
+    "आज पुणे मंडी में गेहूं का क्या भाव है? (Wheat price in Mandi?)",
+    "पीएम-किसान योजना की अगली किस्त कब आएगी? (PM Kisan installment)",
+    "धान की फसल में पानी कब लगाना चाहिए? (Paddy irrigation advisory)",
+  ];
+
+  const activeVoiceLang = langVoiceMap[language] || "hi-IN";
+
+  const handleStartListening = () => {
+    if (typeof window !== "undefined" && ("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.lang = activeVoiceLang;
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        setTranscript(t("landing.voiceModal.listening"));
+      };
+
+      recognition.onresult = (event: any) => {
+        const text = event.results[0][0].transcript;
+        setTranscript(text);
+        processQuery(text);
+      };
+
+      recognition.onerror = () => {
+        setIsListening(false);
+        setTranscript("Voice recognition unavailable. Please select from sample questions.");
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognition.start();
+    } else {
+      // Fallback
+      setIsListening(true);
+      setTimeout(() => {
+        setIsListening(false);
+        processQuery(sampleQueries[0]);
+      }, 1500);
+    }
+  };
+
+  const processQuery = (query: string) => {
+    setTranscript(query);
+    let reply = t("landing.chatCard.botResponse");
+    setResponse(reply);
+    speakResponse(reply);
+  };
+
+  const speakResponse = (text: string) => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = activeVoiceLang;
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      setIsListening(false);
+      setTranscript("");
+      setResponse(null);
+      setIsSpeaking(false);
+    }
+  }, [isOpen]);
+
+  return (
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-[28px] bg-white border border-emerald-100 shadow-2xl text-slate-900">
+        
+        {/* Header */}
+        <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 text-white p-5 flex items-center justify-between border-b border-emerald-600/30">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-white shadow-xs flex-shrink-0 bg-emerald-900">
+              <Image
+                src="/annapurna-avatar.jpg"
+                alt="Annapurna AI"
+                width={44}
+                height={44}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <DialogTitle className="font-headline font-bold text-base text-white">
+                {t("landing.voiceModal.title")}
+              </DialogTitle>
+              <DialogDescription className="text-xs text-emerald-100 font-medium">
+                {t("landing.voiceModal.subtitle")}
+              </DialogDescription>
+            </div>
+          </div>
+          
+          <Sparkles className="h-5 w-5 text-emerald-200" />
+        </div>
+
+        {/* Modal Body */}
+        <div className="p-6 space-y-5 bg-[#FAFCFA]">
+          
+          {/* Big Microphone Tap Target */}
+          <div className="flex flex-col items-center justify-center py-3 space-y-2.5">
+            <button
+              onClick={handleStartListening}
+              className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/25 transition-all duration-300 transform active:scale-95 cursor-pointer ${
+                isListening
+                  ? "bg-red-500 text-white ring-8 ring-red-100 animate-pulse"
+                  : "bg-emerald-600 hover:bg-emerald-700 text-white hover:scale-105"
+              }`}
+              title="Click to speak"
+              aria-label="Start Voice Recording"
+            >
+              <Mic className="h-8 w-8 stroke-[2.5]" />
+            </button>
+            <p className="text-xs sm:text-sm font-semibold text-slate-800">
+              {isListening ? t("landing.voiceModal.listening") : t("landing.voiceModal.tapMic")}
+            </p>
+          </div>
+
+          {/* Transcript / Result Box */}
+          {(transcript || response) && (
+            <div className="space-y-2.5 p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200/70 shadow-xs">
+              {transcript && (
+                <div className="text-xs sm:text-sm font-medium text-slate-800">
+                  <span className="font-bold text-emerald-700">{t("landing.voiceModal.youAsked")}</span> &quot;{transcript}&quot;
+                </div>
+              )}
+              {response && (
+                <div className="text-xs sm:text-sm text-slate-700 pt-2 border-t border-emerald-200/60">
+                  <div className="flex items-center gap-1.5 font-bold text-emerald-700 mb-1">
+                    <Volume2 className={`h-4 w-4 ${isSpeaking ? "animate-pulse" : ""}`} />
+                    <span>{t("landing.voiceModal.annapurnaReply")}</span>
+                  </div>
+                  <p className="leading-relaxed">{response}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Suggested Prompts */}
+          <div className="space-y-2">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              {t("landing.voiceModal.tryAsking")}
+            </span>
+            <div className="space-y-1.5">
+              {sampleQueries.map((q, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => processQuery(q)}
+                  className="w-full text-left p-2.5 rounded-xl bg-white hover:bg-emerald-50 border border-emerald-100 text-xs text-slate-800 font-medium transition-colors flex items-center justify-between group cursor-pointer shadow-xs"
+                >
+                  <span className="truncate pr-2">• &quot;{q}&quot;</span>
+                  <ArrowRight className="h-3.5 w-3.5 text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <Button
+            asChild
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-full shadow-md shadow-emerald-600/25"
+          >
+            <a href="/dashboard">
+              <span>{t("landing.voiceModal.openChat")}</span>
+              <ArrowRight className="h-4 w-4 ml-1 stroke-[2.5]" />
+            </a>
+          </Button>
+
+        </div>
+
+      </DialogContent>
+    </Dialog>
+  );
+}

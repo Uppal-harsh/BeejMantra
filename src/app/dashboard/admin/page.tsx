@@ -84,15 +84,16 @@ export default function AdminPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, sessionToken, user?.id]);
 
+  const activeApplicationId = selectedApplication?.id;
   useEffect(() => {
     const refreshSelected = async () => {
-      if (!sessionToken || !selectedApplication) return;
-      const records = await fetchLedgerRecords(sessionToken, selectedApplication.id);
+      if (!sessionToken || !activeApplicationId) return;
+      const records = await fetchLedgerRecords(sessionToken, activeApplicationId);
       setLedgerRecords(records);
     };
 
     refreshSelected().catch((error) => console.error(error));
-  }, [sessionToken, selectedApplication?.id]);
+  }, [sessionToken, activeApplicationId]);
 
   const initializeDemoOfficer = async () => {
     if (!sessionToken || !user) return;
