@@ -16,6 +16,7 @@ import { toast } from "@/hooks/use-toast";
 
 const languages: { code: Language; name: string }[] = [
   { code: 'hi', name: 'हिंदी (Hindi)' },
+  { code: 'pa', name: 'ਪੰਜਾਬੀ (Punjabi)' },
   { code: 'kn', name: 'ಕನ್ನಡ (Kannada)' },
   { code: 'bn', name: 'বাংলা (Bengali)' },
   { code: 'bho', name: 'भोजपुरी (Bhojpuri)' },

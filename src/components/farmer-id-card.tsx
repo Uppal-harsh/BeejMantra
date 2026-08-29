@@ -36,7 +36,7 @@ export function FarmerIdCard({ userProfile, className = "" }: FarmerIdCardProps)
   const location = userProfile?.location || "Haryana, India";
   const crops = userProfile?.crops || "Wheat, Mustard, Paddy";
   const memberSince = userProfile?.memberSince || "2026";
-  const photoUrl = userProfile?.photoURL || "https://placehold.co/120x120.png";
+  const photoUrl = userProfile?.photoURL || "/desi-farmer-hero.jpg";
 
   const verifyUrl =
     typeof window !== "undefined"

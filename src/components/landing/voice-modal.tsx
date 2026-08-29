@@ -14,6 +14,7 @@ interface VoiceModalProps {
 
 const langVoiceMap: Record<string, string> = {
   hi: "hi-IN",
+  pa: "pa-IN",
   kn: "kn-IN",
   bn: "bn-IN",
   bho: "hi-IN",

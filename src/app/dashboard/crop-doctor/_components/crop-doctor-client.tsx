@@ -67,7 +67,7 @@ export function CropDoctorClient() {
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
-    const langMap = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN', bn: 'bn-IN', bho: 'bho-IN' };
+    const langMap = { en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN', kn: 'kn-IN', bn: 'bn-IN', bho: 'bho-IN' };
     recognition.lang = langMap[language] || 'en-IN';
 
     recognition.onstart = () => setIsRecording(true);
