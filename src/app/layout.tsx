@@ -1,6 +1,6 @@
 
 import type { Metadata } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Inter, Playfair_Display, Noto_Sans_Devanagari } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
@@ -14,15 +14,21 @@ const inter = Inter({
   display: 'swap',
 });
 
-const spaceGrotesk = Space_Grotesk({
+const playfair = Playfair_Display({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  variable: '--font-playfair',
+  display: 'swap',
+});
+
+const notoDevanagari = Noto_Sans_Devanagari({
+  subsets: ['devanagari'],
+  variable: '--font-devanagari',
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'BeejMantra — AI Assistant for Indian Farmers',
-  description: 'Your Kheti Partner, Har Kadam Saath. AI-powered assistant for modern farming, crop diagnosis, mandi rates, and schemes.',
+  title: 'BeejMantra — Your Kheti Partner, Har Kadam Saath',
+  description: 'AI Assistant for Indian Farmers — crop doctor, live mandi rates, weather, and government schemes in your native language.',
   icons: {
     icon: '/favicon.ico',
   },
@@ -34,12 +40,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn(inter.variable, spaceGrotesk.variable)} suppressHydrationWarning>
-      <body className={cn('font-body antialiased')} suppressHydrationWarning>
+    <html lang="en" className={cn(inter.variable, playfair.variable, notoDevanagari.variable)} suppressHydrationWarning>
+      <body className={cn('font-body antialiased bg-[#F7EFD9] text-[#3B2A1B]')} suppressHydrationWarning>
          <ThemeProvider
             attribute="class"
-            defaultTheme="system"
-            enableSystem
+            defaultTheme="light"
+            enableSystem={false}
             disableTransitionOnChange
           >
             <AuthProvider>

@@ -657,95 +657,93 @@
             "languages": "Languages",
             "forFarmers": "For Farmers",
             "aboutUs": "About Us",
-            "signIn": "Sign In",
+            "signIn": "लॉगिन (Sign In)",
             "getStarted": "Get Started",
             "goToDashboard": "Go to Dashboard",
             "tagline": "AI Assistant for Indian Farmers"
         },
         "hero": {
-            "badge": "Your Trusted Farming Partner • AI Kheti Partner",
+            "badge": "आपकी खेती का साथी",
             "titleLine1": "Your Kheti Partner,",
             "titleLine2": "Har Kadam Saath.",
-            "description": "BeejMantra empowers your farming decisions with AI — crop doctor, live mandi rates, weather, and government schemes all in one place.",
-            "pills": {
-                "ai": "AI Powered Diagnosis",
-                "voice": "Voice in 5 Languages",
-                "mandi": "Mandi & Schemes"
-            },
-            "getStarted": "Get Started Free",
-            "askAnnapurna": "Ask Annapurna",
-            "trustLine": "Trusted by thousands of farmers across India • 100% Free for Kisans"
+            "description": "BeejMantra aapke farming decisions ko smarter banata hai AI ke saath — fasal, mandi, mausam aur sarkari yojana sab ek jagah.",
+            "pillAi": "AI Powered",
+            "pillVoice": "Voice Support",
+            "pillLanguages": "In Your Language",
+            "ctaGetStarted": "Get Started",
+            "ctaVoice": "Annapurna se poochho",
+            "trustLine": "Trusted by thousands of farmers across India"
         },
         "chatCard": {
-            "name": "Annapurna",
-            "role": "AI Agri Advisory (24x7)",
-            "userQuery": "My wheat leaves are turning yellow, what should I do?",
-            "botResponse": "Please upload a photo of the leaf, and I will help you identify the disease and organic solution.",
-            "placeholder": "Type or speak in your language...",
-            "speakButton": "Ask with Voice"
+            "headerTitle": "Annapurna",
+            "headerSubtitle": "AI Assistant",
+            "userMessage": "Meri fasal ke patte peele ho rahe hain, kya karu?",
+            "aiMessage": "Photo bhejiye, main problem identify karne mein help karti hoon. 🌱",
+            "inputPlaceholder": "Type or speak...",
+            "voiceCta": "Bolkar Poochho"
         },
         "features": {
-            "fasalDoctor": {
+            "cropDoctor": {
                 "title": "Fasal Doctor",
-                "desc": "Upload photo, detect crop disease instantly and get organic remedies.",
+                "description": "Photo bhejo, bimari pehchano aur turant upay pao.",
                 "cta": "Check Now"
             },
             "mandiBhav": {
                 "title": "Mandi Bhav",
-                "desc": "Real-time mandi prices and AI price trends for maximum profit.",
+                "description": "Real-time mandi rates aur AI se behtar bechne ka time jano.",
                 "cta": "View Prices"
             },
             "mausam": {
                 "title": "Mausam",
-                "desc": "Accurate field-level weather forecasts and smart irrigation alerts.",
+                "description": "Aapke khet ke liye accurate weather aur sujhav.",
                 "cta": "Check Weather"
             },
-            "sarkariYojana": {
+            "yojana": {
                 "title": "Sarkari Yojana",
-                "desc": "Explore government schemes and verify eligibility in one click.",
+                "description": "Yojana khojo, eligibility check karo aur apply karo.",
                 "cta": "Explore Schemes"
             },
             "agriStore": {
                 "title": "Agri Store",
-                "desc": "Direct access to quality seeds, bio-fertilizers, and farm tools.",
+                "description": "Beej, khaad, tools aur machine best price par kharidein.",
                 "cta": "Shop Now"
             }
         },
         "languageStrip": {
             "title": "5 Indian Languages",
-            "subtitle": "Your language, your convenience",
+            "subtitle": "Apni bhasha, apni suvidha",
             "voiceTitle": "Voice First, Kisan First",
-            "voiceSubtitle": "Speak directly, get instant answers.",
+            "voiceSubtitle": "Bolkar poochho, turant jawab pao.",
             "voiceCta": "Voice Se Poochho",
             "toastTitle": "Language Changed ({{name}})",
             "toastDesc": "BeejMantra is now displaying in {{name}}."
         },
         "howItWorks": {
-            "badge": "3 Easy Steps • How It Works",
+            "badge": "3 आसान चरण • How It Works",
             "title": "Making Farming Effortless & Profitable",
             "subtitle": "No complex tech needed — make smarter agricultural decisions directly from your mobile in your native language.",
+            "ctaStartFree": "Start Free Now",
             "step1": {
                 "number": "01",
-                "badge": "Easy Input",
+                "badge": "Photo Bhejo",
                 "title": "Snap Photo or Speak Query",
                 "subtitle": "Easy Mobile Input",
                 "desc": "Take a photo of the diseased leaf directly in the field or speak your problem to Annapurna AI in your own language."
             },
             "step2": {
                 "number": "02",
-                "badge": "Fast AI",
+                "badge": "AI Pehchano",
                 "title": "AI Diagnoses in Seconds",
                 "subtitle": "Instant Multimodal AI Diagnosis",
                 "desc": "Google Gemini multimodal AI analyzes symptoms, pests, or nutrient deficiencies within seconds."
             },
             "step3": {
                 "number": "03",
-                "badge": "Best Yield",
+                "badge": "Turant Upay",
                 "title": "Actionable Remedies & Best Price",
                 "subtitle": "Remedies & Profit Advisory",
                 "desc": "Get organic remedies, accurate agricultural medicines, and know the best timing to sell at nearby mandis."
-            },
-            "startFree": "Start Free Now"
+            }
         },
         "farmerStories": {
             "badge": "Farmer Experience • Farmer Stories",

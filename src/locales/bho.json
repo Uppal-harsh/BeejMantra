@@ -658,72 +658,71 @@
             "forFarmers": "किसान भाई लोगिन खातिर",
             "aboutUs": "हमनी के बारे में",
             "signIn": "लॉगिन (Sign In)",
-            "getStarted": "सुरु करीं",
+            "getStarted": "Get Started",
             "goToDashboard": "डैशबोर्ड पर जाईं",
-            "tagline": "भारतीय किसानन के AI साथी"
+            "tagline": "AI Assistant for Indian Farmers"
         },
         "hero": {
-            "badge": "राउर खेती के सच्चा साथी • AI Kheti Partner",
+            "badge": "राउर खेती के साथी",
             "titleLine1": "Your Kheti Partner,",
             "titleLine2": "Har Kadam Saath.",
-            "description": "BeejMantra राउर खेती के फैसला के AI के साथे होशियार बनावेला — फसल डॉक्टर, लाइव मंडी भाव, मौसम आ सरकारी योजना सब एके जगह।",
-            "pills": {
-                "ai": "AI रोग पहचान",
-                "voice": "5 भाषा में आवाज सपोर्ट",
-                "mandi": "मंडी भाव आ सरकारी योजना"
-            },
-            "getStarted": "मुफ्त सुरु करीं",
-            "askAnnapurna": "अन्नपूर्णा से पूछीं",
-            "trustLine": "हजारन किसानन के भरोसा • किसान भाई लोगिन खातिर 100% मुफ्त"
+            "description": "BeejMantra राउर खेती के फैसला के AI के साथे होशियार बनावेला — फसल, मंडी, मौसम आ सरकारी योजना सब एके जगह।",
+            "pillAi": "AI Powered",
+            "pillVoice": "Voice Support",
+            "pillLanguages": "In Your Language",
+            "ctaGetStarted": "Get Started →",
+            "ctaVoice": "Annapurna se poochho",
+            "trustLine": "हजारन किसानन के भरोसा • Trusted by thousands of farmers across India"
         },
         "chatCard": {
-            "name": "अन्नपूर्णा",
-            "role": "AI खेती सलाहकार (24x7)",
-            "userQuery": "हमार गेहूं के फसल में पतई पीयर होत बा, का करीं?",
-            "botResponse": "पतई के फोटो भेजीं, हम बीमारी आ ओकर जैविक उपाय तुरंत बतावत बानी।",
-            "placeholder": "अपना भाषा में लिखीं चाहे बोलीं...",
-            "speakButton": "बोल के पूछीं"
+            "headerTitle": "अन्नपूर्णा",
+            "headerSubtitle": "AI Assistant",
+            "userMessage": "हमार गेहूं के फसल में पतई पीयर होत बा, का करीं?",
+            "aiMessage": "पतई के फोटो भेजीं, हम बीमारी आ ओकर जैविक उपाय तुरंत बतावत बानी। 🌱",
+            "inputPlaceholder": "Type or speak...",
+            "voiceCta": "बोल के पूछीं"
         },
         "features": {
-            "fasalDoctor": {
+            "cropDoctor": {
                 "title": "फसल डॉक्टर",
-                "desc": "फोटो भेजीं, तुरंत बीमारी पहचानीं आ जैविक व सटीक उपाय पाईं।",
-                "cta": "जांचीं"
+                "description": "फोटो भेजीं, तुरंत बीमारी पहचानीं आ जैविक व सटीक उपाय पाईं।",
+                "cta": "Check Now →"
             },
             "mandiBhav": {
                 "title": "मंडी भाव",
-                "desc": "लाइव मंडी भाव आ AI से फसल बेचे के सही समय जानीं।",
-                "cta": "भाव देखीं"
+                "description": "लाइव मंडी भाव आ AI से फसल बेचे के सही समय जानीं।",
+                "cta": "View Prices →"
             },
             "mausam": {
-                "title": "मौसम आ सलाह",
-                "desc": "राउर खेत खातिर सटीक मौसम के अनुमान आ सिंचाई के सलाह।",
-                "cta": "मौसम जांचीं"
+                "title": "मौसम",
+                "description": "राउर खेत खातिर सटीक मौसम के अनुमान आ सिंचाई के सलाह।",
+                "cta": "Check Weather →"
             },
-            "sarkariYojana": {
+            "yojana": {
                 "title": "सरकारी योजना",
-                "desc": "खेती योजना खोजीं आ पात्रता एगो क्लिक में जांचीं।",
-                "cta": "योजना देखीं"
+                "description": "खेती योजना खोजीं आ पात्रता एगो क्लिक में जांचीं।",
+                "cta": "Explore Schemes →"
             },
             "agriStore": {
                 "title": "कृषि बाज़ार",
-                "desc": "बढ़िया बीज, जैविक खाद आ खेती के औजार सीधे खरीदीं।",
-                "cta": "खरीदीं"
+                "description": "बढ़िया बीज, जैविक खाद आ खेती के औजार सीधे खरीदीं।",
+                "cta": "Shop Now →"
             }
         },
         "languageStrip": {
-            "title": "5 भारतीय भाषा",
+            "title": "5 Indian Languages",
             "subtitle": "राउर भाषा, राउर सुविधा",
-            "voiceTitle": "आवाज फर्स्ट, किसान फर्स्ट",
+            "voiceTitle": "Voice First, Kisan First",
             "voiceSubtitle": "बोल के पूछीं, तुरंत जबाब पाईं।",
-            "voiceCta": "बोल के पूछीं",
+            "voiceCta": "Voice Se Poochho",
             "toastTitle": "भाषा बदल गइल ({{name}})",
             "toastDesc": "BeejMantra अब {{name}} में लउकी।"
         },
         "howItWorks": {
-            "badge": "3 आसान कदम • How It Works",
+            "badge": "3 आसान चरण • How It Works",
             "title": "खेती के आसान आ फायदेमन्द बनाईं",
             "subtitle": "बिना कवनो झंझट के, सीधे अपना भाषा में मोबाइल से सही खेती के फैसला लीं।",
+            "ctaStartFree": "Start Free Now",
             "step1": {
                 "number": "01",
                 "badge": "आसान इनपुट",
