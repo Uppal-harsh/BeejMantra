@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
@@ -25,41 +24,51 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const { userProfile, loading: authLoading } = useAuth();
-  const [language, setLanguageState] = useState<Language>('hi');
+  const { userProfile, loading: authLoading, updateUserProfile } = useAuth();
+  
+  // 1. Initialize language state with immediate local storage lookup
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY) as Language | null;
+        if (saved && ['en', 'hi', 'kn', 'bn', 'bho', 'pa'].includes(saved)) {
+          return saved;
+        }
+      } catch {}
+    }
+    return 'hi';
+  });
 
-  // 1. Initial hydration from localStorage on client
+  // 2. Client-side hydration check
   useEffect(() => {
     try {
       const savedLang = localStorage.getItem(LANGUAGE_STORAGE_KEY) as Language | null;
       if (savedLang && ['en', 'hi', 'kn', 'bn', 'bho', 'pa'].includes(savedLang)) {
         setLanguageState(savedLang);
+        document.documentElement.lang = savedLang;
       }
     } catch {
-      // Storage access blocked or SSR
+      // Storage access blocked
     }
   }, []);
 
-  // 2. Sync with userProfile language if available
-  useEffect(() => {
-    if (!authLoading) {
-      const preferredLanguage = userProfile?.language as Language | undefined;
-      if (preferredLanguage && ['en', 'hi', 'kn', 'bn', 'bho', 'pa'].includes(preferredLanguage)) {
-        setLanguageState(preferredLanguage);
-        try {
-          localStorage.setItem(LANGUAGE_STORAGE_KEY, preferredLanguage);
-        } catch {}
-      }
-    }
-  }, [userProfile, authLoading]);
-
-  // 3. Central setLanguage that updates state and localStorage
+  // 3. Central setLanguage that immediately updates state and persists
   const setLanguage = useCallback((newLang: Language) => {
+    if (!['en', 'hi', 'kn', 'bn', 'bho', 'pa'].includes(newLang)) return;
+    
     setLanguageState(newLang);
+    
     try {
       localStorage.setItem(LANGUAGE_STORAGE_KEY, newLang);
+      if (typeof document !== 'undefined') {
+        document.documentElement.lang = newLang;
+      }
     } catch {}
-  }, []);
+
+    if (updateUserProfile) {
+      updateUserProfile({ language: newLang }).catch(() => {});
+    }
+  }, [updateUserProfile]);
 
   const t = useCallback((key: string, replacements: Record<string, string | number> = {}): string => {
     const langFile = translations[language] || translations.hi || translations.en;
@@ -116,5 +125,3 @@ export const useTranslation = () => {
   }
   return context;
 };
-
-    
