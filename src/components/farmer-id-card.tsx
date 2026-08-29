@@ -15,6 +15,8 @@ import {
   Calendar,
   Sparkles,
   Award,
+  Phone,
+  Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -32,7 +34,9 @@ export function FarmerIdCard({ userProfile, className = "" }: FarmerIdCardProps)
   const [copied, setCopied] = useState(false);
 
   const farmerId = userProfile?.farmerId || "BM-KSN-2026-7842";
-  const displayName = userProfile?.displayName || "Ram Kishan";
+  const displayName = userProfile?.displayName || "Harsh Uppal";
+  const email = userProfile?.email || "harshuppal300@gmail.com";
+  const phone = userProfile?.phone || "8905905953";
   const location = userProfile?.location || "Haryana, India";
   const crops = userProfile?.crops || "Wheat, Mustard, Paddy";
   const memberSince = userProfile?.memberSince || "2026";
@@ -185,8 +189,13 @@ export function FarmerIdCard({ userProfile, className = "" }: FarmerIdCardProps)
               </div>
 
               <div className="flex items-center gap-1.5 text-xs text-emerald-200">
-                <Wheat className="w-3.5 h-3.5 text-[#19C866] shrink-0" />
-                <span className="truncate">{crops}</span>
+                <Phone className="w-3.5 h-3.5 text-[#19C866] shrink-0" />
+                <span className="truncate">{phone}</span>
+              </div>
+
+              <div className="flex items-center gap-1.5 text-xs text-emerald-200">
+                <Mail className="w-3.5 h-3.5 text-[#19C866] shrink-0" />
+                <span className="truncate">{email}</span>
               </div>
 
               <div className="flex items-center gap-1.5 text-[11px] text-emerald-400/80">

@@ -37,7 +37,7 @@ export function Footer() {
             </h3>
             <p className="text-xs sm:text-sm text-[#5D4A3A]">
               {t("landing.footer.helplineSubtitle")}{" "}
-              <strong className="text-[#245B35] font-bold">1800-180-1551</strong>
+              <strong className="text-[#245B35] font-bold">+91 8905905953</strong>
             </p>
           </div>
 
@@ -45,9 +45,9 @@ export function Footer() {
             asChild
             className="bg-[#245B35] hover:bg-[#1A4A28] active:scale-95 text-[#FAF5E8] font-bold px-7 py-6 rounded-full shadow-md text-base transition-transform hover:scale-105 border border-[#194A28]"
           >
-            <a href="tel:18001801551" className="flex items-center gap-2">
+            <a href="tel:8905905953" className="flex items-center gap-2">
               <PhoneCall className="h-4 w-4 text-[#FAF5E8]" />
-              <span>{t("landing.footer.callButton")}</span>
+              <span>{t("landing.footer.callButton") || "Call +91 8905905953"}</span>
             </a>
           </Button>
         </div>

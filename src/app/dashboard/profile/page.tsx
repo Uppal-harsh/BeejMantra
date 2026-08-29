@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Upload, RefreshCw, Link2, ExternalLink, ShieldCheck, Award } from "lucide-react";
+import { ArrowLeft, Upload, RefreshCw, Link2, ExternalLink, ShieldCheck, Award, Phone } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useTranslation } from "@/contexts/language-context";
@@ -74,16 +74,17 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Canonical, untranslated state
-  const [canonicalDisplayName, setCanonicalDisplayName] = useState("");
-  const [canonicalCrops, setCanonicalCrops] = useState("");
-  const [farmerId, setFarmerId] = useState("");
+  const [canonicalDisplayName, setCanonicalDisplayName] = useState("Harsh Uppal");
+  const [canonicalCrops, setCanonicalCrops] = useState("Wheat, Mustard, Paddy");
+  const [farmerId, setFarmerId] = useState("BM-KSN-2026-7842");
 
   // Translated state for display
-  const [displayDisplayName, setDisplayDisplayName] = useState("");
-  const [displayCrops, setDisplayCrops] = useState("");
+  const [displayDisplayName, setDisplayDisplayName] = useState("Harsh Uppal");
+  const [displayCrops, setDisplayCrops] = useState("Wheat, Mustard, Paddy");
   
-  const [email, setEmail] = useState("");
-  const [location, setLocation] = useState("");
+  const [email, setEmail] = useState("harshuppal300@gmail.com");
+  const [phone, setPhone] = useState("8905905953");
+  const [location, setLocation] = useState("Haryana, India");
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
@@ -91,19 +92,21 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (userProfile) {
-      const name = userProfile.displayName || "Ram Kishan";
+      const name = userProfile.displayName || "Harsh Uppal";
       const crops = userProfile.crops || "Wheat, Mustard, Paddy";
       const fid = userProfile.farmerId || "BM-KSN-2026-7842";
+      const userPhone = userProfile.phone || "8905905953";
 
       setCanonicalDisplayName(name);
       setCanonicalCrops(crops);
       setDisplayDisplayName(name);
       setDisplayCrops(crops);
       setFarmerId(fid);
-      setEmail(userProfile.email || user?.email || "farmer@beejmantra.in");
+      setEmail(userProfile.email || user?.email || "harshuppal300@gmail.com");
+      setPhone(userPhone);
       setLocation(userProfile.location || "Haryana, India");
     } else if (user) {
-      setEmail(user.email || "farmer@beejmantra.in");
+      setEmail(user.email || "harshuppal300@gmail.com");
     }
 
     // Fetch verified certificates for profile
@@ -139,7 +142,7 @@ export default function ProfilePage() {
   }, [language, canonicalDisplayName, canonicalCrops, userProfile?.language]);
 
   const getInitials = (name: string | null | undefined) => {
-    if (!name) return "RK";
+    if (!name) return "HU";
     const names = name.split(" ");
     if (names.length > 1) {
       return (names[0][0] + names[names.length - 1][0]).toUpperCase();
@@ -168,6 +171,8 @@ export default function ProfilePage() {
     try {
       await updateUserProfile({
         displayName: canonicalDisplayName,
+        email,
+        phone,
         location,
         crops: canonicalCrops,
         farmerId,
@@ -256,7 +261,19 @@ export default function ProfilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-2">
-              <FarmerIdCard userProfile={userProfile} />
+              <FarmerIdCard
+                userProfile={{
+                  ...userProfile,
+                  uid: userProfile?.uid || user?.id || "demo-farmer-001",
+                  photoURL: userProfile?.photoURL ?? null,
+                  email,
+                  phone,
+                  displayName: displayDisplayName,
+                  location,
+                  crops: displayCrops,
+                  farmerId,
+                }}
+              />
             </CardContent>
           </Card>
 
@@ -369,9 +386,25 @@ export default function ProfilePage() {
                     id="email"
                     type="email"
                     value={email}
-                    disabled
-                    className="rounded-xl bg-muted/50"
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="rounded-xl"
                   />
+                </div>
+
+                {/* Phone Number */}
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="phone">Phone / Mobile Number</Label>
+                  <div className="relative">
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="e.g. 8905905953"
+                      className="rounded-xl pl-10 font-mono font-semibold"
+                    />
+                    <Phone className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3" />
+                  </div>
                 </div>
 
                 {/* Farmer ID (with Regenerate button) */}

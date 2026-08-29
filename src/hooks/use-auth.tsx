@@ -27,6 +27,7 @@ export interface UserProfile extends Record<string, any> {
   uid: string;
   farmerId?: string;
   email: string | null;
+  phone?: string | null;
   displayName: string | null;
   photoURL: string | null;
   location?: string;
@@ -64,16 +65,17 @@ interface AuthContextType {
 
 const DEFAULT_DEMO_USER: AppUser = {
   id: "demo-farmer-001",
-  email: "farmer@beejmantra.in",
-  displayName: "Ram Kishan",
+  email: "harshuppal300@gmail.com",
+  displayName: "Harsh Uppal",
   photoURL: null,
 };
 
 const DEFAULT_DEMO_PROFILE: UserProfile = {
   uid: "demo-farmer-001",
   farmerId: "BM-KSN-2026-7842",
-  displayName: "Ram Kishan",
-  email: "farmer@beejmantra.in",
+  displayName: "Harsh Uppal",
+  email: "harshuppal300@gmail.com",
+  phone: "8905905953",
   photoURL: null,
   location: "Haryana, India",
   language: "hi",
@@ -320,8 +322,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const nextProfile: UserProfile = {
       uid: user?.id || "demo-farmer-001",
       farmerId: data.farmerId ?? userProfile?.farmerId ?? ("BM-KSN-2026-" + Math.floor(1000 + Math.random() * 9000)),
-      email: data.email ?? user?.email ?? "farmer@beejmantra.in",
-      displayName: data.displayName ?? userProfile?.displayName ?? user?.displayName ?? "Ram Kishan",
+      email: data.email ?? userProfile?.email ?? user?.email ?? "harshuppal300@gmail.com",
+      phone: data.phone ?? userProfile?.phone ?? "8905905953",
+      displayName: data.displayName ?? userProfile?.displayName ?? user?.displayName ?? "Harsh Uppal",
       photoURL: data.photoURL ?? userProfile?.photoURL ?? null,
       location: data.location ?? userProfile?.location ?? "Haryana, India",
       language: data.language ?? userProfile?.language ?? "hi",
