@@ -143,35 +143,41 @@ export function CropRecommenderClient() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-12">
-      <Card className="lg:col-span-4 xl:col-span-3">
+      <Card className="lg:col-span-5 xl:col-span-4 shadow-sm border border-border/80">
         <CardHeader>
-          <CardTitle>{t('cropRecommender.client.formTitle')}</CardTitle>
-          <CardDescription>{t('cropRecommender.client.formDescription')}</CardDescription>
+          <CardTitle className="font-headline font-bold text-xl">{t('cropRecommender.client.formTitle')}</CardTitle>
+          <CardDescription className="text-xs leading-relaxed">{t('cropRecommender.client.formDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <Label htmlFor="location">{t('profile.location')}</Label>
-              <Input id="location" {...register('location')} />
-              {errors.location && <p className="text-xs text-destructive">{errors.location.message}</p>}
+              <Input id="location" {...register('location')} className="mt-1.5" />
+              {errors.location && <p className="text-xs text-destructive mt-1">{errors.location.message}</p>}
             </div>
 
             <div>
-                <Label>{t('cropRecommender.client.farmType')}</Label>
+                <Label className="text-sm font-medium">{t('cropRecommender.client.farmType')}</Label>
                 <Controller
                     name="farmType"
                     control={control}
                     render={({ field }) => (
-                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4 mt-2">
-                            <Label className="flex items-center gap-2 p-3 border rounded-md has-[:checked]:bg-secondary cursor-pointer flex-1">
-                                <RadioGroupItem value="irrigated" id="irrigated" />
-                                <Droplets className="h-4 w-4 text-blue-500"/>
-                                {t('cropRecommender.client.irrigated')}
+                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-2 gap-2 mt-2">
+                            <Label 
+                                htmlFor="irrigated"
+                                className="flex items-center gap-2 p-2.5 sm:p-3 border border-border/80 rounded-lg has-[:checked]:bg-secondary has-[:checked]:border-primary/60 cursor-pointer min-w-0 transition-all hover:bg-muted/50"
+                            >
+                                <RadioGroupItem value="irrigated" id="irrigated" className="shrink-0" />
+                                <Droplets className="h-4 w-4 text-blue-500 shrink-0"/>
+                                <span className="text-xs sm:text-sm font-medium truncate">{t('cropRecommender.client.irrigated')}</span>
                             </Label>
-                             <Label className="flex items-center gap-2 p-3 border rounded-md has-[:checked]:bg-secondary cursor-pointer flex-1">
-                                <RadioGroupItem value="rainfed" id="rainfed" />
-                                <Sun className="h-4 w-4 text-orange-500"/>
-                                {t('cropRecommender.client.rainfed')}
+                            <Label 
+                                htmlFor="rainfed"
+                                className="flex items-center gap-2 p-2.5 sm:p-3 border border-border/80 rounded-lg has-[:checked]:bg-secondary has-[:checked]:border-primary/60 cursor-pointer min-w-0 transition-all hover:bg-muted/50"
+                            >
+                                <RadioGroupItem value="rainfed" id="rainfed" className="shrink-0" />
+                                <Sun className="h-4 w-4 text-orange-500 shrink-0"/>
+                                <span className="text-xs sm:text-sm font-medium truncate">{t('cropRecommender.client.rainfed')}</span>
                             </Label>
                         </RadioGroup>
                     )}
@@ -179,13 +185,13 @@ export function CropRecommenderClient() {
             </div>
              <div>
               <Label htmlFor="landSize">{t('cropRecommender.client.landSize')}</Label>
-              <div className="flex items-center gap-2">
-                <Input id="landSize" {...register('landSize')} placeholder="e.g., 2 acres"/>
-                 <Button type="button" variant={recordingField === 'landSize' ? "destructive" : "outline"} size="icon" onClick={() => handleMicClick('landSize')} disabled={!!recordingField}>
+              <div className="flex items-center gap-2 mt-1.5">
+                <Input id="landSize" {...register('landSize')} placeholder="e.g., 2 acres" className="min-w-0 flex-1"/>
+                 <Button type="button" variant={recordingField === 'landSize' ? "destructive" : "outline"} size="icon" onClick={() => handleMicClick('landSize')} disabled={!!recordingField} className="shrink-0">
                     {recordingField === 'landSize' ? <Square className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                 </Button>
               </div>
-              {errors.landSize && <p className="text-xs text-destructive">{errors.landSize.message}</p>}
+              {errors.landSize && <p className="text-xs text-destructive mt-1">{errors.landSize.message}</p>}
             </div>
 
             <div className="grid grid-cols-1 gap-4">
@@ -262,7 +268,7 @@ export function CropRecommenderClient() {
         </CardContent>
       </Card>
       
-      <div className="lg:col-span-8 xl:col-span-9">
+      <div className="lg:col-span-7 xl:col-span-8">
         <h2 className="text-2xl font-bold mb-4 font-headline">{t('cropRecommender.client.resultsTitle')}</h2>
         
         {result?.recommendations && !isLoading && (
