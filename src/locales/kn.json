@@ -656,65 +656,63 @@
             "forFarmers": "ರೈತರಿಗಾಗಿ",
             "aboutUs": "ನಮ್ಮ ಬಗ್ಗೆ",
             "signIn": "ಲಾಗಿನ್ (Sign In)",
-            "getStarted": "ಪ್ರಾರಂಭಿಸಿ",
+            "getStarted": "Get Started",
             "goToDashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹೋಗಿ",
-            "tagline": "ಭಾರತೀಯ ರೈತರ AI ಸಹಾಯಕ"
+            "tagline": "AI Assistant for Indian Farmers"
         },
         "hero": {
-            "badge": "ನಿಮ್ಮ ನಂಬಿಕಸ್ಥ ಕೃಷಿ ಪಾಲುದಾರ • AI Kheti Partner",
+            "badge": "ನಿಮ್ಮ ಕೃಷಿ ಸಂಗಾತಿ",
             "titleLine1": "Your Kheti Partner,",
             "titleLine2": "Har Kadam Saath.",
             "description": "BeejMantra ರೈತರ ತೀರ್ಮಾನಗಳನ್ನು AI ಮೂಲಕ ಸುಲಭಗೊಳಿಸುತ್ತದೆ — ಬೆಳೆ ವೈದ್ಯ, ಲೈವ್ ಮಂಡಿ ಬೆಲೆ, ಹವಾಮಾನ ಮತ್ತು ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು ಒಂದೇ ಕಡೆ.",
-            "pills": {
-                "ai": "AI ರೋಗ ಪತ್ತೆ",
-                "voice": "5 ಭಾಷೆಗಳಲ್ಲಿ ಧ್ವನಿ ಬೆಂಬಲ",
-                "mandi": "ಮಂಡಿ ದರ ಮತ್ತು ಯೋಜನೆಗಳು"
-            },
-            "getStarted": "ಉಚಿತವಾಗಿ ಪ್ರಾರಂಭಿಸಿ",
-            "askAnnapurna": "ಅನ್ನಪೂರ್ಣಗೆ ಕೇಳಿ",
-            "trustLine": "ದೇಶಾದ್ಯಂತ ಸಾವಿರಾರು ರೈತರ ನಂಬಿಕೆ • ರೈತರಿಗೆ 100% ಉಚಿತ"
+            "pillAi": "AI Powered",
+            "pillVoice": "Voice Support",
+            "pillLanguages": "In Your Language",
+            "ctaGetStarted": "Get Started →",
+            "ctaVoice": "Annapurna se poochho",
+            "trustLine": "ದೇಶಾದ್ಯಂತ ಸಾವಿರಾರು ರೈತರ ನಂಬಿಕೆ • Trusted by thousands of farmers across India"
         },
         "chatCard": {
-            "name": "ಅನ್ನಪೂರ್ಣ",
-            "role": "AI ಕೃಷಿ ಸಲಹೆಗಾರ (24x7)",
-            "userQuery": "ನನ್ನ ಗೋಧಿ ಬೆಳೆಯಲ್ಲಿ ಎಲೆಗಳು ಹಳದಿಯಾಗುತ್ತಿವೆ, ಏನು ಮಾಡಬೇಕು?",
-            "botResponse": "ಎಲೆಯ ಫೋಟೋ ಕಳುಹಿಸಿ, ರೋಗ ಮತ್ತು ಸಾವಯವ ಪರಿಹಾರವನ್ನು ತಕ್ಷಣ ತಿಳಿಸುತ್ತೇನೆ.",
-            "placeholder": "ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಮಾತನಾಡಿ...",
-            "speakButton": "ಮಾತನಾಡಿ ಕೇಳಿ"
+            "headerTitle": "ಅನ್ನಪೂರ್ಣ",
+            "headerSubtitle": "AI Assistant",
+            "userMessage": "ನನ್ನ ಗೋಧಿ ಬೆಳೆಯಲ್ಲಿ ಎಲೆಗಳು ಹಳದಿಯಾಗುತ್ತಿವೆ, ಏನು ಮಾಡಬೇಕು?",
+            "aiMessage": "ಎಲೆಯ ಫೋಟೋ ಕಳುಹಿಸಿ, ರೋಗ ಮತ್ತು ಸಾವಯವ ಪರಿಹಾರವನ್ನು ತಕ್ಷಣ ತಿಳಿಸುತ್ತೇನೆ. 🌱",
+            "inputPlaceholder": "Type or speak...",
+            "voiceCta": "ಮಾತನಾಡಿ ಕೇಳಿ"
         },
         "features": {
-            "fasalDoctor": {
-                "title": "ಬೆಳೆ ವೈದ್ಯ (Crop Doctor)",
-                "desc": "ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ, ರೋಗವನ್ನು ಪತ್ತೆಹಚ್ಚಿ ಮತ್ತು ಸಾವಯವ ಪರಿಹಾರಗಳನ್ನು ಪಡೆಯಿರಿ.",
-                "cta": "ಪರೀಕ್ಷಿಸಿ"
+            "cropDoctor": {
+                "title": "ಬೆಳೆ ವೈದ್ಯ (Fasal Doctor)",
+                "description": "ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ, ರೋಗವನ್ನು ಪತ್ತೆಹಚ್ಚಿ ಮತ್ತು ಸಾವಯವ ಪರಿಹಾರಗಳನ್ನು ಪಡೆಯಿರಿ.",
+                "cta": "Check Now →"
             },
             "mandiBhav": {
-                "title": "ಮಂಡಿ ದರ (Mandi Rates)",
-                "desc": "ಲೈವ್ ಮಾರುಕಟ್ಟೆ ದರಗಳು ಮತ್ತು ಮಾರಾಟಕ್ಕೆ ಸೂಕ್ತ ಸಮಯದ AI ಸಲಹೆ.",
-                "cta": "ದರಗಳನ್ನು ವೀಕ್ಷಿಸಿ"
+                "title": "ಮಂಡಿ ದರ (Mandi Bhav)",
+                "description": "ಲೈವ್ ಮಾರುಕಟ್ಟೆ ದರಗಳು ಮತ್ತು ಮಾರಾಟಕ್ಕೆ ಸೂಕ್ತ ಸಮಯದ AI ಸಲಹೆ.",
+                "cta": "View Prices →"
             },
             "mausam": {
-                "title": "ಹವಾಮಾನ (Weather)",
-                "desc": "ನಿಮ್ಮ ಜಮೀನಿಗೆ ನಿಖರ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ ಮತ್ತು ನೀರಾವರಿ ಸಲಹೆಗಳು.",
-                "cta": "ಹವಾಮಾನ ನೋಡಿ"
+                "title": "ಹವಾಮಾನ (Mausam)",
+                "description": "ನಿಮ್ಮ ಜಮೀನಿಗೆ ನಿಖರ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ ಮತ್ತು ನೀರಾವರಿ ಸಲಹೆಗಳು.",
+                "cta": "Check Weather →"
             },
-            "sarkariYojana": {
-                "title": "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು",
-                "desc": "ರೈತ ಕಲ್ಯಾಣ ಯೋಜನೆಗಳನ್ನು ಅನ್ವೇಷಿಸಿ ಮತ್ತು ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸಿ.",
-                "cta": "ಯೋಜನೆಗಳನ್ನು ನೋಡಿ"
+            "yojana": {
+                "title": "ಸರ್ಕಾರಿ ಯೋಜನೆ (Sarkari Yojana)",
+                "description": "ರೈತ ಕಲ್ಯಾಣ ಯೋಜನೆಗಳನ್ನು ಅನ್ವೇಷಿಸಿ ಮತ್ತು ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸಿ.",
+                "cta": "Explore Schemes →"
             },
             "agriStore": {
                 "title": "ಕೃಷಿ ಅಂಗಡಿ (Agri Store)",
-                "desc": "ಉತ್ತಮ ಗುಣಮಟ್ಟದ ಬೀಜಗಳು, ರಸಗೊಬ್ಬರಗಳು ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಖರೀದಿಸಿ.",
-                "cta": "ಖರೀದಿಸಿ"
+                "description": "ಉತ್ತಮ ಗುಣಮಟ್ಟದ ಬೀಜಗಳು, ರಸಗೊಬ್ಬರಗಳು ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಖರೀದಿಸಿ.",
+                "cta": "Shop Now →"
             }
         },
         "languageStrip": {
-            "title": "5 ಭಾರತೀಯ ಭಾಷೆಗಳು",
-            "subtitle": "ನಿಮ್ಮ ಭಾಷೆ, ನಿಮ್ಮ ಅನುಕೂಲ",
-            "voiceTitle": "ಮೊದಲು ಧ್ವನಿ, ಮೊದಲು ರೈತ",
+            "title": "5 Indian Languages",
+            "subtitle": "ನಿಮ್ಮ ಭಾಷೆ, ನಿಮ್ಮ ಸೌಲಭ್ಯ",
+            "voiceTitle": "Voice First, Kisan First",
             "voiceSubtitle": "ನೇರವಾಗಿ ಮಾತನಾಡಿ, ತಕ್ಷಣ ಉತ್ತರ ಪಡೆಯಿರಿ.",
-            "voiceCta": "ಧ್ವನಿಯ ಮೂಲಕ ಕೇಳಿ",
+            "voiceCta": "Voice Se Poochho",
             "toastTitle": "ಭಾಷೆ ಬದಲಾಗಿದೆ ({{name}})",
             "toastDesc": "BeejMantra ಈಗ {{name}} ಭಾಷೆಯಲ್ಲಿದೆ."
         },
@@ -722,6 +720,7 @@
             "badge": "3 ಸುಲಭ ಹಂತಗಳು • How It Works",
             "title": "ಕೃಷಿಯನ್ನು ಸುಲಭ ಮತ್ತು ಲಾಭದಾಯಕವಾಗಿಸಿ",
             "subtitle": "ಸಂಕೀರ್ಣ ತಂತ್ರಜ್ಞಾನವಿಲ್ಲದೆ, ನಿಮ್ಮ ಮೊಬೈಲ್ ಮೂಲಕ ನಿಮ್ಮದೇ ಮಾತೃಭಾಷೆಯಲ್ಲಿ ಕೃಷಿ ನಿರ್ಧಾರಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ.",
+            "ctaStartFree": "Start Free Now",
             "step1": {
                 "number": "01",
                 "badge": "ಸುಲಭ ಇನ್‌ಪುಟ್",

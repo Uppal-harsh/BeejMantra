@@ -28,10 +28,10 @@ export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const sampleQueries = [
-    t("landing.chatCard.userQuery"),
-    "आज पुणे मंडी में गेहूं का क्या भाव है? (Wheat price in Mandi?)",
-    "पीएम-किसान योजना की अगली किस्त कब आएगी? (PM Kisan installment)",
-    "धान की फसल में पानी कब लगाना चाहिए? (Paddy irrigation advisory)",
+    t("landing.chatCard.userMessage"),
+    "आज मंडी में गेहूं का क्या भाव है?",
+    "पीएम-किसान योजना की अगली किस्त कब आएगी?",
+    "धान की फसल में पानी कब लगाना चाहिए?",
   ];
 
   const activeVoiceLang = langVoiceMap[language] || "hi-IN";
@@ -77,7 +77,7 @@ export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
 
   const processQuery = (query: string) => {
     setTranscript(query);
-    let reply = t("landing.chatCard.botResponse");
+    let reply = t("landing.chatCard.aiMessage");
     setResponse(reply);
     speakResponse(reply);
   };
@@ -108,66 +108,65 @@ export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-[28px] bg-white border border-emerald-100 shadow-2xl text-slate-900">
+      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-3xl bg-[#FAF5E8] border-2 border-[#D8CABA] shadow-2xl text-[#281E15]">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 text-white p-5 flex items-center justify-between border-b border-emerald-600/30">
+        <div className="bg-[#1A4A28] text-white p-5 flex items-center justify-between border-b border-[#12361D]">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-white shadow-xs flex-shrink-0 bg-emerald-900">
+            <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-[#C99A3A] shadow-xs shrink-0 relative">
               <Image
                 src="/annapurna-avatar.jpg"
                 alt="Annapurna AI"
-                width={44}
-                height={44}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
             <div>
-              <DialogTitle className="font-headline font-bold text-base text-white">
+              <DialogTitle className="font-headline font-bold text-base text-[#FAF5E8]">
                 {t("landing.voiceModal.title")}
               </DialogTitle>
-              <DialogDescription className="text-xs text-emerald-100 font-medium">
+              <DialogDescription className="text-xs text-[#A7F3D0] font-medium">
                 {t("landing.voiceModal.subtitle")}
               </DialogDescription>
             </div>
           </div>
           
-          <Sparkles className="h-5 w-5 text-emerald-200" />
+          <Sparkles className="h-5 w-5 text-[#FDE047]" />
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 space-y-5 bg-[#FAFCFA]">
+        <div className="p-6 space-y-5 bg-[#FBF7EE]">
           
           {/* Big Microphone Tap Target */}
           <div className="flex flex-col items-center justify-center py-3 space-y-2.5">
             <button
               onClick={handleStartListening}
-              className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/25 transition-all duration-300 transform active:scale-95 cursor-pointer ${
+              className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 transform active:scale-95 cursor-pointer ${
                 isListening
-                  ? "bg-red-500 text-white ring-8 ring-red-100 animate-pulse"
-                  : "bg-emerald-600 hover:bg-emerald-700 text-white hover:scale-105"
+                  ? "bg-[#B85C38] text-white ring-8 ring-[#B85C38]/20 animate-pulse"
+                  : "bg-[#245B35] hover:bg-[#1A4A28] text-white hover:scale-105"
               }`}
               title="Click to speak"
               aria-label="Start Voice Recording"
             >
               <Mic className="h-8 w-8 stroke-[2.5]" />
             </button>
-            <p className="text-xs sm:text-sm font-semibold text-slate-800">
+            <p className="text-xs sm:text-sm font-bold text-[#281E15]">
               {isListening ? t("landing.voiceModal.listening") : t("landing.voiceModal.tapMic")}
             </p>
           </div>
 
           {/* Transcript / Result Box */}
           {(transcript || response) && (
-            <div className="space-y-2.5 p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200/70 shadow-xs">
+            <div className="space-y-2.5 p-4 rounded-2xl bg-[#FFFFFF] border border-[#D8CABA] shadow-xs">
               {transcript && (
-                <div className="text-xs sm:text-sm font-medium text-slate-800">
-                  <span className="font-bold text-emerald-700">{t("landing.voiceModal.youAsked")}</span> &quot;{transcript}&quot;
+                <div className="text-xs sm:text-sm font-medium text-[#281E15]">
+                  <span className="font-bold text-[#245B35]">{t("landing.voiceModal.youAsked")}</span> &quot;{transcript}&quot;
                 </div>
               )}
               {response && (
-                <div className="text-xs sm:text-sm text-slate-700 pt-2 border-t border-emerald-200/60">
-                  <div className="flex items-center gap-1.5 font-bold text-emerald-700 mb-1">
+                <div className="text-xs sm:text-sm text-[#3F2918] pt-2 border-t border-[#D8CABA]">
+                  <div className="flex items-center gap-1.5 font-bold text-[#245B35] mb-1">
                     <Volume2 className={`h-4 w-4 ${isSpeaking ? "animate-pulse" : ""}`} />
                     <span>{t("landing.voiceModal.annapurnaReply")}</span>
                   </div>
@@ -179,7 +178,7 @@ export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
 
           {/* Suggested Prompts */}
           <div className="space-y-2">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-[#756653] uppercase tracking-wider">
               {t("landing.voiceModal.tryAsking")}
             </span>
             <div className="space-y-1.5">
@@ -187,10 +186,10 @@ export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
                 <button
                   key={idx}
                   onClick={() => processQuery(q)}
-                  className="w-full text-left p-2.5 rounded-xl bg-white hover:bg-emerald-50 border border-emerald-100 text-xs text-slate-800 font-medium transition-colors flex items-center justify-between group cursor-pointer shadow-xs"
+                  className="w-full text-left p-2.5 rounded-xl bg-[#FFFFFF] hover:bg-[#E8F3EB] border border-[#D8CABA] text-xs text-[#281E15] font-medium transition-colors flex items-center justify-between group cursor-pointer shadow-2xs"
                 >
                   <span className="truncate pr-2">• &quot;{q}&quot;</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                  <ArrowRight className="h-3.5 w-3.5 text-[#245B35] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                 </button>
               ))}
             </div>
@@ -198,7 +197,7 @@ export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
 
           <Button
             asChild
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-full shadow-md shadow-emerald-600/25"
+            className="w-full bg-[#245B35] hover:bg-[#1A4A28] text-[#FAF5E8] font-bold py-3.5 rounded-full shadow-md border border-[#194A28]"
           >
             <a href="/dashboard">
               <span>{t("landing.voiceModal.openChat")}</span>

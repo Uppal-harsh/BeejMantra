@@ -656,72 +656,71 @@
             "forFarmers": "किसानों के लिए",
             "aboutUs": "हमारे बारे में",
             "signIn": "लॉगिन (Sign In)",
-            "getStarted": "शुरू करें",
+            "getStarted": "Get Started",
             "goToDashboard": "डैशबोर्ड पर जाएं",
-            "tagline": "भारतीय किसानों का AI साथी"
+            "tagline": "AI Assistant for Indian Farmers"
         },
         "hero": {
-            "badge": "आपकी खेती का सच्चा साथी • AI Kheti Partner",
+            "badge": "आपकी खेती का साथी",
             "titleLine1": "Your Kheti Partner,",
             "titleLine2": "Har Kadam Saath.",
-            "description": "BeejMantra आपके कृषि निर्णयों को स्मार्ट बनाता है AI के साथ — फसल डॉक्टर, लाइव मंडी भाव, मौसम और सरकारी योजनाएं सब एक जगह।",
-            "pills": {
-                "ai": "AI रोग पहचान",
-                "voice": "5 भाषाओं में वॉयस सपोर्ट",
-                "mandi": "मंडी भाव व सरकारी योजनाएं"
-            },
-            "getStarted": "मुफ्त शुरू करें",
-            "askAnnapurna": "अन्नपूर्णा से पूछें",
-            "trustLine": "देशभर के हजारों किसानों का भरोसा • किसानों के लिए 100% मुफ्त"
+            "description": "BeejMantra आपके कृषि निर्णयों को स्मार्ट बनाता है AI के साथ — फसल, मंडी, मौसम और सरकारी योजनाएं सब एक जगह।",
+            "pillAi": "AI Powered",
+            "pillVoice": "Voice Support",
+            "pillLanguages": "In Your Language",
+            "ctaGetStarted": "Get Started →",
+            "ctaVoice": "Annapurna se poochho",
+            "trustLine": "देशभर के हजारों किसानों का भरोसा • Trusted by thousands of farmers across India"
         },
         "chatCard": {
-            "name": "अन्नपूर्णा",
-            "role": "AI कृषि सलाहकार (24x7)",
-            "userQuery": "मेरी गेहूं की फसल में पीले पत्ते हो रहे हैं, क्या करूं?",
-            "botResponse": "पत्ती की फोटो भेजें, मैं बीमारी और उसका जैविक उपाय तुरंत बताती हूँ।",
-            "placeholder": "अपनी भाषा में लिखें या बोलें...",
-            "speakButton": "बोलकर पूछें"
+            "headerTitle": "अन्नपूर्णा",
+            "headerSubtitle": "AI Assistant",
+            "userMessage": "मेरी फसल के पत्ते पीले हो रहे हैं, क्या करूं?",
+            "aiMessage": "फोटो भेजिए, मैं समस्या पहचानने में मदद करती हूँ। 🌱",
+            "inputPlaceholder": "Type or speak...",
+            "voiceCta": "बोलकर पूछें"
         },
         "features": {
-            "fasalDoctor": {
+            "cropDoctor": {
                 "title": "फसल डॉक्टर",
-                "desc": "फोटो भेजें, तुरंत बीमारी पहचानें और जैविक व सटीक उपाय पाएं।",
-                "cta": "जांचें"
+                "description": "फोटो भेजो, बीमारी पहचानो और तुरंत उपाय पाओ।",
+                "cta": "Check Now →"
             },
             "mandiBhav": {
                 "title": "मंडी भाव",
-                "desc": "लाइव मंडी भाव और AI से बिक्री का सबसे सही समय जानें।",
-                "cta": "भाव देखें"
+                "description": "रियल-टाइम मंडी रेट्स और AI से बेहतर बेचने का समय जानो।",
+                "cta": "View Prices →"
             },
             "mausam": {
-                "title": "मौसम व सलाह",
-                "desc": "आपके खेत के लिए सटीक मौसम पूर्वानुमान और सिंचाई सलाह।",
-                "cta": "मौसम जांचें"
+                "title": "मौसम",
+                "description": "आपके खेत के लिए सटीक मौसम और सुझाव।",
+                "cta": "Check Weather →"
             },
-            "sarkariYojana": {
-                "title": "सरकारी योजनाएं",
-                "desc": "कृषि योजनाएं खोजें और अपनी पात्रता एक क्लिक में जांचें।",
-                "cta": "योजनाएं देखें"
+            "yojana": {
+                "title": "सरकारी योजना",
+                "description": "योजना खोजो, पात्रता चेक करो और अप्लाई करो।",
+                "cta": "Explore Schemes →"
             },
             "agriStore": {
-                "title": "कृषि बाज़ार",
-                "desc": "उत्कृष्ट बीज, जैविक खाद और कृषि उपकरण सीधे खरीदें।",
-                "cta": "अभी खरीदें"
+                "title": "एग्री स्टोर",
+                "description": "बीज, खाद, टूल्स और मशीन बेस्ट प्राइस पर खरीदें।",
+                "cta": "Shop Now →"
             }
         },
         "languageStrip": {
-            "title": "5 भारतीय भाषाएं",
+            "title": "5 Indian Languages",
             "subtitle": "अपनी भाषा, अपनी सुविधा",
-            "voiceTitle": "वॉयस फर्स्ट, किसान फर्स्ट",
-            "voiceSubtitle": "बोलकर पूछें, तुरंत समाधान पाएं।",
-            "voiceCta": "बोलकर पूछें",
+            "voiceTitle": "Voice First, Kisan First",
+            "voiceSubtitle": "बोलकर पूछो, तुरंत जवाब पाओ।",
+            "voiceCta": "Voice Se Poochho",
             "toastTitle": "भाषा बदली गई ({{name}})",
             "toastDesc": "BeejMantra अब {{name}} में प्रदर्शित हो रहा है।"
         },
         "howItWorks": {
-            "badge": "3 आसान कदम • How It Works",
+            "badge": "3 आसान चरण • How It Works",
             "title": "खेती को आसान और लाभकारी बनाएं",
             "subtitle": "बिना किसी जटिल तकनीक के, सीधे अपनी भाषा में अपने मोबाइल से सही कृषि निर्णय लें।",
+            "ctaStartFree": "Start Free Now",
             "step1": {
                 "number": "01",
                 "badge": "सरल इनपुट",

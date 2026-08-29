@@ -17,8 +17,8 @@ export default function LandingPage() {
   const [isVoiceOpen, setIsVoiceOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#FAFCFA] text-[#0F2419] flex flex-col selection:bg-emerald-100 selection:text-emerald-800 antialiased">
-      {/* 1. Full-Width Dark Navbar (88-92px) */}
+    <div className="min-h-screen bg-[#F7EFD9] text-[#281E15] flex flex-col selection:bg-[#245B35] selection:text-[#FAF5E8] antialiased">
+      {/* 1. Full-Width Navbar with Traditional Top Border */}
       <Navbar
         onOpenAuth={() => setIsAuthOpen(true)}
         onOpenVoice={() => setIsVoiceOpen(true)}
