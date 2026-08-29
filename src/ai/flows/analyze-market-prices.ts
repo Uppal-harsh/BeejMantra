@@ -24,15 +24,26 @@ const AnalyzeMarketPricesOutputSchema = z.object({
 });
 export type AnalyzeMarketPricesOutput = z.infer<typeof AnalyzeMarketPricesOutputSchema>;
 
-// Function to fetch live market data from NCDEX scraper
+// Function to fetch live market data
 async function fetchLiveMarketData() {
   try {
-    const response = await fetch('http://localhost:9002/api/market-prices', {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:9002");
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+    const response = await fetch(`${baseUrl}/api/market-prices`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
+      signal: controller.signal,
+      cache: 'no-store',
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch market data: ${response.status}`);
@@ -41,7 +52,7 @@ async function fetchLiveMarketData() {
     const data = await response.json();
     return data.data || [];
   } catch (error) {
-    console.error('Error fetching live market data:', error);
+    console.warn('Live market data fetch timed out or offline, using fallback data:', (error as any).message);
     return null;
   }
 }

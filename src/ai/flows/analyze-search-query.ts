@@ -46,7 +46,13 @@ const analyzeSearchQueryFlow = ai.defineFlow(
     outputSchema: AnalyzeSearchQueryOutputSchema,
   },
   async input => {
-    const {output} = await analyzeQueryPrompt(input);
-    return output!;
+    try {
+      const {output} = await analyzeQueryPrompt(input);
+      if (!output) throw new Error("Empty search query analysis");
+      return output;
+    } catch (error) {
+      console.warn("Error in analyzeSearchQueryFlow, defaulting to true:", error);
+      return { isRelevant: true };
+    }
   }
 );

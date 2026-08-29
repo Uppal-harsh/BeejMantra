@@ -38,6 +38,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useTranslation } from "@/contexts/language-context";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { KisanNewsCard } from "@/components/dashboard/kisan-news-card";
 import { Icons } from "@/components/icons";
 
 const iconMap = {
@@ -280,19 +281,7 @@ export default function DashboardPage() {
                 </Card>
             </div>
             <div className="lg:col-span-2">
-                 <Card className="h-full">
-                    <CardHeader>
-                        <CardTitle>Notifications</CardTitle>
-                         <CardDescription>Important updates and alerts for your farm.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex flex-col items-center justify-center text-center text-muted-foreground h-64">
-                            <Icons.wheat className="h-12 w-12 mb-4"/>
-                            <p className="font-semibold">No new notifications</p>
-                            <p className="text-sm">Check back later for updates on weather, market prices, and more.</p>
-                        </div>
-                    </CardContent>
-                </Card>
+                <KisanNewsCard />
             </div>
         </div>
 

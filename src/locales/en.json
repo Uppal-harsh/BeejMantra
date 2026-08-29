@@ -64,6 +64,57 @@
             "title": "Seasonal Crop Recommendations",
             "description": "Crops suggested for the current season based on your location and weather.",
             "unavailable": "Could not load recommendations at this time."
+        },
+        "news": {
+            "title": "Kisan News & Updates",
+            "description": "Latest government decisions, MSP alerts, and farm advisories.",
+            "liveBadge": "Live",
+            "allNewsBtn": "All Updates",
+            "filters": {
+                "all": "All",
+                "msp": "MSP & Rates",
+                "subsidy": "Subsidies",
+                "advisory": "Advisory"
+            },
+            "badges": {
+                "msp": "MSP Alert",
+                "subsidy": "Govt Scheme",
+                "advisory": "Crop Advisory",
+                "tech": "Agri Tech",
+                "inputs": "Fertilizers"
+            },
+            "time": {
+                "hoursAgo2": "2 hours ago",
+                "hoursAgo5": "5 hours ago",
+                "dayAgo1": "1 day ago",
+                "daysAgo2": "2 days ago",
+                "daysAgo3": "3 days ago"
+            },
+            "items": {
+                "kharifMsp": {
+                    "title": "Kharif 2026 MSP Rates Announced: Paddy & Cotton Rates Hiked",
+                    "desc": "Cabinet approves significant hike in Minimum Support Price (MSP) for 14 Kharif crops to ensure 50% profit over production cost."
+                },
+                "pmKisan": {
+                    "title": "PM-KISAN 17th Installment Release Date Announced",
+                    "desc": "Direct benefit transfer of ₹2,000 to be credited to eligible farmer bank accounts. Complete eKYC to ensure uninterrupted receipt."
+                },
+                "icarAdvisory": {
+                    "title": "ICAR Monsoon Sowing Advisory Issued for Farmers",
+                    "desc": "Scientists recommend early seed treatment, moisture conservation techniques, and optimal sowing windows for Kharif pulses and oilseeds."
+                },
+                "kusumSolar": {
+                    "title": "PM-KUSUM 60% Solar Pump Subsidy Window Open",
+                    "desc": "Farmers can now apply for solar water pump installation with up to 60% state and central subsidy support."
+                },
+                "nanoDap": {
+                    "title": "Liquid Nano DAP & Bio-fertilizer Subsidies Approved",
+                    "desc": "Government expands subsidy support for Nano Urea and Nano DAP bottles to reduce cultivation costs and protect soil health."
+                }
+            },
+            "readSource": "Read Source",
+            "verifiedSources": "Verified PIB & Govt Sources",
+            "exploreGovtPortals": "Explore Schemes"
         }
     },
     "cropDoctor": {
