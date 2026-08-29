@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
 import { useTranslation } from "@/contexts/language-context";
 import { toast } from "@/hooks/use-toast";
+import { DesiSproutLogo } from "./desi-folk-art";
 
 const authSchema = z.object({
   email: z.string().email({ message: "Valid email required" }),
@@ -68,15 +69,15 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[420px] rounded-[28px] p-6 bg-white border border-emerald-100 shadow-2xl text-slate-900">
+      <DialogContent className="sm:max-w-[420px] rounded-3xl p-6 bg-[#FAF5E8] border-2 border-[#D8CABA] shadow-2xl text-[#281E15]">
         <DialogHeader>
-          <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center mx-auto mb-2 shadow-md shadow-emerald-600/25">
-            <Sprout className="h-6 w-6" strokeWidth={2.5} />
+          <div className="w-12 h-12 rounded-2xl bg-[#245B35] text-[#FAF5E8] flex items-center justify-center mx-auto mb-2 shadow-md border border-[#194A28]">
+            <DesiSproutLogo className="w-7 h-7" />
           </div>
-          <DialogTitle className="font-headline font-bold text-center text-2xl text-slate-900">
+          <DialogTitle className="font-headline font-black text-center text-2xl text-[#281E15]">
             {isSignUp ? t("landing.authModal.createAccount") : t("landing.authModal.signIn")}
           </DialogTitle>
-          <DialogDescription className="text-center text-xs text-slate-500">
+          <DialogDescription className="text-center text-xs text-[#5D4A3A]">
             {isSignUp
               ? t("landing.authModal.createDesc")
               : t("landing.authModal.signInDesc")}
@@ -94,50 +95,79 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               toast({ title: "Google Sign In Failed", description: err?.message, variant: "destructive" });
             }
           }}
-          className="w-full mt-2 font-semibold border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 text-slate-800 rounded-xl py-5"
+          className="w-full mt-2 font-bold border-[#D8CABA] bg-[#FFFFFF] hover:bg-[#E8F3EB] text-[#281E15] rounded-xl py-5 shadow-xs"
         >
-          <span className="mr-2 font-bold text-base text-emerald-700">G</span> {t("landing.authModal.google")}
+          <span className="mr-2 font-bold text-base text-[#245B35]">G</span> {t("landing.authModal.google")}
         </Button>
 
-        <div className="relative my-2">
+        <div className="relative my-3">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-slate-200" />
+            <span className="w-full border-t border-[#D8CABA]" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-slate-500">{t("landing.authModal.orEmail")}</span>
+            <span className="bg-[#FAF5E8] px-2 text-[#756653] font-semibold">
+              {t("landing.authModal.orContinueWith")}
+            </span>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5">
-          <div className="space-y-1">
-            <Label htmlFor="modal-email" className="text-xs font-semibold text-slate-800">{t("landing.authModal.emailLabel")}</Label>
-            <Input id="modal-email" type="email" placeholder="kisan@example.com" {...register("email")} className="rounded-xl border-slate-200 bg-white text-slate-900 focus:border-emerald-600" />
-            {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+        {/* Credentials Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-1.5 text-left">
+            <Label htmlFor="email" className="text-xs font-bold text-[#281E15]">
+              {t("landing.authModal.emailLabel")}
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="kisan@beejmantra.in"
+              {...register("email")}
+              className="bg-[#FFFFFF] border-[#D8CABA] text-[#281E15] placeholder-[#8C7A68] rounded-xl focus-visible:ring-[#245B35]"
+            />
+            {errors.email && (
+              <p className="text-[11px] text-[#B85C38]">{errors.email.message}</p>
+            )}
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="modal-password" className="text-xs font-semibold text-slate-800">{t("landing.authModal.passwordLabel")}</Label>
-            <Input id="modal-password" type="password" placeholder="••••••••" {...register("password")} className="rounded-xl border-slate-200 bg-white text-slate-900 focus:border-emerald-600" />
-            {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+          <div className="space-y-1.5 text-left">
+            <Label htmlFor="password" className="text-xs font-bold text-[#281E15]">
+              {t("landing.authModal.passwordLabel")}
+            </Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              {...register("password")}
+              className="bg-[#FFFFFF] border-[#D8CABA] text-[#281E15] placeholder-[#8C7A68] rounded-xl focus-visible:ring-[#245B35]"
+            />
+            {errors.password && (
+              <p className="text-[11px] text-[#B85C38]">{errors.password.message}</p>
+            )}
           </div>
 
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 rounded-xl shadow-md shadow-emerald-600/25 text-sm"
+            className="w-full bg-[#245B35] hover:bg-[#1A4A28] active:scale-95 text-[#FAF5E8] font-bold py-5 rounded-xl shadow-md border border-[#194A28] text-sm"
           >
-            {isSubmitting ? t("landing.authModal.processing") : isSignUp ? t("landing.authModal.createBtn") : t("landing.authModal.signInBtn")}
+            {isSubmitting
+              ? t("landing.authModal.pleaseWait")
+              : isSignUp
+              ? t("landing.authModal.signUpButton")
+              : t("landing.authModal.signInButton")}
           </Button>
         </form>
 
-        <div className="text-center text-xs text-slate-500 mt-2">
-          {isSignUp ? t("landing.authModal.alreadyHave") : t("landing.authModal.noAccount")}
+        {/* Toggle Sign In / Sign Up */}
+        <div className="text-center pt-2">
           <button
             type="button"
             onClick={() => setIsSignUp(!isSignUp)}
-            className="text-emerald-700 font-bold underline underline-offset-2 ml-1 cursor-pointer"
+            className="text-xs text-[#245B35] hover:text-[#1A4A28] font-bold hover:underline"
           >
-            {isSignUp ? t("landing.authModal.loginLink") : t("landing.authModal.registerLink")}
+            {isSignUp
+              ? t("landing.authModal.alreadyHaveAccount")
+              : t("landing.authModal.needAccount")}
           </button>
         </div>
       </DialogContent>

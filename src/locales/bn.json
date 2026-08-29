@@ -653,65 +653,63 @@
             "forFarmers": "কৃষকদের জন্য",
             "aboutUs": "আমাদের সম্পর্কে",
             "signIn": "লগইন (Sign In)",
-            "getStarted": "শুরু করুন",
+            "getStarted": "Get Started",
             "goToDashboard": "ড্যাশবোর্ডে যান",
-            "tagline": "ভারতীয় কৃষকদের AI সহকারী"
+            "tagline": "AI Assistant for Indian Farmers"
         },
         "hero": {
-            "badge": "আপনার বিশ্বস্ত কৃষি সঙ্গী • AI Kheti Partner",
+            "badge": "আপনার চাষের সঙ্গী",
             "titleLine1": "Your Kheti Partner,",
             "titleLine2": "Har Kadam Saath.",
             "description": "BeejMantra আপনার চাষের সিদ্ধান্তকে AI-এর সাহায্যে সহজ করে তোলে — ফসল ডাক্তার, লাইভ মান্ডি দর, আবহাওয়া এবং সরকারি প্রকল্প সব এক জায়গায়।",
-            "pills": {
-                "ai": "AI রোগ নির্ণয়",
-                "voice": "৫টি ভাষায় ভয়েস সাপোর্ট",
-                "mandi": "মান্ডি দর ও সরকারি প্রকল্প"
-            },
-            "getStarted": "বিনামূল্যে শুরু করুন",
-            "askAnnapurna": "অন্নপূর্ণাকে জিজ্ঞাসা করুন",
-            "trustLine": "দেশজুড়ে হাজার হাজার কৃষকের ভরসা • কৃষকদের জন্য ১০০% বিনামূল্যে"
+            "pillAi": "AI Powered",
+            "pillVoice": "Voice Support",
+            "pillLanguages": "In Your Language",
+            "ctaGetStarted": "Get Started →",
+            "ctaVoice": "Annapurna se poochho",
+            "trustLine": "দেশজুড়ে হাজার হাজার কৃষকের ভরসা • Trusted by thousands of farmers across India"
         },
         "chatCard": {
-            "name": "অন্নপূর্ণা",
-            "role": "AI কৃষি উপদেষ্টা (২৪x৭)",
-            "userQuery": "আমার গম ফসলের পাতা হলুদ হয়ে যাচ্ছে, কী করব?",
-            "botResponse": "পাতার ছবি পাঠান, আমি রোগ ও জৈব প্রতিকার দ্রুত জানিয়ে দিচ্ছি।",
-            "placeholder": "আপনার ভাষায় টাইপ করুন বা কথা বলুন...",
-            "speakButton": "কথা বলে জানুন"
+            "headerTitle": "অন্নপূর্ণা",
+            "headerSubtitle": "AI Assistant",
+            "userMessage": "আমার গম ফসলের পাতা হলুদ হয়ে যাচ্ছে, কী করব?",
+            "aiMessage": "পাতার ছবি পাঠান, আমি রোগ ও জৈব প্রতিকার দ্রুত জানিয়ে দিচ্ছি। 🌱",
+            "inputPlaceholder": "Type or speak...",
+            "voiceCta": "কথা বলে জানুন"
         },
         "features": {
-            "fasalDoctor": {
-                "title": "ফসল ডাক্তার",
-                "desc": "ছবি আপলোড করুন, সঙ্গে সঙ্গে রোগ শনাক্ত করুন ও সঠিক ওষুধ পান।",
-                "cta": "পরীক্ষা করুন"
+            "cropDoctor": {
+                "title": "ফসল ডাক্তার (Fasal Doctor)",
+                "description": "ছবি আপলোড করুন, সঙ্গে সঙ্গে রোগ শনাক্ত করুন ও সঠিক ওষুধ পান।",
+                "cta": "Check Now →"
             },
             "mandiBhav": {
-                "title": "মান্ডি দর",
-                "desc": "রিয়েল-টাইম মান্ডি দর ও AI মূল্যায়নে সর্বোচ্চ মুনাফা নিশ্চিত করুন।",
-                "cta": "দর দেখুন"
+                "title": "মান্ডি দর (Mandi Bhav)",
+                "description": "রিয়েল-টাইম মান্ডি দর ও AI মূল্যায়নে সর্বোচ্চ মুনাফা নিশ্চিত করুন।",
+                "cta": "View Prices →"
             },
             "mausam": {
-                "title": "আবহাওয়া",
-                "desc": "আপনার জমির জন্য নিখুঁত আবহাওয়ার পূর্বাভাস ও সেচ পরামর্শ।",
-                "cta": "আবহাওয়া দেখুন"
+                "title": "আবহাওয়া (Mausam)",
+                "description": "আপনার জমির জন্য নিখুঁত আবহাওয়ার পূর্বাভাস ও সেচ পরামর্শ।",
+                "cta": "Check Weather →"
             },
-            "sarkariYojana": {
-                "title": "সরকারি প্রকল্প",
-                "desc": "কৃষি কল্যাণ প্রকল্প খুঁজুন এবং সহজেই যোগ্যতা যাচাই করুন।",
-                "cta": "প্রকল্প খুঁজুন"
+            "yojana": {
+                "title": "সরকারি প্রকল্প (Sarkari Yojana)",
+                "description": "কৃষি কল্যাণ প্রকল্প খুঁজুন এবং সহজেই যোগ্যতা যাচাই করুন।",
+                "cta": "Explore Schemes →"
             },
             "agriStore": {
-                "title": "কৃষি স্টোর",
-                "desc": "উন্নত মানের বীজ, জৈব সার ও কৃষি যন্ত্রপাতি সরাসরি কিনুন।",
-                "cta": "এখনই কিনুন"
+                "title": "কৃষি স্টোর (Agri Store)",
+                "description": "উন্নত মানের বীজ, জৈব সার ও কৃষি যন্ত্রপাতি সরাসরি কিনুন।",
+                "cta": "Shop Now →"
             }
         },
         "languageStrip": {
-            "title": "৫টি ভারতীয় ভাষা",
+            "title": "5 Indian Languages",
             "subtitle": "আপনার ভাষা, আপনার সুবিধা",
-            "voiceTitle": "ভয়েস ফার্স্ট, কৃষক ফার্স্ট",
+            "voiceTitle": "Voice First, Kisan First",
             "voiceSubtitle": "মুখে বলুন, তাৎক্ষণিক সমাধান পান।",
-            "voiceCta": "ভয়েসের মাধ্যমে বলুন",
+            "voiceCta": "Voice Se Poochho",
             "toastTitle": "ভাষা পরিবর্তিত হয়েছে ({{name}})",
             "toastDesc": "BeejMantra এখন {{name}} ভাষায় প্রদর্শিত হচ্ছে।"
         },
@@ -719,6 +717,7 @@
             "badge": "৩টি সহজ ধাপ • How It Works",
             "title": "চাষকে করুন সহজ ও লাভজনক",
             "subtitle": "কোনো জটিল প্রযুক্তি ছাড়াই সরাসরি নিজের ভাষায় মোবাইল থেকে সঠিক কৃষি সিদ্ধান্ত নিন।",
+            "ctaStartFree": "Start Free Now",
             "step1": {
                 "number": "01",
                 "badge": "সহজ ইনপুট",

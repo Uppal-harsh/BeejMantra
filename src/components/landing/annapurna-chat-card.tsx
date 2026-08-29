@@ -2,159 +2,161 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Mic, Sparkles, CheckCheck } from "lucide-react";
+import { Mic, Send, Volume2, Sparkles, CheckCheck } from "lucide-react";
 import { useTranslation } from "@/contexts/language-context";
 
 interface AnnapurnaChatCardProps {
-  onOpenVoice?: () => void;
+  onOpenVoice: () => void;
 }
 
 export function AnnapurnaChatCard({ onOpenVoice }: AnnapurnaChatCardProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [inputText, setInputText] = useState("");
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
-  const handleSpeakSample = () => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(t("landing.chatCard.botResponse"));
-      utterance.lang = "hi-IN";
-      utterance.onstart = () => setIsPlayingAudio(true);
-      utterance.onend = () => setIsPlayingAudio(false);
-      utterance.onerror = () => setIsPlayingAudio(false);
-      window.speechSynthesis.speak(utterance);
-    } else if (onOpenVoice) {
-      onOpenVoice();
-    }
+  const handleSpeak = (text: string) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    const langMap: Record<string, string> = {
+      hi: "hi-IN",
+      kn: "kn-IN",
+      bn: "bn-IN",
+      bho: "hi-IN",
+      en: "en-IN",
+    };
+    utterance.lang = langMap[language] || "hi-IN";
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    window.speechSynthesis.speak(utterance);
   };
 
   return (
-    <div className="relative w-full max-w-[390px] sm:max-w-[420px] mx-auto select-none animate-float">
-      
-      {/* Main Floating Chat Card Container */}
-      <div className="bg-white rounded-[30px] shadow-2xl shadow-emerald-950/15 border border-emerald-200/80 overflow-hidden backdrop-blur-md transition-all duration-300">
+    <div className="relative w-full max-w-[360px] sm:max-w-[400px] select-none group">
+      {/* Main Chat Container */}
+      <div className="bg-[#FAF5E8] rounded-3xl border-2 border-[#3F2918]/80 shadow-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
         
-        {/* Card Header (Deep Emerald Gradient) */}
-        <div className="bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-700 text-white px-5 py-4 flex items-center justify-between border-b border-emerald-600/30">
+        {/* Deep Green Header */}
+        <div className="bg-[#1A4A28] px-4 py-3.5 flex items-center justify-between text-white border-b border-[#12361D]">
           <div className="flex items-center gap-3">
-            <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-white shadow-xs flex-shrink-0 bg-emerald-900">
+            <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-[#C99A3A] shadow-xs">
               <Image
                 src="/annapurna-avatar.jpg"
                 alt="Annapurna AI"
-                width={44}
-                height={44}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80";
-                }}
+                fill
+                className="object-cover"
               />
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="font-headline font-bold text-base tracking-tight text-white leading-tight">
-                  {t("landing.chatCard.name")}
+            <div className="flex flex-col text-left">
+              <div className="flex items-center gap-1.5">
+                <span className="font-headline font-bold text-base text-[#FAF5E8] tracking-tight">
+                  {t("landing.chatCard.headerTitle")}
                 </span>
-                <span className="inline-block w-2 h-2 rounded-full bg-emerald-300 shadow-[0_0_8px_#86efac] animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-[#4ADE80] animate-pulse" />
               </div>
-              <span className="text-xs font-sans text-emerald-100/90 leading-tight mt-0.5">
-                {t("landing.chatCard.role")}
+              <span className="text-[11px] font-sans text-[#A7F3D0] font-medium tracking-wide">
+                {t("landing.chatCard.headerSubtitle")}
               </span>
             </div>
           </div>
 
-          {/* Sound Waveform & Sparkle Icons */}
-          <div className="flex items-center gap-2.5">
-            <button
-              onClick={handleSpeakSample}
-              className="p-1.5 rounded-full hover:bg-white/10 text-emerald-200 transition-colors cursor-pointer"
-              title="Listen to Annapurna"
-              aria-label="Listen audio sample"
-            >
-              <div className="flex items-center gap-0.5">
-                <span className="w-1 h-3 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
-                <span className="w-1 h-5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
-                <span className="w-1 h-2.5 bg-white rounded-full animate-bounce" />
-              </div>
-            </button>
-            <Sparkles className="h-4 w-4 text-emerald-200" />
+          {/* Voice Waveform & Sparkle */}
+          <div className="flex items-center gap-2 text-[#A7F3D0]">
+            <div className="flex items-center gap-0.5 h-4">
+              <span className="w-0.5 h-3 bg-[#A7F3D0] rounded-full animate-bounce [animation-delay:0ms]" />
+              <span className="w-0.5 h-4 bg-[#A7F3D0] rounded-full animate-bounce [animation-delay:150ms]" />
+              <span className="w-0.5 h-2.5 bg-[#A7F3D0] rounded-full animate-bounce [animation-delay:300ms]" />
+              <span className="w-0.5 h-3.5 bg-[#A7F3D0] rounded-full animate-bounce [animation-delay:450ms]" />
+            </div>
+            <Sparkles className="w-4 h-4 text-[#FDE047]" />
           </div>
         </div>
 
-        {/* Chat Message Body */}
-        <div className="p-5 space-y-4 bg-emerald-50/30 min-h-[190px] flex flex-col justify-end">
+        {/* Chat Messages Area */}
+        <div className="p-4 space-y-3.5 bg-[#FBF7EE]/90">
           
-          {/* User Message Bubble */}
-          <div className="self-end max-w-[85%] bg-emerald-600 text-white p-3.5 rounded-2xl rounded-tr-xs shadow-sm text-xs sm:text-[13px] leading-relaxed">
-            <div className="text-[10px] font-bold text-emerald-100 mb-1">
-              You
-            </div>
-            <p className="font-medium text-white">
-              {t("landing.chatCard.userQuery")}
-            </p>
-            <div className="flex items-center justify-end gap-1 text-[10px] text-emerald-100/80 mt-1.5">
-              <span>10:30 AM</span>
-              <CheckCheck className="h-3.5 w-3.5 text-white" />
-            </div>
-          </div>
-
-          {/* Annapurna Response Bubble */}
-          <div className="self-start max-w-[90%] bg-white text-slate-800 p-3.5 rounded-2xl rounded-tl-xs shadow-sm border border-emerald-100 text-xs sm:text-[13px] leading-relaxed">
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <div className="w-4 h-4 rounded-full overflow-hidden flex-shrink-0 bg-emerald-700">
-                <Image
-                  src="/annapurna-avatar.jpg"
-                  alt="A"
-                  width={16}
-                  height={16}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <span className="text-[10px] font-bold text-emerald-700">
-                {t("landing.chatCard.name")}
+          {/* User Bubble (Right) */}
+          <div className="flex flex-col items-end">
+            <div className="max-w-[85%] bg-[#FFFFFF] border border-[#D8CABA] rounded-2xl rounded-tr-xs px-3.5 py-2.5 shadow-xs">
+              <span className="block text-[11px] font-bold text-[#756653] mb-0.5">
+                You
               </span>
-            </div>
-            <p className="font-normal text-slate-700 leading-relaxed">
-              {t("landing.chatCard.botResponse")}
-            </p>
-            <div className="flex items-center justify-end text-[10px] text-slate-400 mt-1">
-              <span>10:31 AM</span>
+              <p className="text-xs sm:text-[13px] font-medium text-[#281E15] leading-relaxed">
+                {t("landing.chatCard.userMessage")}
+              </p>
+              <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-[#8C7A68]">
+                <span>10:30 AM</span>
+                <CheckCheck className="w-3.5 h-3.5 text-[#245B35]" />
+              </div>
             </div>
           </div>
 
-        </div>
+          {/* Annapurna Response Bubble (Left) */}
+          <div className="flex flex-col items-start">
+            <div className="max-w-[88%] bg-[#FFFFFF] border border-[#D8CABA] rounded-2xl rounded-tl-xs px-3.5 py-2.5 shadow-xs">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <div className="w-3.5 h-3.5 rounded-full overflow-hidden relative">
+                  <Image src="/annapurna-avatar.jpg" alt="Annapurna" fill className="object-cover" />
+                </div>
+                <span className="text-[11px] font-bold text-[#245B35]">
+                  Annapurna
+                </span>
+              </div>
+              <p className="text-xs sm:text-[13px] font-medium text-[#281E15] leading-relaxed">
+                {t("landing.chatCard.aiMessage")}
+              </p>
+              <div className="flex items-center justify-between mt-1 text-[10px] text-[#8C7A68]">
+                <button
+                  onClick={() => handleSpeak(t("landing.chatCard.aiMessage"))}
+                  className="flex items-center gap-1 text-[#245B35] hover:text-[#1A4A28] font-semibold transition-colors"
+                  aria-label="Listen message"
+                >
+                  <Volume2 className={`w-3 h-3 ${isSpeaking ? "animate-pulse" : ""}`} />
+                  <span>Listen</span>
+                </button>
+                <span>10:31 AM</span>
+              </div>
+            </div>
+          </div>
 
-        {/* Chat Input Bar */}
-        <div className="p-3.5 bg-white border-t border-emerald-100 flex items-center gap-2.5">
-          <input
-            type="text"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder={t("landing.chatCard.placeholder")}
-            className="flex-1 bg-slate-50 text-xs sm:text-sm px-4 py-2.5 rounded-full border border-emerald-200/70 outline-none text-slate-900 placeholder-slate-400 focus:border-emerald-600 focus:bg-white transition-colors"
-          />
-          <button
-            onClick={onOpenVoice || handleSpeakSample}
-            className="w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white flex items-center justify-center shadow-md shadow-emerald-600/30 transition-all group cursor-pointer"
-            title={t("landing.chatCard.speakButton")}
-            aria-label="Microphone"
-          >
-            <Mic className="h-4 w-4 stroke-[2.5] group-hover:scale-110 transition-transform" />
-          </button>
+          {/* Input Bar */}
+          <div className="pt-2">
+            <div className="relative flex items-center bg-[#FFFFFF] border border-[#C7B99E] rounded-full pl-3.5 pr-1.5 py-1.5 shadow-inner">
+              <input
+                type="text"
+                placeholder={t("landing.chatCard.inputPlaceholder")}
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && inputText.trim()) {
+                    onOpenVoice();
+                  }
+                }}
+                className="w-full bg-transparent text-xs text-[#281E15] placeholder-[#8C7A68] outline-hidden pr-2 font-medium"
+              />
+              <button
+                onClick={onOpenVoice}
+                className="w-8 h-8 rounded-full bg-[#245B35] hover:bg-[#1A4A28] active:scale-90 text-[#FAF5E8] flex items-center justify-center transition-transform shadow-xs shrink-0"
+                aria-label="Voice input"
+              >
+                <Mic className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         </div>
-
       </div>
 
-      {/* Floating Pill Below Card */}
-      <div className="flex justify-center -mt-3 relative z-10">
+      {/* Floating Pill Attached Below Card */}
+      <div className="flex justify-center -mt-3.5 relative z-10">
         <button
-          onClick={onOpenVoice || handleSpeakSample}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white text-emerald-700 font-semibold text-xs shadow-lg border border-emerald-200 hover:bg-emerald-50 active:scale-95 transition-all cursor-pointer"
+          onClick={onOpenVoice}
+          className="bg-[#1A4A28] hover:bg-[#245B35] active:scale-95 text-[#FAF5E8] text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-md border border-[#FAF5E8]/30 transition-all hover:scale-105"
         >
-          <Mic className="h-3.5 w-3.5 text-emerald-600 animate-pulse" strokeWidth={2.5} />
-          <span>{t("landing.chatCard.speakButton")}</span>
+          <Mic className="w-3.5 h-3.5 text-[#FDE047]" />
+          <span>{t("landing.chatCard.voiceCta")}</span>
         </button>
       </div>
-
     </div>
   );
 }
