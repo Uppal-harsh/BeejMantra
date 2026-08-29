@@ -15,6 +15,7 @@
         "eLearning": "E-Learning",
         "tracker": "Tracker",
         "cropRecommender": "Crop Recommender",
+        "fasalCertificate": "Fasal Certificate",
         "profile": "Profile",
         "settings": "Settings"
     },
@@ -54,7 +55,8 @@
             "marketAnalyst": "Get real-time price analysis.",
             "govtSchemes": "Find government schemes for you.",
             "tracker": "Track your farm expenses and profits.",
-            "eLearning": "Browse guides and tutorials."
+            "eLearning": "Browse guides and tutorials.",
+            "fasalCertificate": "Apni fasal ka verified digital record banayein."
         },
         "currentWeather": "Current Weather",
         "weatherUnavailable": "Weather data unavailable.",

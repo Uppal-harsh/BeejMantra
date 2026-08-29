@@ -1,7 +1,7 @@
-# 🚀 NCDEX Market Integration for Kisan-Bhai
+# 🚀 NCDEX Market Integration for BeejMantra
 
 ## Overview
-This integration brings real-time NCDEX market data scraping and visualization to the Kisan-Bhai project, allowing farmers to view live crop prices, set price alerts, and analyze market trends.
+This integration brings real-time NCDEX market data scraping and visualization to the BeejMantra project, allowing farmers to view live crop prices, set price alerts, and analyze market trends.
 
 ## ✨ New Features Added
 
@@ -47,7 +47,7 @@ This integration brings real-time NCDEX market data scraping and visualization t
 
 ### 1. Install Dependencies
 ```bash
-cd Kisan-Bhai/KishanBhai
+cd beejMantra/BeejMantra
 npm install
 ```
 
@@ -182,7 +182,7 @@ localStorage.setItem('debug', 'true')
 
 ## 📄 License
 
-This integration follows the same license as the main Kisan-Bhai project.
+This integration follows the same license as the main BeejMantra project.
 
 ## 🤝 Support
 

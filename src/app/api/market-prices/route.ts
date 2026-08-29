@@ -46,9 +46,58 @@ const mockData = [
 
 export async function GET(request: NextRequest) {
   try {
-    // Try to use Puppeteer for real scraping
+    const apiKey = process.env.MARKET_DATA_API_KEY;
+
+    // 1. Try to fetch from official Data.gov.in AGMARKNET API
+    if (apiKey && apiKey !== 'your-market-data-api-key') {
+      try {
+        const url = new URL('https://api.data.gov.in/resource/9ef842f8-24b4-4749-8c46-97ef4d317424');
+        url.searchParams.set('api-key', apiKey);
+        url.searchParams.set('format', 'json');
+        url.searchParams.set('limit', '50');
+
+        const response = await fetch(url.toString(), {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+          next: { revalidate: 3600 } // Cache results for 1 hour
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result && Array.isArray(result.records) && result.records.length > 0) {
+            const mappedData = result.records.map((record: any) => {
+              const modalPriceStr = record.modal_price || '0';
+              const modalPriceVal = parseFloat(modalPriceStr);
+              const displayPrice = isNaN(modalPriceVal) ? modalPriceStr : modalPriceVal.toLocaleString('en-IN');
+              
+              return {
+                timestamp: new Date().toLocaleString(),
+                commodity: record.commodity || 'Unknown',
+                location: `${record.market || ''}${record.district ? ', ' + record.district : ''}`,
+                time: record.arrival_date || new Date().toLocaleDateString(),
+                price: displayPrice,
+                change: '0' // Flat change as daily data does not supply historical delta
+              };
+            });
+
+            return NextResponse.json({
+              success: true,
+              data: mappedData,
+              timestamp: new Date().toISOString(),
+              count: mappedData.length,
+              source: 'Data.gov.in (AGMARKNET)'
+            });
+          }
+        }
+      } catch (apiError) {
+        console.error('Data.gov.in API fetch failed, proceeding to scraper:', (apiError as any).message);
+      }
+    }
+
+    // 2. Fallback to Puppeteer web scraping
     let puppeteer: any;
-    
     try {
       // Dynamic import to avoid build-time issues
       if (!puppeteer) {
@@ -101,20 +150,20 @@ export async function GET(request: NextRequest) {
           data,
           timestamp: new Date().toISOString(),
           count: data.length,
-          source: 'NCDEX Live'
+          source: 'NCDEX Live Scraper'
         });
       }
     } catch (scrapingError) {
       console.log('Scraping failed, using mock data:', (scrapingError as any).message);
     }
 
-    // Fallback to mock data
+    // 3. Ultimate fallback to local mock data
     return NextResponse.json({
       success: true,
       data: mockData,
       timestamp: new Date().toISOString(),
       count: mockData.length,
-      source: 'Mock Data (Scraping Unavailable)'
+      source: 'Mock Data (API & Scraper Offline)'
     });
 
   } catch (error) {

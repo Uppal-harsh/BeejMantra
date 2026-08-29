@@ -3,7 +3,7 @@
 <div align="center">
 
 ![BeejMantra Logo](https://img.shields.io/badge/BeejMantra-AI%20Assistant%20for%20Farmers-green?style=for-the-badge&logo=leaf)
-![Next.js](https://img.shields.io/badge/Next.js-15.3.3-black?style=for-the-badge&logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js-15.5.24-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20Auth-3FCF8E?style=for-the-badge&logo=supabase)
 ![Gemini AI](https://img.shields.io/badge/Gemini%20AI-1.14.1-purple?style=for-the-badge&logo=google)
@@ -109,7 +109,7 @@ BeejMantra is a comprehensive AI-powered digital assistant designed specifically
 ## 🛠️ Technology Stack
 
 ### **Frontend**
-- **Next.js 15.3.3** - React framework with App Router
+- **Next.js 15.5.24** - React framework with App Router
 - **TypeScript 5.0** - Type-safe development
 - **Tailwind CSS 3.4.1** - Utility-first CSS framework
 - **Radix UI** - Accessible component primitives
@@ -423,6 +423,49 @@ We welcome contributions from the community! Here's how you can help:
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+- **Data Encryption**: End-to-end encryption for sensitive data
+- **API Security**: Rate limiting and request validation
+- **Input Validation**: Comprehensive input sanitization
+- **HTTPS Only**: Secure communication protocols
+
+### **Privacy**
+- **GDPR Compliance**: User data protection
+- **Local Storage**: Sensitive data stored locally
+- **Data Minimization**: Collect only necessary data
+- **User Consent**: Transparent data usage policies
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Here's how you can help:
+
+### **Development Setup**
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+### **Contribution Guidelines**
+- Follow the existing code style and conventions
+- Add tests for new features
+- Update documentation as needed
+- Ensure all tests pass before submitting
+
+### **Areas for Contribution**
+- 🐛 Bug fixes and improvements
+- ✨ New features and enhancements
+- 📚 Documentation updates
+- 🌐 Additional language support
+- 🎨 UI/UX improvements
+- 🧪 Test coverage expansion
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -451,19 +494,14 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ## 📞 Support & Contact
 
 ### **Get Help**
-- 📧 **Email**: support@kishanbhai.com
-- 💬 **Discord**: [Join our community](https://discord.gg/kishanbhai)
+- 📧 **Email**: support@beejmantra.in
+- 💬 **Discord**: [Join our community](https://discord.gg/beejmantra)
 - 📱 **WhatsApp**: +91-XXXXXXXXXX
 - 🐛 **Issues**: [GitHub Issues](https://github.com/your-username/BeejMantra/issues)
-
-### **Stay Connected**
-- 🌐 **Website**: [kishanbhai.com](https://kishanbhai.com)
+- 🌐 **Website**: [beejmantra.in](https://beejmantra.in)
 - 📱 **Mobile App**: Available on Google Play Store
 - 📺 **YouTube**: [BeejMantra Channel](https://youtube.com/beejmantra)
 - 📘 **Facebook**: [BeejMantra Page](https://facebook.com/beejmantra)
-
----
-
 <div align="center">
 
 **Made with ❤️ for Indian Farmers**

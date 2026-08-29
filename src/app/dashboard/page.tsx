@@ -28,6 +28,7 @@ import {
   Wallet,
   Leaf,
   ArrowRight,
+  Link2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getWeatherForecast, type GetWeatherForecastOutput } from "@/ai/flows/get-weather-forecast";
@@ -92,6 +93,12 @@ export default function DashboardPage() {
       description: t('dashboard.quickLinks.eLearning'),
       href: "/dashboard/learn",
       icon: BookOpen,
+    },
+    {
+      title: t('nav.fasalCertificate'),
+      description: t('dashboard.quickLinks.fasalCertificate'),
+      href: "/dashboard/fasal-certificate",
+      icon: Link2,
     },
   ];
 
@@ -279,6 +286,45 @@ export default function DashboardPage() {
                 </Card>
             </div>
         </div>
+
+        {/* Trusted Farming Records Section */}
+        <Card
+          className="overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, rgba(7, 90, 50, 0.15), rgba(21, 24, 23, 0.9))",
+            border: "1px solid rgba(25, 200, 102, 0.15)",
+          }}
+        >
+          <CardContent className="py-10 px-6 md:px-10">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="flex-1 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Link2 className="h-5 w-5 text-primary" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-primary">
+                    Trusted Farming Records
+                  </span>
+                </div>
+                <h3 className="text-2xl font-bold font-headline">
+                  &ldquo;Apni Fasal. Apna Record. Verified.&rdquo;
+                </h3>
+                <p className="text-muted-foreground text-sm max-w-md">
+                  BeejMantra blockchain technology ka use karke aapki fasal ke important records
+                  ko secure aur tamper-evident banata hai.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <Button asChild>
+                    <Link href="/dashboard/fasal-certificate">
+                      <Link2 className="mr-2 h-4 w-4" /> Generate Fasal Certificate →
+                    </Link>
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Your information stays private. Blockchain stores only the verification proof.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
     </div>
   );
 }

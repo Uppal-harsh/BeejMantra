@@ -51,7 +51,7 @@ const initialVideosData: Video[] = [
         duration: "12:45",
         videoId: "g-v3a3jK_4s",
         hint: "pruning tomato plant",
-        thumbnailUrl: "https://placehold.co/600x400.png",
+        thumbnailUrl: "https://img.youtube.com/vi/g-v3a3jK_4s/hqdefault.jpg",
     },
     {
         title: "Setting Up a Home Vermicompost Bin",
@@ -59,7 +59,7 @@ const initialVideosData: Video[] = [
         duration: "08:22",
         videoId: "N8_B-g4g_a4",
         hint: "worms in compost",
-        thumbnailUrl: "https://placehold.co/600x400.png",
+        thumbnailUrl: "https://img.youtube.com/vi/N8_B-g4g_a4/hqdefault.jpg",
     },
     {
         title: "Identifying Common Nutrient Deficiencies",
@@ -67,7 +67,7 @@ const initialVideosData: Video[] = [
         duration: "15:30",
         videoId: "o-rp3f_It2k",
         hint: "yellow plant leaf",
-        thumbnailUrl: "https://placehold.co/600x400.png",
+        thumbnailUrl: "https://img.youtube.com/vi/o-rp3f_It2k/hqdefault.jpg",
     }
 ];
 

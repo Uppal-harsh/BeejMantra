@@ -108,7 +108,7 @@ export default function SettingsPage() {
                     <CardTitle className="flex items-center gap-2"><Phone className="h-5 w-5 text-primary"/>{t('settings.contact.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                    <p><strong>{t('settings.contact.emailLabel')}:</strong> <a href="mailto:support@kishanbhai.in" className="text-primary hover:underline">support@kishanbhai.in</a></p>
+                    <p><strong>{t('settings.contact.emailLabel')}:</strong> <a href="mailto:support@beejmantra.in" className="text-primary hover:underline">support@beejmantra.in</a></p>
                     <p><strong>{t('settings.contact.whatsappLabel')}:</strong> +91-7374084224</p>
                 </CardContent>
             </Card>

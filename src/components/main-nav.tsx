@@ -17,6 +17,7 @@ import {
   Leaf,
   User,
   Settings,
+  Link2,
 } from "lucide-react";
 import {
   Tooltip,
@@ -44,6 +45,7 @@ export function MainNav({ isSheet = false }: MainNavProps) {
     { href: "/dashboard/market-analyst", icon: LineChart, label: t('nav.marketAnalyst') },
     { href: "/dashboard/schemes", icon: Banknote, label: t('nav.govtSchemes') },
     { href: "/dashboard/tracker", icon: Wallet, label: t('nav.tracker') },
+    { href: "/dashboard/fasal-certificate", icon: Link2, label: t('nav.fasalCertificate') },
     { href: "/dashboard/weather", icon: CloudSun, label: t('nav.weather') },
     { href: "/dashboard/community", icon: Users, label: t('nav.community') },
     { href: "/dashboard/shop", icon: ShoppingCart, label: t('nav.shop') },
