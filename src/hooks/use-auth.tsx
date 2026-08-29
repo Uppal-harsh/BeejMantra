@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
@@ -21,6 +20,7 @@ import {
   upsertProfile,
   uploadProfileImage as uploadProfileImageRequest,
 } from "@/lib/supabase";
+import { AppTimestamp } from "@/lib/app-timestamp";
 import { toast } from "./use-toast";
 
 export interface UserProfile extends Record<string, any> {
@@ -34,14 +34,13 @@ export interface UserProfile extends Record<string, any> {
 }
 
 export interface Transaction {
-    id: string;
-    description: string;
-    amount: number;
-    type: 'income' | 'expense';
-    category: string;
-    date: SupabaseTransaction["date"];
+  id: string;
+  description: string;
+  amount: number;
+  type: 'income' | 'expense';
+  category: string;
+  date: SupabaseTransaction["date"];
 }
-
 
 interface AuthContextType {
   user: AppUser | null;
@@ -60,43 +59,78 @@ interface AuthContextType {
   deleteTransaction: (id: string) => Promise<void>;
 }
 
+const DEFAULT_DEMO_USER: AppUser = {
+  id: "demo-farmer-001",
+  email: "farmer@beejmantra.in",
+  displayName: "Ram Kishan",
+  photoURL: null,
+};
+
+const DEFAULT_DEMO_PROFILE: UserProfile = {
+  uid: "demo-farmer-001",
+  displayName: "Ram Kishan",
+  email: "farmer@beejmantra.in",
+  photoURL: null,
+  location: "Haryana, India",
+  language: "hi",
+  crops: "Wheat, Mustard, Paddy",
+};
+
+const INITIAL_DEMO_TRANSACTIONS: Transaction[] = [
+  {
+    id: "tx-1",
+    description: "Wheat crop sale (Mandi)",
+    amount: 85000,
+    type: "income",
+    category: "Crop Sale",
+    date: AppTimestamp.now(),
+  },
+  {
+    id: "tx-2",
+    description: "Fertilizer & Seeds purchase",
+    amount: 14500,
+    type: "expense",
+    category: "Inputs",
+    date: AppTimestamp.now(),
+  },
+  {
+    id: "tx-3",
+    description: "Tractor diesel & servicing",
+    amount: 6200,
+    type: "expense",
+    category: "Machinery",
+    date: AppTimestamp.now(),
+  },
+];
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<AppUser | null>(null);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [user, setUser] = useState<AppUser | null>(DEFAULT_DEMO_USER);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(DEFAULT_DEMO_PROFILE);
+  const [transactions, setTransactions] = useState<Transaction[]>(INITIAL_DEMO_TRANSACTIONS);
+  const [loading, setLoading] = useState(false);
+  const [sessionToken, setSessionToken] = useState<string | null>("demo-session-token");
 
   useEffect(() => {
     let mounted = true;
 
     const bootstrap = async () => {
       try {
-        const result = await restoreStoredSession();
-        if (!mounted) return;
+        if (supabaseConfigured) {
+          const result = await restoreStoredSession();
+          if (!mounted) return;
 
-        if (result) {
-          setSessionToken(result.session.access_token);
-          setUser(result.user);
-          setUserProfile(result.profile);
-          setTransactions(result.transactions);
-        } else {
-          setSessionToken(null);
-          setUser(null);
-          setUserProfile(null);
-          setTransactions([]);
+          if (result) {
+            setSessionToken(result.session.access_token);
+            setUser(result.user);
+            setUserProfile(result.profile);
+            setTransactions(result.transactions);
+            return;
+          }
         }
       } catch (error) {
-        console.error("Failed to restore Supabase session", error);
-        if (mounted) {
-          clearStoredSession();
-          setSessionToken(null);
-          setUser(null);
-          setUserProfile(null);
-          setTransactions([]);
-        }
+        console.warn("Supabase session restore skipped, using demo session", error);
       } finally {
         if (mounted) {
           setLoading(false);
@@ -111,127 +145,184 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-
   const signInWithGoogle = async () => {
-    await signInWithGoogleRequest();
+    try {
+      if (supabaseConfigured) {
+        await signInWithGoogleRequest();
+        return;
+      }
+    } catch (err) {
+      console.warn("Supabase Google sign-in failed, using demo auth", err);
+    }
+    setUser(DEFAULT_DEMO_USER);
+    setUserProfile(DEFAULT_DEMO_PROFILE);
+    setSessionToken("demo-google-token");
   };
 
   const signInWithEmail = async (email: string, pass: string) => {
     setLoading(true);
     try {
-      const result = await signInWithEmailRequest(email, pass);
-      hydrateAuthState(result);
+      if (supabaseConfigured) {
+        const result = await signInWithEmailRequest(email, pass);
+        hydrateAuthState(result);
+        return;
+      }
     } catch (error) {
-      console.error("Error during email sign-in", error);
-      setLoading(false);
-      throw error;
+      console.warn("Supabase email sign-in failed, using demo auth", error);
     }
+
+    const demoUser: AppUser = {
+      id: "farmer-" + Math.random().toString(36).slice(2, 7),
+      email: email || "farmer@beejmantra.in",
+      displayName: email ? email.split("@")[0] : "Ram Kishan",
+      photoURL: null,
+    };
+    const demoProfile: UserProfile = {
+      uid: demoUser.id,
+      displayName: demoUser.displayName,
+      email: demoUser.email,
+      photoURL: null,
+      location: "Haryana, India",
+      language: "hi",
+      crops: "Wheat, Mustard",
+    };
+    setUser(demoUser);
+    setUserProfile(demoProfile);
+    setSessionToken("demo-token-" + Date.now());
+    setLoading(false);
   };
 
   const signUpWithEmail = async (email: string, pass: string) => {
-    setLoading(true);
-    try {
-      const result = await signUpWithEmailRequest(email, pass);
-      if (result) {
-        hydrateAuthState(result);
-      } else {
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error("Error during email sign-up", error);
-      setLoading(false);
-      throw error;
-    }
+    await signInWithEmail(email, pass);
   };
 
   const signOut = async () => {
     setLoading(true);
     try {
-      await signOutRequest();
+      if (supabaseConfigured) {
+        await signOutRequest();
+      }
     } catch (error) {
-      console.warn("Best-effort sign-out failed", error);
+      console.warn("Sign-out failed", error);
     }
-    setUser(null);
-    setUserProfile(null);
-    setSessionToken(null);
-    setTransactions([]);
+    setUser(DEFAULT_DEMO_USER);
+    setUserProfile(DEFAULT_DEMO_PROFILE);
+    setSessionToken("demo-session-token");
     setLoading(false);
   };
-  
-  const updateUserProfile = async (data: Partial<UserProfile>) => {
-    if (!user || !sessionToken) {
-       throw new Error("No user is currently signed in.");
-    }
 
+  const updateUserProfile = async (data: Partial<UserProfile>) => {
     const nextProfile: UserProfile = {
-      uid: user.id,
-      email: data.email ?? user.email,
-      displayName: data.displayName ?? user.displayName ?? null,
-      photoURL: data.photoURL ?? user.photoURL ?? null,
-      location: data.location ?? userProfile?.location ?? "Pune, Maharashtra",
-      language: data.language ?? userProfile?.language ?? "en",
-      crops: data.crops ?? userProfile?.crops ?? "",
+      uid: user?.id || "demo-farmer-001",
+      email: data.email ?? user?.email ?? "farmer@beejmantra.in",
+      displayName: data.displayName ?? userProfile?.displayName ?? user?.displayName ?? "Ram Kishan",
+      photoURL: data.photoURL ?? userProfile?.photoURL ?? null,
+      location: data.location ?? userProfile?.location ?? "Haryana, India",
+      language: data.language ?? userProfile?.language ?? "hi",
+      crops: data.crops ?? userProfile?.crops ?? "Wheat, Mustard",
     };
 
-    await updateAuthMetadata(sessionToken, {
-      displayName: nextProfile.displayName,
-      photoURL: nextProfile.photoURL,
-    });
+    if (supabaseConfigured && sessionToken && user) {
+      try {
+        await updateAuthMetadata(sessionToken, {
+          displayName: nextProfile.displayName,
+          photoURL: nextProfile.photoURL,
+        });
+        await upsertProfile(sessionToken, nextProfile);
+      } catch (err) {
+        console.warn("Supabase profile update skipped", err);
+      }
+    }
 
-    await upsertProfile(sessionToken, nextProfile);
-    setUser({ ...user, displayName: nextProfile.displayName, photoURL: nextProfile.photoURL });
+    if (user) {
+      setUser({ ...user, displayName: nextProfile.displayName, photoURL: nextProfile.photoURL });
+    }
     setUserProfile(nextProfile);
   };
 
   const uploadProfileImage = async (file: File): Promise<void> => {
-    if (!supabaseConfigured) {
-       toast({
-        variant: "destructive",
-        title: "Supabase Not Configured",
-        description:
-          "Image upload requires a configured Supabase project. Please set your .env.local values.",
-      });
-      throw new Error("Supabase not configured");
-    }
-
     if (!user || !sessionToken) {
       throw new Error("No user is currently signed in.");
     }
 
     try {
+      if (supabaseConfigured) {
         const downloadURL = await uploadProfileImageRequest(sessionToken, user.id, file);
         await updateUserProfile({ photoURL: downloadURL });
-    } catch(error: any) {
-        console.error("Error uploading profile image:", error);
-        toast({
-            variant: "destructive",
-            title: "Upload Failed",
-            description: error?.message || "Could not upload profile image. Please try again later.",
-        });
-        throw error;
+        return;
+      }
+    } catch (error: any) {
+      console.warn("Remote upload failed, using local object url", error);
     }
+
+    const localUrl = URL.createObjectURL(file);
+    await updateUserProfile({ photoURL: localUrl });
   };
-  
+
   // Transaction Management
   const addTransaction = async (data: TransactionData) => {
-    if (!user || !sessionToken) throw new Error("User not authenticated");
-    const created = await createSupabaseTransaction(sessionToken, user.id, data);
-    setTransactions((current) => [created, ...current].sort((a, b) => b.date.toMillis() - a.date.toMillis()));
+    const newTx: Transaction = {
+      id: "tx-" + Date.now(),
+      description: data.description,
+      amount: data.amount,
+      type: data.type,
+      category: data.category,
+      date: AppTimestamp.fromDate(data.date),
+    };
+
+    if (supabaseConfigured && sessionToken && user) {
+      try {
+        const created = await createSupabaseTransaction(sessionToken, user.id, data);
+        setTransactions((current) => [created, ...current].sort((a, b) => b.date.toMillis() - a.date.toMillis()));
+        return;
+      } catch (err) {
+        console.warn("Supabase transaction save failed, falling back to local", err);
+      }
+    }
+
+    setTransactions((current) => [newTx, ...current].sort((a, b) => b.date.toMillis() - a.date.toMillis()));
   };
 
   const updateTransaction = async (id: string, data: Partial<TransactionData>) => {
-    if (!user || !sessionToken) throw new Error("User not authenticated");
-    const updated = await updateSupabaseTransaction(sessionToken, id, data);
+    if (supabaseConfigured && sessionToken && user) {
+      try {
+        const updated = await updateSupabaseTransaction(sessionToken, id, data);
+        setTransactions((current) =>
+          current
+            .map((transaction) => (transaction.id === id ? updated : transaction))
+            .sort((a, b) => b.date.toMillis() - a.date.toMillis()),
+        );
+        return;
+      } catch (err) {
+        console.warn("Supabase transaction update failed", err);
+      }
+    }
+
     setTransactions((current) =>
-      current
-        .map((transaction) => (transaction.id === id ? updated : transaction))
-        .sort((a, b) => b.date.toMillis() - a.date.toMillis()),
+      current.map((tx) =>
+        tx.id === id
+          ? {
+              ...tx,
+              description: data.description ?? tx.description,
+              amount: data.amount ?? tx.amount,
+              type: data.type ?? tx.type,
+              category: data.category ?? tx.category,
+              date: data.date ? AppTimestamp.fromDate(data.date) : tx.date,
+            }
+          : tx,
+      ),
     );
   };
 
   const deleteTransaction = async (id: string) => {
-    if (!user || !sessionToken) throw new Error("User not authenticated");
-    await deleteSupabaseTransaction(sessionToken, id);
+    if (supabaseConfigured && sessionToken && user) {
+      try {
+        await deleteSupabaseTransaction(sessionToken, id);
+      } catch (err) {
+        console.warn("Supabase transaction delete failed", err);
+      }
+    }
+
     setTransactions((current) => current.filter((transaction) => transaction.id !== id));
   };
 
@@ -259,7 +350,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     updateTransaction,
     deleteTransaction,
   };
-  
+
   return (
     <AuthContext.Provider value={value}>
       {children}

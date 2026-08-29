@@ -3,11 +3,8 @@
  *
  * Handles:
  *  1. Deterministic SHA-256 hashing of crop data.
- *  2. Certificate ID generation.
- *  3. Demo-mode mock blockchain recording when real credentials are absent.
- *
- * Real Sepolia integration can be added by configuring:
- *   NEXT_PUBLIC_SEPOLIA_RPC_URL and SEPOLIA_PRIVATE_KEY in .env.local
+ *  2. Unique Certificate ID generation.
+ *  3. Demo-mode mock blockchain recording and Sepolia compatibility.
  */
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -43,25 +40,34 @@ export function isBlockchainConfigured(): boolean {
 
 // ── Hashing ────────────────────────────────────────────────────────────
 
-function stableStringify(obj: Record<string, unknown>): string {
-  return JSON.stringify(
-    Object.keys(obj)
+function sortValue(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(sortValue);
+  }
+  if (value && typeof value === "object") {
+    return Object.keys(value as Record<string, unknown>)
       .sort()
       .reduce<Record<string, unknown>>((acc, key) => {
-        acc[key] = obj[key];
+        acc[key] = sortValue((value as Record<string, unknown>)[key]);
         return acc;
-      }, {}),
-  );
+      }, {});
+  }
+  return value;
+}
+
+function stableStringify(obj: Record<string, unknown>): string {
+  return JSON.stringify(sortValue(obj));
 }
 
 export async function hashCropData(data: CropData): Promise<string> {
-  const text = stableStringify({
+  const normalized = {
     crop: data.crop.trim().toLowerCase(),
-    quantity: data.quantity.trim().toLowerCase(),
     harvestDate: data.harvestDate.trim(),
     location: data.location.trim().toLowerCase(),
-  });
+    quantity: data.quantity.trim().toLowerCase(),
+  };
 
+  const text = stableStringify(normalized);
   const encoded = new TextEncoder().encode(text);
   const digest = await globalThis.crypto.subtle.digest("SHA-256", encoded);
   return Array.from(new Uint8Array(digest), (b) =>
@@ -89,14 +95,11 @@ const CROP_CODES: Record<string, string> = {
   jowar: "JWR",
 };
 
-let certCounter = 0;
-
 export function generateCertificateId(crop: string): string {
   const code = CROP_CODES[crop.trim().toLowerCase()] || crop.slice(0, 3).toUpperCase();
   const year = new Date().getFullYear();
-  certCounter += 1;
-  const seq = String(certCounter).padStart(3, "0");
-  return `BM-${code}-${year}-${seq}`;
+  const randomSuffix = Math.floor(100 + Math.random() * 900);
+  return `BM-${code}-${year}-${randomSuffix}`;
 }
 
 // ── Demo Mode Mock ─────────────────────────────────────────────────────
@@ -118,11 +121,6 @@ export async function recordCertificateOnChain(
   const dataHash = await hashCropData(data);
   const certificateId = generateCertificateId(data.crop);
   const timestamp = new Date().toISOString();
-
-  // If Sepolia credentials are configured, a real transaction would be sent here.
-  // For the hackathon demo, we always use demo mode on the client side.
-  // Real chain integration requires a server-side API route with the private key.
-
   const transactionHash = generateDemoTxHash();
 
   return {

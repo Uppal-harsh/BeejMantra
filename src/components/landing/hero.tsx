@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Sprout, Mic, ArrowRight, ShieldCheck, Cpu, Languages } from "lucide-react";
+import { Sprout, Mic, ArrowRight, ShieldCheck, Cpu, Languages, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/contexts/language-context";
 
@@ -66,22 +66,32 @@ export function Hero({ onOpenVoice, onOpenAuth }: HeroProps) {
               {t("landing.hero.description")}
             </p>
 
-            {/* 3 Outlined Feature Pills */}
+            {/* 3 Interactive Feature Pills */}
             <div className="flex flex-wrap gap-2.5 pt-1">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#FAF5E8]/90 border border-[#D8CABA] text-[#281E15] text-xs sm:text-sm font-semibold shadow-xs">
+              <Link
+                href="/dashboard/crop-doctor"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#FAF5E8]/90 hover:bg-[#FAF5E8] border border-[#D8CABA] hover:border-[#245B35] text-[#281E15] text-xs sm:text-sm font-semibold shadow-xs transition-colors"
+              >
                 <Cpu className="w-4 h-4 text-[#245B35]" />
                 <span>{t("landing.hero.pillAi")}</span>
-              </div>
+              </Link>
 
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#FAF5E8]/90 border border-[#D8CABA] text-[#281E15] text-xs sm:text-sm font-semibold shadow-xs">
+              <button
+                type="button"
+                onClick={onOpenVoice}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#FAF5E8]/90 hover:bg-[#FAF5E8] border border-[#D8CABA] hover:border-[#245B35] text-[#281E15] text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
+              >
                 <Mic className="w-4 h-4 text-[#245B35]" />
                 <span>{t("landing.hero.pillVoice")}</span>
-              </div>
+              </button>
 
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#FAF5E8]/90 border border-[#D8CABA] text-[#281E15] text-xs sm:text-sm font-semibold shadow-xs">
+              <a
+                href="#languages"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#FAF5E8]/90 hover:bg-[#FAF5E8] border border-[#D8CABA] hover:border-[#245B35] text-[#281E15] text-xs sm:text-sm font-semibold shadow-xs transition-colors"
+              >
                 <Languages className="w-4 h-4 text-[#245B35]" />
                 <span>{t("landing.hero.pillLanguages")}</span>
-              </div>
+              </a>
             </div>
 
             {/* CTA Buttons */}
@@ -101,7 +111,7 @@ export function Hero({ onOpenVoice, onOpenAuth }: HeroProps) {
                 type="button"
                 variant="outline"
                 onClick={onOpenVoice}
-                className="bg-[#FAF5E8]/90 hover:bg-[#FAF5E8] active:scale-95 text-[#245B35] border-2 border-[#245B35] font-bold rounded-full px-7 py-6 text-base shadow-xs transition-all hover:scale-105"
+                className="bg-[#FAF5E8]/90 hover:bg-[#FAF5E8] active:scale-95 text-[#245B35] border-2 border-[#245B35] font-bold rounded-full px-7 py-6 text-base shadow-xs transition-all hover:scale-105 cursor-pointer"
               >
                 <Mic className="w-5 h-5 text-[#245B35] mr-1.5" />
                 <span>{t("landing.hero.ctaVoice")}</span>

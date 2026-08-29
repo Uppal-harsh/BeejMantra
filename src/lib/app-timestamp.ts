@@ -5,6 +5,10 @@ export class AppTimestamp {
     this.value = value;
   }
 
+  static now() {
+    return new AppTimestamp(new Date());
+  }
+
   static fromDate(date: Date) {
     return new AppTimestamp(date);
   }

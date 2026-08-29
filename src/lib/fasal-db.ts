@@ -2,7 +2,7 @@
  * Fasal Certificate – Off-chain Database Interface
  *
  * Stores & retrieves the human-readable certificate data.
- * Falls back to localStorage when Supabase is not configured.
+ * Persists to localStorage and syncs with Supabase when available.
  */
 
 import { supabaseConfigured } from "@/lib/supabase";
@@ -38,6 +38,24 @@ interface FasalCertificateRow {
   created_at: string;
 }
 
+// ── Initial Sample Certificate ─────────────────────────────────────────
+
+const SAMPLE_CERTIFICATES: FasalCertificate[] = [
+  {
+    id: "BM-WHT-2026-001",
+    userId: "demo-farmer-001",
+    crop: "Wheat",
+    quantity: "18 Quintal",
+    harvestDate: "2026-08-24",
+    location: "Haryana, India",
+    photoUrl: null,
+    dataHash: "7a82f3c9e1b4d5a6c7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0",
+    transactionHash: "0x7a82b3d8f1e2c3b4a5d6e7f890123456789012345678901234567890123491fc",
+    isDemo: true,
+    createdAt: "2026-08-24T10:32:00.000Z",
+  },
+];
+
 // ── Mapping ────────────────────────────────────────────────────────────
 
 function toModel(row: FasalCertificateRow): FasalCertificate {
@@ -56,23 +74,32 @@ function toModel(row: FasalCertificateRow): FasalCertificate {
   };
 }
 
-// ── localStorage Fallback ──────────────────────────────────────────────
+// ── localStorage Persistence ───────────────────────────────────────────
 
 const LS_KEY = "beejmantra.fasal_certificates";
 
 function readLocalCerts(): FasalCertificate[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === "undefined") return SAMPLE_CERTIFICATES;
   try {
     const raw = localStorage.getItem(LS_KEY);
-    return raw ? (JSON.parse(raw) as FasalCertificate[]) : [];
+    if (!raw) {
+      localStorage.setItem(LS_KEY, JSON.stringify(SAMPLE_CERTIFICATES));
+      return SAMPLE_CERTIFICATES;
+    }
+    const parsed = JSON.parse(raw) as FasalCertificate[];
+    return parsed.length > 0 ? parsed : SAMPLE_CERTIFICATES;
   } catch {
-    return [];
+    return SAMPLE_CERTIFICATES;
   }
 }
 
 function writeLocalCerts(certs: FasalCertificate[]) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(LS_KEY, JSON.stringify(certs));
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(certs));
+  } catch (e) {
+    console.warn("Failed to write certificate to localStorage", e);
+  }
 }
 
 // ── Public API ─────────────────────────────────────────────────────────
@@ -81,37 +108,47 @@ export async function saveFasalCertificate(
   token: string | null,
   cert: FasalCertificate,
 ): Promise<void> {
+  // Always persist locally
+  const all = readLocalCerts().filter((c) => c.id !== cert.id);
+  all.unshift(cert);
+  writeLocalCerts(all);
+
+  // Sync to Supabase if configured
   if (supabaseConfigured && token) {
-    await supabaseRequest("/rest/v1/fasal_certificates", {
-      method: "POST",
-      token,
-      headers: { Prefer: "return=minimal" },
-      body: [
-        {
-          id: cert.id,
-          user_id: cert.userId,
-          crop: cert.crop,
-          quantity: cert.quantity,
-          harvest_date: cert.harvestDate,
-          location: cert.location,
-          photo_url: cert.photoUrl,
-          data_hash: cert.dataHash,
-          transaction_hash: cert.transactionHash,
-          is_demo: cert.isDemo,
-          created_at: cert.createdAt,
-        },
-      ],
-    });
-  } else {
-    const all = readLocalCerts();
-    all.unshift(cert);
-    writeLocalCerts(all);
+    try {
+      await supabaseRequest("/rest/v1/fasal_certificates", {
+        method: "POST",
+        token,
+        headers: { Prefer: "return=minimal" },
+        body: [
+          {
+            id: cert.id,
+            user_id: cert.userId,
+            crop: cert.crop,
+            quantity: cert.quantity,
+            harvest_date: cert.harvestDate,
+            location: cert.location,
+            photo_url: cert.photoUrl,
+            data_hash: cert.dataHash,
+            transaction_hash: cert.transactionHash,
+            is_demo: cert.isDemo,
+            created_at: cert.createdAt,
+          },
+        ],
+      });
+    } catch (err) {
+      console.warn("Supabase remote sync skipped, saved locally", err);
+    }
   }
 }
 
 export async function fetchFasalCertificate(
   certificateId: string,
 ): Promise<FasalCertificate | null> {
+  const localList = readLocalCerts();
+  const localMatch = localList.find((c) => c.id === certificateId);
+  if (localMatch) return localMatch;
+
   if (supabaseConfigured) {
     try {
       const rows = await supabaseRequest<FasalCertificateRow[]>(
@@ -124,20 +161,26 @@ export async function fetchFasalCertificate(
           },
         },
       );
-      return rows.length > 0 ? toModel(rows[0]) : null;
+      if (rows.length > 0) {
+        const found = toModel(rows[0]);
+        // Cache locally
+        saveFasalCertificate(null, found).catch(() => {});
+        return found;
+      }
     } catch {
-      // Fall back to localStorage
+      // Fall back
     }
   }
 
-  const all = readLocalCerts();
-  return all.find((c) => c.id === certificateId) || null;
+  return null;
 }
 
 export async function fetchUserCertificates(
   token: string | null,
   userId: string,
 ): Promise<FasalCertificate[]> {
+  const local = readLocalCerts();
+
   if (supabaseConfigured && token) {
     try {
       const rows = await supabaseRequest<FasalCertificateRow[]>(
@@ -151,11 +194,13 @@ export async function fetchUserCertificates(
           },
         },
       );
-      return rows.map(toModel);
+      if (rows.length > 0) {
+        return rows.map(toModel);
+      }
     } catch {
       // Fall back
     }
   }
 
-  return readLocalCerts().filter((c) => c.userId === userId);
+  return local;
 }

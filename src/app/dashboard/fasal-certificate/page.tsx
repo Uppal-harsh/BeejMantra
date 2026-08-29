@@ -1,19 +1,20 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
   Link2,
   CheckCircle2,
   Loader2,
-  Download,
   Wheat,
   MapPin,
   Calendar,
   Package,
-  Upload,
   Shield,
+  History,
+  ExternalLink,
+  Plus,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ import {
 } from "@/blockchain/fasal-blockchain";
 import {
   saveFasalCertificate,
+  fetchUserCertificates,
   type FasalCertificate,
 } from "@/lib/fasal-db";
 
@@ -75,27 +77,24 @@ interface VerificationStep {
   status: StepStatus;
 }
 
-// ── Page Component ─────────────────────────────────────────────────────
-
 export default function FasalCertificatePage() {
   const { user, userProfile, sessionToken } = useAuth();
   const { t } = useTranslation();
 
   // Form state
   const [crop, setCrop] = useState("Wheat");
-  const [quantity, setQuantity] = useState("");
+  const [quantity, setQuantity] = useState("18");
   const [quantityUnit, setQuantityUnit] = useState("Quintal");
   const [harvestDate, setHarvestDate] = useState(
     new Date().toISOString().slice(0, 10),
   );
-  const [location, setLocation] = useState(
-    userProfile?.location || "",
-  );
+  const [location, setLocation] = useState("Haryana, India");
   const [photoFile, setPhotoFile] = useState<File | null>(null);
 
   // Process state
   const [isGenerating, setIsGenerating] = useState(false);
   const [certificate, setCertificate] = useState<FasalCertificate | null>(null);
+  const [history, setHistory] = useState<FasalCertificate[]>([]);
   const [steps, setSteps] = useState<VerificationStep[]>([
     { label: "Crop details collected", icon: "📋", status: "pending" },
     { label: "Digital fingerprint generated", icon: "🔐", status: "pending" },
@@ -105,7 +104,16 @@ export default function FasalCertificatePage() {
 
   const certRef = useRef<HTMLDivElement>(null);
 
-  // Update a specific step
+  useEffect(() => {
+    if (userProfile?.location) {
+      setLocation(userProfile.location);
+    }
+    // Load history
+    fetchUserCertificates(sessionToken, user?.id || "demo-farmer-001")
+      .then((list) => setHistory(list))
+      .catch((err) => console.warn("Failed to load certificate history", err));
+  }, [userProfile?.location, user?.id, sessionToken]);
+
   const updateStep = (index: number, status: StepStatus) => {
     setSteps((prev) =>
       prev.map((s, i) => (i === index ? { ...s, status } : s)),
@@ -123,7 +131,12 @@ export default function FasalCertificatePage() {
     setCertificate(null);
 
     // Reset steps
-    setSteps((prev) => prev.map((s) => ({ ...s, status: "pending" as StepStatus })));
+    setSteps([
+      { label: "Crop details collected", icon: "📋", status: "pending" },
+      { label: "Digital fingerprint generated", icon: "🔐", status: "pending" },
+      { label: "Recording on blockchain...", icon: "⛓", status: "pending" },
+      { label: "Certificate verified", icon: "✓", status: "pending" },
+    ]);
 
     try {
       // Step 1: Collect
@@ -145,7 +158,7 @@ export default function FasalCertificatePage() {
 
       // Step 3: Blockchain
       updateStep(2, "active");
-      await sleep(1200);
+      await sleep(1000);
       const result = await recordCertificateOnChain(cropData);
       updateStep(2, "done");
 
@@ -157,7 +170,7 @@ export default function FasalCertificatePage() {
       // Build certificate
       const cert: FasalCertificate = {
         id: result.certificateId,
-        userId: user?.id || "demo-user",
+        userId: user?.id || "demo-farmer-001",
         crop,
         quantity: `${quantity} ${quantityUnit}`,
         harvestDate,
@@ -173,14 +186,13 @@ export default function FasalCertificatePage() {
       await saveFasalCertificate(sessionToken, cert);
 
       setCertificate(cert);
+      setHistory((prev) => [cert, ...prev.filter((c) => c.id !== cert.id)]);
     } catch (err) {
       console.error("Certificate generation failed", err);
     } finally {
       setIsGenerating(false);
     }
   };
-
-  // ── Format helpers ───────────────────────────────────────────────────
 
   const formatDate = (iso: string) => {
     try {
@@ -195,19 +207,17 @@ export default function FasalCertificatePage() {
   };
 
   const shortenHash = (hash: string) =>
-    hash.length > 12 ? `${hash.slice(0, 6)}...${hash.slice(-4)}` : hash;
+    hash.length > 14 ? `${hash.slice(0, 6)}...${hash.slice(-4)}` : hash;
 
-  const verifyUrl =
+  const getVerifyUrl = (id: string) =>
     typeof window !== "undefined"
-      ? `${window.location.origin}/verify/${certificate?.id || ""}`
-      : `/verify/${certificate?.id || ""}`;
-
-  // ── Render ───────────────────────────────────────────────────────────
+      ? `${window.location.origin}/verify/${id}`
+      : `https://beejmantra.in/verify/${id}`;
 
   return (
-    <div className="space-y-6 pb-10">
+    <div className="space-y-6 pb-12">
       {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between pt-5">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between pt-4">
         <div>
           <h1 className="text-3xl font-bold font-headline flex items-center gap-2">
             <Link2 className="h-8 w-8 text-primary" />
@@ -224,23 +234,23 @@ export default function FasalCertificatePage() {
         </Button>
       </div>
 
-      {/* Certificate generated — show it */}
+      {/* Certificate Generated View */}
       {certificate ? (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-in fade-in-50 duration-300">
           {/* Certificate Card */}
           <div
             ref={certRef}
-            className="mx-auto max-w-lg rounded-2xl overflow-hidden"
+            className="mx-auto max-w-lg rounded-2xl overflow-hidden shadow-2xl"
             style={{
               background:
                 "linear-gradient(145deg, #0d1f14 0%, #151817 50%, #0d1a12 100%)",
-              border: "1px solid rgba(25, 200, 102, 0.25)",
-              boxShadow: "0 0 40px rgba(25, 200, 102, 0.08)",
+              border: "1px solid rgba(25, 200, 102, 0.3)",
+              boxShadow: "0 0 50px rgba(25, 200, 102, 0.12)",
             }}
           >
             {/* Top accent bar */}
             <div
-              className="h-1.5 w-full"
+              className="h-2 w-full"
               style={{
                 background:
                   "linear-gradient(90deg, #075A32, #19C866, #075A32)",
@@ -250,8 +260,8 @@ export default function FasalCertificatePage() {
             <div className="p-8 space-y-6">
               {/* Header */}
               <div className="text-center space-y-1">
-                <p className="text-xs tracking-[0.3em] uppercase" style={{ color: "#19C866" }}>
-                  🌿 BeejMantra
+                <p className="text-xs tracking-[0.3em] uppercase font-bold" style={{ color: "#19C866" }}>
+                  🌿 BEEJMANTRA
                 </p>
                 <h2 className="text-2xl font-bold tracking-wide" style={{ color: "#F5F7F5" }}>
                   FASAL CERTIFICATE
@@ -266,8 +276,8 @@ export default function FasalCertificatePage() {
                 <div
                   className="rounded-full p-4"
                   style={{
-                    background: "rgba(25, 200, 102, 0.1)",
-                    border: "1px solid rgba(25, 200, 102, 0.2)",
+                    background: "rgba(25, 200, 102, 0.12)",
+                    border: "1px solid rgba(25, 200, 102, 0.3)",
                   }}
                 >
                   <Wheat className="h-10 w-10" style={{ color: "#19C866" }} />
@@ -282,9 +292,9 @@ export default function FasalCertificatePage() {
               </p>
 
               {/* Details Grid */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 rounded-xl p-4" style={{ background: "rgba(0,0,0,0.25)" }}>
                 <div className="space-y-1">
-                  <p className="text-xs uppercase tracking-wider" style={{ color: "#9AA39E" }}>
+                  <p className="text-xs uppercase tracking-wider font-medium" style={{ color: "#9AA39E" }}>
                     Quantity
                   </p>
                   <p className="font-semibold flex items-center gap-1.5" style={{ color: "#F5F7F5" }}>
@@ -293,7 +303,7 @@ export default function FasalCertificatePage() {
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs uppercase tracking-wider" style={{ color: "#9AA39E" }}>
+                  <p className="text-xs uppercase tracking-wider font-medium" style={{ color: "#9AA39E" }}>
                     Harvest Date
                   </p>
                   <p className="font-semibold flex items-center gap-1.5" style={{ color: "#F5F7F5" }}>
@@ -302,7 +312,7 @@ export default function FasalCertificatePage() {
                   </p>
                 </div>
                 <div className="col-span-2 space-y-1">
-                  <p className="text-xs uppercase tracking-wider" style={{ color: "#9AA39E" }}>
+                  <p className="text-xs uppercase tracking-wider font-medium" style={{ color: "#9AA39E" }}>
                     Location
                   </p>
                   <p className="font-semibold flex items-center gap-1.5" style={{ color: "#F5F7F5" }}>
@@ -312,34 +322,28 @@ export default function FasalCertificatePage() {
                 </div>
               </div>
 
-              {/* Divider */}
-              <div
-                className="h-px w-full"
-                style={{ background: "rgba(25, 200, 102, 0.15)" }}
-              />
-
               {/* Status */}
               <div className="text-center">
                 <div
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold tracking-wide"
                   style={{
-                    background: "rgba(25, 200, 102, 0.1)",
-                    border: "1px solid rgba(25, 200, 102, 0.3)",
+                    background: "rgba(25, 200, 102, 0.12)",
+                    border: "1px solid rgba(25, 200, 102, 0.35)",
                     color: "#19C866",
                   }}
                 >
                   <CheckCircle2 className="h-4 w-4" />
                   {certificate.isDemo
-                    ? "BLOCKCHAIN VERIFICATION (DEMO)"
+                    ? "BLOCKCHAIN VERIFIED"
                     : "BLOCKCHAIN VERIFIED"}
                 </div>
               </div>
 
               {/* Certificate & Transaction IDs */}
-              <div className="space-y-3">
+              <div className="space-y-2.5 rounded-xl p-3.5" style={{ background: "rgba(0,0,0,0.2)" }}>
                 <div className="flex justify-between items-center text-sm">
                   <span style={{ color: "#9AA39E" }}>Certificate ID</span>
-                  <span className="font-mono font-semibold" style={{ color: "#F5F7F5" }}>
+                  <span className="font-mono font-bold text-sm" style={{ color: "#F5F7F5" }}>
                     {certificate.id}
                   </span>
                 </div>
@@ -352,30 +356,28 @@ export default function FasalCertificatePage() {
               </div>
 
               {/* QR Code */}
-              <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-col items-center gap-3 pt-2">
                 <div
-                  className="p-3 rounded-xl"
-                  style={{
-                    background: "#F5F7F5",
-                  }}
+                  className="p-3.5 rounded-2xl shadow-md"
+                  style={{ background: "#F5F7F5" }}
                 >
                   <QRCodeSVG
-                    value={verifyUrl}
+                    value={getVerifyUrl(certificate.id)}
                     size={140}
                     level="H"
                     bgColor="#F5F7F5"
                     fgColor="#070908"
                   />
                 </div>
-                <p className="text-xs text-center" style={{ color: "#9AA39E" }}>
-                  Scan to verify this crop record
+                <p className="text-xs text-center font-medium" style={{ color: "#9AA39E" }}>
+                  Scan to verify this crop record.
                 </p>
               </div>
             </div>
 
             {/* Bottom accent bar */}
             <div
-              className="h-1 w-full"
+              className="h-1.5 w-full"
               style={{
                 background:
                   "linear-gradient(90deg, #075A32, #19C866, #075A32)",
@@ -389,38 +391,38 @@ export default function FasalCertificatePage() {
               onClick={() => setCertificate(null)}
               variant="outline"
             >
-              Generate Another Certificate
+              <Plus className="mr-2 h-4 w-4" /> Generate Another Certificate
             </Button>
             <Button asChild>
               <Link href={`/verify/${certificate.id}`} target="_blank">
                 <Shield className="mr-2 h-4 w-4" />
-                Open Verification Page
+                Open Public Verification Page
               </Link>
             </Button>
           </div>
         </div>
       ) : isGenerating ? (
-        /* Verification Animation */
-        <Card className="mx-auto max-w-md">
-          <CardHeader className="text-center">
+        /* Progress Step UI */
+        <Card className="mx-auto max-w-md shadow-xl border-primary/20">
+          <CardHeader className="text-center pb-2">
             <CardTitle className="flex items-center justify-center gap-2 text-xl">
               <Link2 className="h-5 w-5 text-primary animate-pulse" />
-              Generating Certificate
+              Securing Crop Record
             </CardTitle>
             <CardDescription>
-              Please wait while we secure your crop record...
+              Blockchain process in progress...
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3 pt-4">
             {steps.map((step, i) => (
               <div
                 key={i}
-                className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-500 ${
+                className={`flex items-center gap-3 p-3.5 rounded-xl transition-all duration-300 ${
                   step.status === "active"
-                    ? "bg-primary/10 border border-primary/30"
+                    ? "bg-primary/15 border border-primary/40 shadow-sm"
                     : step.status === "done"
-                      ? "bg-green-500/5 border border-green-500/20"
-                      : "opacity-40"
+                      ? "bg-green-500/10 border border-green-500/25"
+                      : "opacity-40 bg-muted/20"
                 }`}
               >
                 <span className="text-lg w-7 text-center">
@@ -435,9 +437,9 @@ export default function FasalCertificatePage() {
                 <span
                   className={`text-sm font-medium ${
                     step.status === "done"
-                      ? "text-green-500"
+                      ? "text-green-400 font-semibold"
                       : step.status === "active"
-                        ? "text-primary"
+                        ? "text-primary font-semibold"
                         : "text-muted-foreground"
                   }`}
                 >
@@ -449,131 +451,201 @@ export default function FasalCertificatePage() {
         </Card>
       ) : (
         /* Input Form */
-        <Card className="mx-auto max-w-lg">
-          <CardHeader>
-            <CardTitle className="text-xl flex items-center gap-2">
-              🌾 Create Your Fasal Certificate
-            </CardTitle>
-            <CardDescription>
-              Apni harvested crop ka secure aur verified record banayein.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form
-              className="space-y-5"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleGenerate();
-              }}
-            >
-              {/* Crop Name */}
-              <div className="space-y-2">
-                <Label htmlFor="cert-crop">Crop Name</Label>
-                <Select value={crop} onValueChange={setCrop}>
-                  <SelectTrigger id="cert-crop">
-                    <SelectValue placeholder="Select crop" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CROPS.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Quantity */}
-              <div className="space-y-2">
-                <Label htmlFor="cert-qty">Quantity</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="cert-qty"
-                    type="number"
-                    placeholder="18"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    className="flex-1"
-                    required
-                  />
-                  <Select value={quantityUnit} onValueChange={setQuantityUnit}>
-                    <SelectTrigger className="w-28">
-                      <SelectValue />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-2 shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                🌾 Create Your Fasal Certificate
+              </CardTitle>
+              <CardDescription>
+                Apni harvested crop ka secure aur verified record banayein.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form
+                className="space-y-5"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleGenerate();
+                }}
+              >
+                {/* Crop Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="cert-crop">Crop Name</Label>
+                  <Select value={crop} onValueChange={setCrop}>
+                    <SelectTrigger id="cert-crop">
+                      <SelectValue placeholder="Select crop" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Quintal">Quintal</SelectItem>
-                      <SelectItem value="Kg">Kg</SelectItem>
-                      <SelectItem value="Ton">Ton</SelectItem>
+                      {CROPS.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
 
-              {/* Harvest Date */}
-              <div className="space-y-2">
-                <Label htmlFor="cert-date">Harvest Date</Label>
-                <Input
-                  id="cert-date"
-                  type="date"
-                  value={harvestDate}
-                  onChange={(e) => setHarvestDate(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* Location */}
-              <div className="space-y-2">
-                <Label htmlFor="cert-loc">Location</Label>
-                <Input
-                  id="cert-loc"
-                  placeholder="e.g. Haryana, India"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* Optional Photo */}
-              <div className="space-y-2">
-                <Label htmlFor="cert-photo" className="text-muted-foreground">
-                  Crop Photo (Optional)
-                </Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="cert-photo"
-                    type="file"
-                    accept="image/*"
-                    className="flex-1"
-                    onChange={(e) =>
-                      setPhotoFile(e.target.files?.[0] || null)
-                    }
-                  />
-                  {photoFile && (
-                    <span className="text-xs text-muted-foreground truncate max-w-[120px]">
-                      {photoFile.name}
-                    </span>
-                  )}
+                {/* Quantity */}
+                <div className="space-y-2">
+                  <Label htmlFor="cert-qty">Quantity</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="cert-qty"
+                      type="number"
+                      placeholder="18"
+                      value={quantity}
+                      onChange={(e) => setQuantity(e.target.value)}
+                      className="flex-1"
+                      required
+                    />
+                    <Select value={quantityUnit} onValueChange={setQuantityUnit}>
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Quintal">Quintal</SelectItem>
+                        <SelectItem value="Kg">Kg</SelectItem>
+                        <SelectItem value="Ton">Ton</SelectItem>
+                        <SelectItem value="Bags">Bags</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-              </div>
 
-              {/* Submit */}
-              <Button
-                type="submit"
-                className="w-full py-6 text-base"
-                disabled={!crop || !quantity || !harvestDate || !location}
-              >
-                <Link2 className="mr-2 h-5 w-5" />
-                🔗 Generate Blockchain Certificate
-              </Button>
+                {/* Harvest Date */}
+                <div className="space-y-2">
+                  <Label htmlFor="cert-date">Harvest Date</Label>
+                  <Input
+                    id="cert-date"
+                    type="date"
+                    value={harvestDate}
+                    onChange={(e) => setHarvestDate(e.target.value)}
+                    required
+                  />
+                </div>
 
-              {/* Privacy note */}
-              <p className="text-xs text-center text-muted-foreground">
-                Your information stays private. Blockchain stores only the
-                verification proof.
-              </p>
-            </form>
-          </CardContent>
-        </Card>
+                {/* Location */}
+                <div className="space-y-2">
+                  <Label htmlFor="cert-loc">Location</Label>
+                  <Input
+                    id="cert-loc"
+                    placeholder="e.g. Haryana, India"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {/* Optional Photo */}
+                <div className="space-y-2">
+                  <Label htmlFor="cert-photo" className="text-muted-foreground">
+                    Crop Photo (Optional)
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="cert-photo"
+                      type="file"
+                      accept="image/*"
+                      className="flex-1 cursor-pointer"
+                      onChange={(e) =>
+                        setPhotoFile(e.target.files?.[0] || null)
+                      }
+                    />
+                    {photoFile && (
+                      <span className="text-xs text-muted-foreground truncate max-w-[120px]">
+                        {photoFile.name}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  className="w-full py-6 text-base font-bold shadow-md"
+                  disabled={!crop || !quantity || !harvestDate || !location}
+                >
+                  <Link2 className="mr-2 h-5 w-5" />
+                  🔗 Generate Blockchain Certificate
+                </Button>
+
+                {/* Privacy note */}
+                <p className="text-xs text-center text-muted-foreground">
+                  Your information stays private. Blockchain stores only the verification proof.
+                </p>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* History / Info Sidebar */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <History className="h-4 w-4 text-primary" />
+                  Recent Certificates
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {history.length > 0 ? (
+                  history.slice(0, 5).map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-3 rounded-xl border border-border/60 bg-muted/20 hover:bg-muted/40 transition-colors space-y-1.5"
+                    >
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-sm">🌾 {item.crop}</span>
+                        <span className="text-[11px] font-mono text-primary font-bold">
+                          {item.id}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>{item.quantity}</span>
+                        <span>{formatDate(item.harvestDate)}</span>
+                      </div>
+                      <div className="pt-1 flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 text-xs px-2 text-primary"
+                          onClick={() => setCertificate(item)}
+                        >
+                          View Card
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs px-2"
+                          asChild
+                        >
+                          <Link href={`/verify/${item.id}`} target="_blank">
+                            Verify <ExternalLink className="ml-1 h-3 w-3" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-muted-foreground text-center py-4">
+                    No certificates created yet.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="bg-primary/5 border-primary/20">
+              <CardContent className="p-4 space-y-2">
+                <h4 className="text-sm font-bold flex items-center gap-1.5 text-primary">
+                  <Shield className="h-4 w-4" /> Tamper-Proof Trust
+                </h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Every certificate generates a unique SHA-256 digital fingerprint stored on the blockchain ledger. Anyone scanning the QR code can independently verify that the record hasn't been altered.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       )}
     </div>
   );

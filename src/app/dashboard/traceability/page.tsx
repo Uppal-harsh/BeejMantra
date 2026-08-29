@@ -452,8 +452,46 @@ export default function TraceabilityPage() {
 }
 
 async function fetchLotsForFarmer(token: string, farmerId: string) {
-  const rows = await fetch("/api/placeholder");
-  return await fetchProduceLotsDirect(token, farmerId);
+  try {
+    const { supabaseConfigured } = await import("@/lib/supabase");
+    if (!supabaseConfigured) {
+      return getDemoProduceLots(farmerId);
+    }
+    return await fetchProduceLotsDirect(token, farmerId);
+  } catch {
+    return getDemoProduceLots(farmerId);
+  }
+}
+
+function getDemoProduceLots(farmerId: string): ProduceLotView[] {
+  return [
+    {
+      lotId: "LOT-WHT-2026-001",
+      farmerId,
+      crop: "Wheat (Sharbati)",
+      quantity: 120,
+      unit: "quintal",
+      harvestDate: "2026-08-20",
+      location: "Karnal, Haryana",
+      notes: "Organic pesticide-free harvest",
+      status: "verified",
+      blockchainRecordId: "rec-wht-001",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      lotId: "LOT-MST-2026-002",
+      farmerId,
+      crop: "Mustard (Pusa Bold)",
+      quantity: 45,
+      unit: "quintal",
+      harvestDate: "2026-08-22",
+      location: "Sirsa, Haryana",
+      notes: "High oil content batch",
+      status: "in_transit",
+      blockchainRecordId: "rec-mst-002",
+      createdAt: new Date().toISOString(),
+    },
+  ];
 }
 
 async function fetchProduceLotsDirect(token: string, farmerId: string) {
@@ -479,6 +517,5 @@ async function fetchProduceLotsDirect(token: string, farmerId: string) {
     status: row.status,
     blockchainRecordId: row.blockchain_record_id,
     createdAt: row.created_at,
-    updatedAt: row.updated_at,
   }));
 }

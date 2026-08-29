@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Link2 } from "lucide-react";
 import { useTranslation } from "@/contexts/language-context";
 import { CardBottomTrim } from "./desi-folk-art";
 
@@ -18,7 +18,6 @@ export function FeatureCards() {
       title: t("landing.features.cropDoctor.title"),
       description: t("landing.features.cropDoctor.description"),
       cta: t("landing.features.cropDoctor.cta"),
-      // Hand-drawn Plant Sprout Icon in Green Circle
       icon: (
         <div className="w-14 h-14 rounded-full bg-[#E8F3EB] border-2 border-[#245B35] flex items-center justify-center shadow-xs">
           <svg viewBox="0 0 36 36" fill="none" className="w-8 h-8 text-[#245B35]">
@@ -39,14 +38,11 @@ export function FeatureCards() {
       title: t("landing.features.mandiBhav.title"),
       description: t("landing.features.mandiBhav.description"),
       cta: t("landing.features.mandiBhav.cta"),
-      // Hand-drawn Rupee & Wheat Icon in Gold Circle
       icon: (
         <div className="w-14 h-14 rounded-full bg-[#FDF6E2] border-2 border-[#C99A3A] flex items-center justify-center shadow-xs">
           <svg viewBox="0 0 36 36" fill="none" className="w-8 h-8 text-[#C99A3A]">
             <circle cx="18" cy="18" r="15" stroke="#C99A3A" strokeWidth="1.2" strokeDasharray="2 2" />
-            {/* Rupee Symbol */}
             <path d="M14 10 L23 10 M14 14 L21 14 M14 10 L14 18 C17 18 20 18 20 21 C20 24 15 24 14 24 M17 21 L22 28" stroke="#3F2918" strokeWidth="2" strokeLinecap="round" />
-            {/* Wheat Spikes on side */}
             <path d="M10 26 Q12 21 12 16" stroke="#C99A3A" strokeWidth="1.5" strokeLinecap="round" />
             <path d="M26 26 Q24 21 24 16" stroke="#C99A3A" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
@@ -61,14 +57,11 @@ export function FeatureCards() {
       title: t("landing.features.mausam.title"),
       description: t("landing.features.mausam.description"),
       cta: t("landing.features.mausam.cta"),
-      // Hand-drawn Rain Cloud Icon in Blue Circle
       icon: (
         <div className="w-14 h-14 rounded-full bg-[#EDF6FC] border-2 border-[#4A7C9B] flex items-center justify-center shadow-xs">
           <svg viewBox="0 0 36 36" fill="none" className="w-8 h-8 text-[#4A7C9B]">
             <circle cx="18" cy="18" r="15" stroke="#4A7C9B" strokeWidth="1.2" strokeDasharray="2 2" />
-            {/* Cloud */}
             <path d="M12 20 C10 20 8 18 8 16 C8 14 10 12 12 12 C13 9 16 8 19 9 C22 8 25 10 25 13 C27 13 28 15 28 17 C28 19 26 20 24 20 Z" fill="#4A7C9B" stroke="#3F2918" strokeWidth="1.5" />
-            {/* Raindrops */}
             <line x1="12" y1="23" x2="11" y2="27" stroke="#4A7C9B" strokeWidth="1.8" strokeLinecap="round" />
             <line x1="18" y1="23" x2="17" y2="27" stroke="#4A7C9B" strokeWidth="1.8" strokeLinecap="round" />
             <line x1="24" y1="23" x2="23" y2="27" stroke="#4A7C9B" strokeWidth="1.8" strokeLinecap="round" />
@@ -84,19 +77,15 @@ export function FeatureCards() {
       title: t("landing.features.yojana.title"),
       description: t("landing.features.yojana.description"),
       cta: t("landing.features.yojana.cta"),
-      // Hand-drawn Classical Temple Pillars Icon in Terracotta Circle
       icon: (
         <div className="w-14 h-14 rounded-full bg-[#FDF0EA] border-2 border-[#B85C38] flex items-center justify-center shadow-xs">
           <svg viewBox="0 0 36 36" fill="none" className="w-8 h-8 text-[#B85C38]">
             <circle cx="18" cy="18" r="15" stroke="#B85C38" strokeWidth="1.2" strokeDasharray="2 2" />
-            {/* Roof / Pediment */}
             <path d="M10 14 L18 8 L26 14 Z" fill="#B85C38" stroke="#3F2918" strokeWidth="1.2" />
             <line x1="9" y1="14" x2="27" y2="14" stroke="#3F2918" strokeWidth="1.5" />
-            {/* Pillars */}
             <rect x="11" y="15" width="2.5" height="9" fill="#B85C38" stroke="#3F2918" strokeWidth="1" />
             <rect x="17" y="15" width="2.5" height="9" fill="#B85C38" stroke="#3F2918" strokeWidth="1" />
             <rect x="23" y="15" width="2.5" height="9" fill="#B85C38" stroke="#3F2918" strokeWidth="1" />
-            {/* Base */}
             <rect x="9" y="24" width="18" height="3" fill="#3F2918" />
           </svg>
         </div>
@@ -104,25 +93,35 @@ export function FeatureCards() {
     },
     {
       id: "agriStore",
-      href: "/dashboard/store",
+      href: "/dashboard/shop",
       color: "#7A4B82",
       bgColor: "#F6EFF7",
       title: t("landing.features.agriStore.title"),
       description: t("landing.features.agriStore.description"),
       cta: t("landing.features.agriStore.cta"),
-      // Hand-drawn Shopping Cart Icon in Purple Circle
       icon: (
         <div className="w-14 h-14 rounded-full bg-[#FAF0FC] border-2 border-[#7A4B82] flex items-center justify-center shadow-xs">
           <svg viewBox="0 0 36 36" fill="none" className="w-8 h-8 text-[#7A4B82]">
             <circle cx="18" cy="18" r="15" stroke="#7A4B82" strokeWidth="1.2" strokeDasharray="2 2" />
-            {/* Cart Frame */}
             <path d="M10 11 L13 11 L16 23 L25 23 L27 15 L14 15" stroke="#3F2918" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            {/* Wheels */}
             <circle cx="17" cy="26" r="2" fill="#7A4B82" stroke="#3F2918" strokeWidth="1" />
             <circle cx="24" cy="26" r="2" fill="#7A4B82" stroke="#3F2918" strokeWidth="1" />
-            {/* Sprout Inside Cart */}
             <path d="M20 15 Q21 11 23 11 M20 15 Q19 11 17 12" stroke="#245B35" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
+        </div>
+      ),
+    },
+    {
+      id: "fasalCertificate",
+      href: "/dashboard/fasal-certificate",
+      color: "#19C866",
+      bgColor: "#EAF9F0",
+      title: t("landing.features.fasalCertificate.title") || "Fasal Certificate",
+      description: t("landing.features.fasalCertificate.description") || "Apni fasal ka verified digital record banayein.",
+      cta: t("landing.features.fasalCertificate.cta") || "Generate Certificate →",
+      icon: (
+        <div className="w-14 h-14 rounded-full bg-[#E8F8EE] border-2 border-[#19C866] flex items-center justify-center shadow-xs">
+          <Link2 className="w-7 h-7 text-[#19C866]" strokeWidth={2.2} />
         </div>
       ),
     },
@@ -131,11 +130,9 @@ export function FeatureCards() {
   return (
     <section id="features" className="relative w-full bg-[#F7EFD9] py-8 sm:py-12 border-b border-[#D8CABA]/70 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Relative Grid with 5 Feature Cards */}
+        {/* Grid with 6 Feature Cards */}
         <div className="relative">
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
             {features.map((feature) => (
               <Link
                 key={feature.id}
@@ -181,9 +178,7 @@ export function FeatureCards() {
               className="object-contain mix-blend-multiply"
             />
           </div>
-
         </div>
-
       </div>
     </section>
   );

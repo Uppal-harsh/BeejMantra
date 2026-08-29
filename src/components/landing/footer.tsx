@@ -12,10 +12,11 @@ import {
   Wallet,
   PackageCheck,
   ShoppingBag,
+  Link2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/contexts/language-context";
-import { DesiSproutLogo, TopDecorativeBorder } from "./desi-folk-art";
+import { DesiSproutLogo } from "./desi-folk-art";
 
 export function Footer() {
   const { t } = useTranslation();
@@ -107,6 +108,12 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm text-[#FAF5E8]/70">
               <li>
+                <Link href="/dashboard/fasal-certificate" className="hover:text-[#FDE047] transition-colors flex items-center gap-2">
+                  <Link2 className="h-3.5 w-3.5 text-[#4ADE80]" />
+                  <span>Fasal Certificate</span>
+                </Link>
+              </li>
+              <li>
                 <Link href="/dashboard/benefits" className="hover:text-[#FDE047] transition-colors flex items-center gap-2">
                   <Wallet className="h-3.5 w-3.5 text-[#4ADE80]" />
                   <span>{t("landing.footer.benefitsCalculator")}</span>
@@ -119,7 +126,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/store" className="hover:text-[#FDE047] transition-colors flex items-center gap-2">
+                <Link href="/dashboard/shop" className="hover:text-[#FDE047] transition-colors flex items-center gap-2">
                   <ShoppingBag className="h-3.5 w-3.5 text-[#4ADE80]" />
                   <span>{t("landing.footer.agriStore")}</span>
                 </Link>
@@ -134,22 +141,22 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm text-[#FAF5E8]/70">
               <li>
-                <Link href="/privacy-policy" className="hover:text-[#FDE047] transition-colors">
+                <Link href="/dashboard/privacy" className="hover:text-[#FDE047] transition-colors">
                   {t("landing.footer.privacyPolicy")}
                 </Link>
               </li>
               <li>
-                <Link href="/terms-of-service" className="hover:text-[#FDE047] transition-colors">
+                <Link href="/dashboard/terms" className="hover:text-[#FDE047] transition-colors">
                   {t("landing.footer.termsOfService")}
                 </Link>
               </li>
               <li>
-                <Link href="/data-security" className="hover:text-[#FDE047] transition-colors">
+                <Link href="/dashboard/settings" className="hover:text-[#FDE047] transition-colors">
                   {t("landing.footer.dataSecurity")}
                 </Link>
               </li>
               <li>
-                <Link href="/farmer-charter" className="hover:text-[#FDE047] transition-colors">
+                <Link href="/dashboard/learn" className="hover:text-[#FDE047] transition-colors">
                   {t("landing.footer.farmerCharter")}
                 </Link>
               </li>
