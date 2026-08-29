@@ -121,19 +121,20 @@ export default function TraceabilityPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, sessionToken, user?.id, userProfile?.location]);
 
+  const activeLotId = selectedLot?.lotId;
   useEffect(() => {
     const refreshSelected = async () => {
-      if (!sessionToken || !selectedLot) return;
+      if (!sessionToken || !activeLotId) return;
       const [lotEvents, records] = await Promise.all([
-        fetchSupplyChainEvents(sessionToken, selectedLot.lotId),
-        fetchLedgerRecords(sessionToken, selectedLot.lotId),
+        fetchSupplyChainEvents(sessionToken, activeLotId),
+        fetchLedgerRecords(sessionToken, activeLotId),
       ]);
       setEvents(lotEvents);
       setLedgerRecords(records);
     };
 
     refreshSelected().catch((error) => console.error(error));
-  }, [sessionToken, selectedLot?.lotId]);
+  }, [sessionToken, activeLotId]);
 
   const handleRegisterLot = async (event: React.FormEvent) => {
     event.preventDefault();

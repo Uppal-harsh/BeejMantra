@@ -1,103 +1,26 @@
-
 "use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Icons } from '@/components/icons';
-import { useAuth } from '@/hooks/use-auth';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { toast } from '@/hooks/use-toast';
-import { useTranslation } from '@/contexts/language-context';
-import { SplashScreen } from '@/components/splash-screen';
+import { useState } from "react";
+import { Navbar } from "@/components/landing/navbar";
+import { Hero } from "@/components/landing/hero";
+import { FeatureCards } from "@/components/landing/feature-cards";
+import { LanguageStrip } from "@/components/landing/language-strip";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { FarmerStories } from "@/components/landing/farmer-stories";
+import { FAQSection } from "@/components/landing/faq-section";
+import { Footer } from "@/components/landing/footer";
+import { VoiceModal } from "@/components/landing/voice-modal";
+import { AuthModal } from "@/components/landing/auth-modal";
 
-const authSchema = z.object({
-  email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
-});
-
-type AuthFormValues = z.infer<typeof authSchema>;
-
-export default function LoginPage() {
-  const { user, loading, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
-  const router = useRouter();
-  const [isSignUp, setIsSignUp] = useState(false);
-  const { t } = useTranslation();
-
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<AuthFormValues>({
-    resolver: zodResolver(authSchema),
-  });
-
-  useEffect(() => {
-    if (!loading && user) {
-      router.push('/dashboard');
-    }
-  }, [user, loading, router]);
-
-  const onSubmit = async (data: AuthFormValues) => {
-    try {
-      if (isSignUp) {
-        await signUpWithEmail(data.email, data.password);
-        toast({
-          title: t('toast.signUpSuccess'),
-          description: t('toast.signUpSuccessDesc'),
-        });
-        setIsSignUp(false); // Switch to login view after successful signup
-      } else {
-        await signInWithEmail(data.email, data.password);
-      }
-    } catch (error: any) {
-      console.error(`${isSignUp ? 'Sign-up' : 'Sign-in'} failed`, error);
-
-      const message = typeof error?.message === "string" ? error.message : t('toast.unexpectedError');
-      const normalizedMessage = message.toLowerCase();
-      let description = message;
-
-      if (
-        normalizedMessage.includes("invalid login credentials") ||
-        normalizedMessage.includes("user not found") ||
-        normalizedMessage.includes("wrong password")
-      ) {
-        description = t('toast.invalidCredentials');
-      } else if (
-        normalizedMessage.includes("user already registered") ||
-        normalizedMessage.includes("email already exists")
-      ) {
-        description = t('toast.emailInUse');
-      } else if (normalizedMessage.includes("email not confirmed")) {
-        description = "Please verify your email address before signing in.";
-      }
-
-      toast({
-        title: isSignUp ? t('toast.signUpFailed') : t('toast.signInFailed'),
-        description: description,
-        variant: "destructive",
-      });
-    }
-  };
-
-  if (loading) {
-    return <SplashScreen />;
-  }
-  
-  // If user is logged in, useEffect will redirect. In the meantime,
-  // we can show a splash screen or null to avoid flashing the login page.
-  if (user) {
-    return <SplashScreen />;
-  }
+export default function LandingPage() {
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isVoiceOpen, setIsVoiceOpen] = useState(false);
 
   return (
     <div className="w-full h-screen lg:grid lg:grid-cols-2">
-       <div className="hidden bg-muted lg:block relative">
+      <div className="hidden bg-muted lg:block relative">
         <Image
-          src="/images/sunset_farm.jpg"
+          src="https://placehold.co/1200x900.png"
           alt={t('login.imageAlt')}
           data-ai-hint="lush indian farm sunset"
           width="1200"
@@ -106,21 +29,21 @@ export default function LoginPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
         <div className="absolute bottom-10 left-10 text-white">
-            <h2 className="text-4xl font-bold font-headline">{t('login.tagline')}</h2>
-            <p className="text-lg mt-2 max-w-lg">{t('login.subTagline')}</p>
+          <h2 className="text-4xl font-bold font-headline">{t('login.tagline')}</h2>
+          <p className="text-lg mt-2 max-w-lg">{t('login.subTagline')}</p>
         </div>
       </div>
       <div className="flex items-center justify-center py-12 bg-background">
         <div className="mx-auto grid w-[380px] gap-8">
           <div className="grid gap-2 text-center">
             <Link href="/" className="flex items-center justify-center gap-2 font-semibold font-headline text-2xl text-primary">
-                <Image 
-                  src="/favicon.ico" 
-                  alt="BeejMantra Logo" 
-                  width={28} 
-                  height={28} 
-                />
-                <span>BeejMantra</span>
+              <Image
+                src="/favicon.ico"
+                alt="BeejMantra Logo"
+                width={28}
+                height={28}
+              />
+              <span>BeejMantra</span>
             </Link>
             <p className="text-balance text-muted-foreground">
               {isSignUp ? t('login.createAccountPrompt') : t('login.signInPrompt')}
@@ -156,7 +79,7 @@ export default function LoginPage() {
               <span className="bg-background px-2 text-muted-foreground">or</span>
             </div>
           </div>
-          
+
           <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">{t('login.emailLabel')}</Label>

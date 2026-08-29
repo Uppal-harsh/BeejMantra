@@ -104,19 +104,20 @@ export default function BenefitsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, sessionToken, user?.id, userProfile?.location]);
 
+  const activeApplicationId = selectedApplication?.id;
   useEffect(() => {
     const refreshSelected = async () => {
-      if (!sessionToken || !selectedApplication) return;
+      if (!sessionToken || !activeApplicationId) return;
       const [records, txs] = await Promise.all([
-        fetchLedgerRecords(sessionToken, selectedApplication.id),
-        fetchBenefitTransactions(sessionToken, selectedApplication.id),
+        fetchLedgerRecords(sessionToken, activeApplicationId),
+        fetchBenefitTransactions(sessionToken, activeApplicationId),
       ]);
       setLedgerRecords(records);
       setTransactions(txs);
     };
 
     refreshSelected().catch((error) => console.error(error));
-  }, [sessionToken, selectedApplication?.id]);
+  }, [sessionToken, activeApplicationId]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

@@ -648,5 +648,192 @@
         "errorMessage": "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
         "yes": "Yes",
         "no": "No"
+    },
+    "landing": {
+        "nav": {
+            "home": "Home",
+            "features": "Features",
+            "howItWorks": "How it Works",
+            "languages": "Languages",
+            "forFarmers": "For Farmers",
+            "aboutUs": "About Us",
+            "signIn": "Sign In",
+            "getStarted": "Get Started",
+            "goToDashboard": "Go to Dashboard",
+            "tagline": "AI Assistant for Indian Farmers"
+        },
+        "hero": {
+            "badge": "Your Trusted Farming Partner • AI Kheti Partner",
+            "titleLine1": "Your Kheti Partner,",
+            "titleLine2": "Har Kadam Saath.",
+            "description": "BeejMantra empowers your farming decisions with AI — crop doctor, live mandi rates, weather, and government schemes all in one place.",
+            "pills": {
+                "ai": "AI Powered Diagnosis",
+                "voice": "Voice in 5 Languages",
+                "mandi": "Mandi & Schemes"
+            },
+            "getStarted": "Get Started Free",
+            "askAnnapurna": "Ask Annapurna",
+            "trustLine": "Trusted by thousands of farmers across India • 100% Free for Kisans"
+        },
+        "chatCard": {
+            "name": "Annapurna",
+            "role": "AI Agri Advisory (24x7)",
+            "userQuery": "My wheat leaves are turning yellow, what should I do?",
+            "botResponse": "Please upload a photo of the leaf, and I will help you identify the disease and organic solution.",
+            "placeholder": "Type or speak in your language...",
+            "speakButton": "Ask with Voice"
+        },
+        "features": {
+            "fasalDoctor": {
+                "title": "Fasal Doctor",
+                "desc": "Upload photo, detect crop disease instantly and get organic remedies.",
+                "cta": "Check Now"
+            },
+            "mandiBhav": {
+                "title": "Mandi Bhav",
+                "desc": "Real-time mandi prices and AI price trends for maximum profit.",
+                "cta": "View Prices"
+            },
+            "mausam": {
+                "title": "Mausam",
+                "desc": "Accurate field-level weather forecasts and smart irrigation alerts.",
+                "cta": "Check Weather"
+            },
+            "sarkariYojana": {
+                "title": "Sarkari Yojana",
+                "desc": "Explore government schemes and verify eligibility in one click.",
+                "cta": "Explore Schemes"
+            },
+            "agriStore": {
+                "title": "Agri Store",
+                "desc": "Direct access to quality seeds, bio-fertilizers, and farm tools.",
+                "cta": "Shop Now"
+            }
+        },
+        "languageStrip": {
+            "title": "5 Indian Languages",
+            "subtitle": "Your language, your convenience",
+            "voiceTitle": "Voice First, Kisan First",
+            "voiceSubtitle": "Speak directly, get instant answers.",
+            "voiceCta": "Voice Se Poochho",
+            "toastTitle": "Language Changed ({{name}})",
+            "toastDesc": "BeejMantra is now displaying in {{name}}."
+        },
+        "howItWorks": {
+            "badge": "3 Easy Steps • How It Works",
+            "title": "Making Farming Effortless & Profitable",
+            "subtitle": "No complex tech needed — make smarter agricultural decisions directly from your mobile in your native language.",
+            "step1": {
+                "number": "01",
+                "badge": "Easy Input",
+                "title": "Snap Photo or Speak Query",
+                "subtitle": "Easy Mobile Input",
+                "desc": "Take a photo of the diseased leaf directly in the field or speak your problem to Annapurna AI in your own language."
+            },
+            "step2": {
+                "number": "02",
+                "badge": "Fast AI",
+                "title": "AI Diagnoses in Seconds",
+                "subtitle": "Instant Multimodal AI Diagnosis",
+                "desc": "Google Gemini multimodal AI analyzes symptoms, pests, or nutrient deficiencies within seconds."
+            },
+            "step3": {
+                "number": "03",
+                "badge": "Best Yield",
+                "title": "Actionable Remedies & Best Price",
+                "subtitle": "Remedies & Profit Advisory",
+                "desc": "Get organic remedies, accurate agricultural medicines, and know the best timing to sell at nearby mandis."
+            },
+            "startFree": "Start Free Now"
+        },
+        "farmerStories": {
+            "badge": "Farmer Experience • Farmer Stories",
+            "title": "Trusted by Farmers Across India",
+            "subtitle": "Listen to our farmer brothers who increased their crop yields and profits with BeejMantra.",
+            "story1": {
+                "name": "Ramesh Patil",
+                "location": "Pune, Maharashtra",
+                "crop": "Soybean & Wheat",
+                "quote": "My wheat crop caught yellow rust. As soon as I uploaded a photo to Crop Doctor, I got the exact remedy and saved 80% of my harvest!"
+            },
+            "story2": {
+                "name": "Balwinder Singh",
+                "location": "Ludhiana, Punjab",
+                "crop": "Paddy & Maize",
+                "quote": "Following AI advice on Mandi Bhav, I held my crop for 12 days and earned an extra ₹220 per quintal!"
+            },
+            "story3": {
+                "name": "Shivakumar Gowda",
+                "location": "Haveri, Karnataka",
+                "crop": "Cotton & Chilli",
+                "quote": "Being able to speak in Kannada and get instant voice advice made modern farming so effortless for me."
+            }
+        },
+        "faq": {
+            "badge": "Frequently Asked Questions • FAQs",
+            "title": "Common Questions from Farmers",
+            "subtitle": "Clear answers to everything you need to know about using BeejMantra.",
+            "q1": "Is BeejMantra completely free for farmers?",
+            "a1": "Yes, crop disease identification, live mandi prices, weather forecasts, and government scheme navigator are 100% free for all farmers.",
+            "q2": "If I can't type, can I ask by speaking?",
+            "a2": "Absolutely! Annapurna AI fully supports voice. Tap the mic button and ask questions in your mother tongue (Hindi, Kannada, Bengali, Bhojpuri, English).",
+            "q3": "How does Crop Doctor diagnose diseases?",
+            "a3": "Simply upload a clear photo of the leaf or plant. Google Gemini AI analyzes the symptoms and provides organic as well as chemical remedies instantly.",
+            "q4": "Where do the Mandi rates come from?",
+            "a4": "Mandi rates are updated live directly from official Government of India APMC and NCDEX national agricultural market databases.",
+            "q5": "Can I apply for government schemes here?",
+            "a5": "Yes, after checking your eligibility in the Schemes section, you get direct links to official portals along with the checklist of required documents."
+        },
+        "footer": {
+            "helplineBadge": "National Kisan Call Centre",
+            "helplineTitle": "Dial Toll-Free to Speak Directly with Agri Experts",
+            "helplineSubtitle": "Govt of India 24x7 Toll-Free Farmer Helpline:",
+            "callButton": "Call 1800-180-1551",
+            "brandDesc": "Your Kheti Partner, Har Kadam Saath. Empowering Indian farmers with accessible AI, real-time prices, and trustworthy advisory.",
+            "servicesTitle": "Key Services",
+            "cropDoctor": "Crop Doctor",
+            "mandiPrices": "Mandi Prices",
+            "schemes": "Govt Schemes",
+            "weather": "Weather & Advisory",
+            "toolsTitle": "Farmer Tools",
+            "recommender": "Crop Selection",
+            "tracker": "Finance Tracker",
+            "traceability": "Farm-to-Market",
+            "agriStore": "Agri Store",
+            "supportTitle": "Support & Policies",
+            "privacy": "Privacy Policy",
+            "terms": "Terms & Conditions",
+            "community": "Farmer Community",
+            "copyright": "BeejMantra. All Rights Reserved.",
+            "builtFor": "for Indian Farmers"
+        },
+        "voiceModal": {
+            "title": "Annapurna AI Voice Assistant",
+            "subtitle": "Annapurna Voice Assistant • Speak your query",
+            "listening": "Listening... Please speak now",
+            "tapMic": "Tap microphone to speak",
+            "youAsked": "You asked:",
+            "annapurnaReply": "Annapurna AI response:",
+            "tryAsking": "Or tap a sample question:",
+            "openChat": "Open Full Chat in Dashboard"
+        },
+        "authModal": {
+            "createAccount": "Create Farmer Account",
+            "signIn": "Farmer Sign In",
+            "createDesc": "Sign up to track crop health, prices, and personal advisory.",
+            "signInDesc": "Sign in to access your personal farm records & AI assistant.",
+            "google": "Continue with Google",
+            "orEmail": "Or with Email",
+            "emailLabel": "Email Address",
+            "passwordLabel": "Password",
+            "processing": "Please wait...",
+            "createBtn": "Create Account",
+            "signInBtn": "Sign In",
+            "alreadyHave": "Already have an account?",
+            "noAccount": "Don't have an account?",
+            "loginLink": "Sign In",
+            "registerLink": "Create new account here"
+        }
     }
 }

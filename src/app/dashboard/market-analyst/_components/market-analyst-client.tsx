@@ -366,9 +366,9 @@ export function MarketAnalystClient() {
                     <span className="text-sm font-medium text-blue-800">💡 Try asking for specific quantities:</span>
                   </div>
                   <div className="text-xs text-blue-700 space-y-1">
-                    <p>• "100kg guar price"</p>
-                    <p>• "50 quintal wheat price"</p>
-                    <p>• "25 ton rice price"</p>
+                    <p>• &quot;100kg guar price&quot;</p>
+                    <p>• &quot;50 quintal wheat price&quot;</p>
+                    <p>• &quot;25 ton rice price&quot;</p>
                   </div>
                 </div>
               </form>
