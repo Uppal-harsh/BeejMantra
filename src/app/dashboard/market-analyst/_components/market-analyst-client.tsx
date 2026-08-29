@@ -33,9 +33,11 @@ interface MarketData {
   timestamp: string;
   commodity: string;
   location: string;
-  time: string;
   price: string;
   change: string;
+  source?: string;
+  sourceUrl?: string;
+  time?: string;
 }
 
 interface PriceCalculation {
