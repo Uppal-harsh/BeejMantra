@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Mic, Volume2, Sparkles, ArrowRight } from "lucide-react";
+import { Mic, Volume2, Sparkles, ArrowRight, Loader2 } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/contexts/language-context";
+import { annapurnaChat } from "@/ai/flows/annapurna-chat-flow";
 
 interface VoiceModalProps {
   isOpen: boolean;
@@ -24,18 +25,19 @@ const langVoiceMap: Record<string, string> = {
 export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
   const { t, language } = useTranslation();
   const [isListening, setIsListening] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [response, setResponse] = useState<string | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const sampleQueries = [
-    t("landing.chatCard.userMessage"),
-    "आज मंडी में गेहूं का क्या भाव है?",
-    "पीएम-किसान योजना की अगली किस्त कब आएगी?",
-    "धान की फसल में पानी कब लगाना चाहिए?",
+    t("landing.voiceModal.sample1"),
+    t("landing.voiceModal.sample2"),
+    t("landing.voiceModal.sample3"),
+    t("landing.voiceModal.sample4"),
   ];
 
-  const activeVoiceLang = langVoiceMap[language] || "hi-IN";
+  const activeVoiceLang = langVoiceMap[language] || "en-IN";
 
   const handleStartListening = () => {
     if (typeof window !== "undefined" && ("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
@@ -47,18 +49,17 @@ export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
 
       recognition.onstart = () => {
         setIsListening(true);
-        setTranscript(t("landing.voiceModal.listening"));
+        setTranscript("");
+        setResponse(null);
       };
 
       recognition.onresult = (event: any) => {
         const text = event.results[0][0].transcript;
-        setTranscript(text);
         processQuery(text);
       };
 
       recognition.onerror = () => {
         setIsListening(false);
-        setTranscript("Voice recognition unavailable. Please select from sample questions.");
       };
 
       recognition.onend = () => {
@@ -76,11 +77,21 @@ export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
     }
   };
 
-  const processQuery = (query: string) => {
+  const processQuery = async (query: string) => {
     setTranscript(query);
-    let reply = t("landing.chatCard.aiMessage");
-    setResponse(reply);
-    speakResponse(reply);
+    setIsProcessing(true);
+    try {
+      const output = await annapurnaChat({ query, language });
+      const reply = output.response || t("landing.chatCard.aiMessage");
+      setResponse(reply);
+      speakResponse(reply);
+    } catch {
+      const fallback = t("landing.chatCard.aiMessage");
+      setResponse(fallback);
+      speakResponse(fallback);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const speakResponse = (text: string) => {
