@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { exchangeGoogleCodeForSession } from "@/lib/supabase";
 import { SplashScreen } from "@/components/splash-screen";
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
@@ -50,4 +50,12 @@ export default function AuthCallbackPage() {
   }
 
   return <SplashScreen />;
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={<SplashScreen />}>
+      <AuthCallbackContent />
+    </Suspense>
+  );
 }
