@@ -67,7 +67,7 @@ export function SchemeNavigatorClient() {
     recognition.interimResults = false;
     
     // Set language for speech recognition
-    const langMap: Record<string, string> = { en: 'en-IN', hi: 'hi-IN', kn: 'kn-IN', bn: 'bn-IN', bho: 'bho-IN' };
+    const langMap: Record<string, string> = { en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN', kn: 'kn-IN', bn: 'bn-IN', bho: 'bho-IN' };
     recognition.lang = langMap[language] || 'en-IN';
 
     recognition.onstart = () => {

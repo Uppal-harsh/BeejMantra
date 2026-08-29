@@ -14,6 +14,7 @@ export function LanguageStrip({ onOpenVoice }: LanguageStripProps) {
 
   const languages: { id: Language; name: string; nativeName: string }[] = [
     { id: "hi", name: "Hindi", nativeName: "हिंदी" },
+    { id: "pa", name: "Punjabi", nativeName: "ਪੰਜਾਬੀ" },
     { id: "kn", name: "Kannada", nativeName: "ಕನ್ನಡ" },
     { id: "bn", name: "Bengali", nativeName: "বাংলা" },
     { id: "bho", name: "Bhojpuri", nativeName: "भोजपुरी" },

@@ -78,6 +78,7 @@ Your goal is to understand what the farmer needs and provide a clear, concise, a
 Language Requirement:
 The user is speaking in language code: "{{language}}".
 If language is "hi", respond in friendly Hindi (Devanagari).
+If language is "pa", respond in friendly Punjabi (Gurmukhi).
 If language is "kn", respond in Kannada.
 If language is "bn", respond in Bengali.
 If language is "bho", respond in Bhojpuri.

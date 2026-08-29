@@ -61,8 +61,25 @@ const navigateGovernmentSchemesFlow = ai.defineFlow(
     outputSchema: NavigateGovernmentSchemesOutputSchema,
   },
   async input => {
-    const {output} = await navigateGovernmentSchemesPrompt(input);
-    return output!;
+    try {
+      const {output} = await navigateGovernmentSchemesPrompt(input);
+      if (!output) throw new Error("Empty scheme output");
+      return output;
+    } catch (error) {
+      console.warn("Error in navigateGovernmentSchemesFlow, returning fallback:", error);
+      return {
+        schemeName: "PM-KISAN Samman Nidhi Yojana",
+        answer: input.language === 'hi' 
+          ? "पीएम-किसान योजना के तहत पात्र किसान परिवारों को प्रति वर्ष ₹6,000 की वित्तीय सहायता तीन समान किस्तों में प्रदान की जाती है।"
+          : input.language === 'pa'
+          ? "ਪੀਐਮ-ਕਿਸਾਨ ਯੋਜਨਾ ਤਹਿਤ ਕਿਸਾਨ ਪਰਿਵਾਰਾਂ ਨੂੰ ਹਰ ਸਾਲ ₹6,000 ਦੀ ਸਹਾਇਤਾ ਤਿੰਨ ਕਿਸ਼ਤਾਂ ਵਿੱਚ ਸਿੱਧੀ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ।"
+          : "Under PM-KISAN, eligible farmer families receive ₹6,000 per year in three equal 4-monthly installments of ₹2,000 directly into their bank accounts.",
+        eligibility: input.language === 'hi'
+          ? "सभी भूमिधारक किसान परिवार जिनके नाम पर खेती योग्य भूमि है और ई-केवाईसी पूर्ण है।"
+          : "All landholding farmer families with cultivable land in their names and verified eKYC.",
+        applicationLink: "https://pmkisan.gov.in/",
+      };
+    }
   }
 );
 

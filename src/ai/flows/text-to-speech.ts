@@ -14,6 +14,7 @@ import wav from 'wav';
 const voiceMap = {
   en: 'Achernar', // Female
   hi: 'Algenib', // Female - Changed from Miaplacidus
+  pa: 'Algenib', // Female - Punjabi
   kn: 'Schedar', // Female - Changed from Miaplacidus
   bn: 'Algenib', // Using Hindi female voice for Bangla as a fallback
   bho: 'Miaplacidus', // Using Hindi male voice for Bhojpuri as a fallback

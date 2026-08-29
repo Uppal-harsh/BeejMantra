@@ -8,10 +8,11 @@ import hi from '@/locales/hi.json';
 import kn from '@/locales/kn.json';
 import bn from '@/locales/bn.json';
 import bho from '@/locales/bho.json';
+import pa from '@/locales/pa.json';
 
-const translations: Record<string, any> = { en, hi, kn, bn, bho };
+const translations: Record<string, any> = { en, hi, kn, bn, bho, pa };
 
-export type Language = 'en' | 'hi' | 'kn' | 'bn' | 'bho';
+export type Language = 'en' | 'hi' | 'kn' | 'bn' | 'bho' | 'pa';
 
 const LANGUAGE_STORAGE_KEY = 'beejmantra_preferred_lang';
 
@@ -31,7 +32,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     try {
       const savedLang = localStorage.getItem(LANGUAGE_STORAGE_KEY) as Language | null;
-      if (savedLang && ['en', 'hi', 'kn', 'bn', 'bho'].includes(savedLang)) {
+      if (savedLang && ['en', 'hi', 'kn', 'bn', 'bho', 'pa'].includes(savedLang)) {
         setLanguageState(savedLang);
       }
     } catch {
@@ -43,7 +44,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!authLoading) {
       const preferredLanguage = userProfile?.language as Language | undefined;
-      if (preferredLanguage && ['en', 'hi', 'kn', 'bn', 'bho'].includes(preferredLanguage)) {
+      if (preferredLanguage && ['en', 'hi', 'kn', 'bn', 'bho', 'pa'].includes(preferredLanguage)) {
         setLanguageState(preferredLanguage);
         try {
           localStorage.setItem(LANGUAGE_STORAGE_KEY, preferredLanguage);
