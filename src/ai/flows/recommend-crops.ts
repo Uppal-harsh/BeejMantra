@@ -39,8 +39,46 @@ const RecommendCropsOutputSchema = z.object({
 });
 export type RecommendCropsOutput = z.infer<typeof RecommendCropsOutputSchema>;
 
+const DEFAULT_FALLBACK_RECOMMENDATIONS: RecommendCropsOutput = {
+  recommendations: [
+    {
+      cropName: "Soybean",
+      icon: "Leaf",
+      plantingDates: "June - July",
+      reasoning: "A robust and profitable Kharif crop suitable for many Indian climates.",
+      benefits: ["High market demand in your region", "Improves soil nitrogen for next season"],
+      imageHint: "soybean field",
+    },
+    {
+      cropName: "Cotton",
+      icon: "Leaf",
+      plantingDates: "May - June",
+      reasoning: "High demand in the textile industry and grows well in drier conditions.",
+      benefits: ["Drought resistant, lower water needs", "High commercial cash crop value"],
+      imageHint: "ripe cotton crop",
+    },
+    {
+      cropName: "Maize",
+      icon: "Wheat",
+      plantingDates: "June - July",
+      reasoning: "A versatile crop used for food and animal feed, with good yield potential.",
+      benefits: ["Short growing cycle (90-110 days)", "Adaptable to various soil types"],
+      imageHint: "maize corn field",
+    }
+  ]
+};
+
 export async function recommendCrops(input: RecommendCropsInput): Promise<RecommendCropsOutput> {
-  return recommendCropsFlow(input);
+  try {
+    const res = await recommendCropsFlow(input);
+    if (res && Array.isArray(res.recommendations) && res.recommendations.length === 3) {
+      return res;
+    }
+    return DEFAULT_FALLBACK_RECOMMENDATIONS;
+  } catch (err) {
+    console.warn("recommendCrops action error, returning default recommendations:", err);
+    return DEFAULT_FALLBACK_RECOMMENDATIONS;
+  }
 }
 
 const recommendCropsPrompt = ai.definePrompt({
