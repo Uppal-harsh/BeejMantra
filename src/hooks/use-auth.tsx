@@ -25,12 +25,14 @@ import { toast } from "./use-toast";
 
 export interface UserProfile extends Record<string, any> {
   uid: string;
+  farmerId?: string;
   email: string | null;
   displayName: string | null;
   photoURL: string | null;
   location?: string;
   language?: string;
   crops?: string;
+  memberSince?: string;
 }
 
 export interface Transaction {
@@ -68,12 +70,14 @@ const DEFAULT_DEMO_USER: AppUser = {
 
 const DEFAULT_DEMO_PROFILE: UserProfile = {
   uid: "demo-farmer-001",
+  farmerId: "BM-KSN-2026-7842",
   displayName: "Ram Kishan",
   email: "farmer@beejmantra.in",
   photoURL: null,
   location: "Haryana, India",
   language: "hi",
   crops: "Wheat, Mustard, Paddy",
+  memberSince: "2026",
 };
 
 const INITIAL_DEMO_TRANSACTIONS: Transaction[] = [
@@ -214,12 +218,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateUserProfile = async (data: Partial<UserProfile>) => {
     const nextProfile: UserProfile = {
       uid: user?.id || "demo-farmer-001",
+      farmerId: data.farmerId ?? userProfile?.farmerId ?? ("BM-KSN-2026-" + Math.floor(1000 + Math.random() * 9000)),
       email: data.email ?? user?.email ?? "farmer@beejmantra.in",
       displayName: data.displayName ?? userProfile?.displayName ?? user?.displayName ?? "Ram Kishan",
       photoURL: data.photoURL ?? userProfile?.photoURL ?? null,
       location: data.location ?? userProfile?.location ?? "Haryana, India",
       language: data.language ?? userProfile?.language ?? "hi",
       crops: data.crops ?? userProfile?.crops ?? "Wheat, Mustard",
+      memberSince: data.memberSince ?? userProfile?.memberSince ?? "2026",
     };
 
     if (supabaseConfigured && sessionToken && user) {

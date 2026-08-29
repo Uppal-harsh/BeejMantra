@@ -15,8 +15,12 @@ import {
   History,
   ExternalLink,
   Plus,
+  Download,
+  Printer,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
+import { toPng } from "html-to-image";
+import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -93,6 +97,7 @@ export default function FasalCertificatePage() {
 
   // Process state
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [certificate, setCertificate] = useState<FasalCertificate | null>(null);
   const [history, setHistory] = useState<FasalCertificate[]>([]);
   const [steps, setSteps] = useState<VerificationStep[]>([
@@ -103,6 +108,37 @@ export default function FasalCertificatePage() {
   ]);
 
   const certRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadCertificate = async () => {
+    if (!certRef.current || !certificate) return;
+    setIsDownloading(true);
+    try {
+      const dataUrl = await toPng(certRef.current, {
+        quality: 1,
+        pixelRatio: 3,
+        cacheBust: true,
+      });
+
+      const link = document.createElement("a");
+      link.download = `BeejMantra_Fasal_Certificate_${certificate.id}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      toast({
+        title: "Certificate Downloaded",
+        description: `Fasal Certificate ${certificate.id} saved as PNG image.`,
+      });
+    } catch (err) {
+      console.error("Failed to download certificate", err);
+      toast({
+        title: "Download Failed",
+        description: "Could not generate certificate image.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   useEffect(() => {
     if (userProfile?.location) {
@@ -386,14 +422,23 @@ export default function FasalCertificatePage() {
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+          <div className="flex flex-wrap gap-3 justify-center items-center">
+            <Button
+              onClick={handleDownloadCertificate}
+              disabled={isDownloading}
+              className="bg-[#245B35] hover:bg-[#1A4A28] active:scale-95 text-[#FAF5E8] font-bold rounded-full px-6 py-2.5 shadow-md border border-[#194A28]"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              {isDownloading ? "Generating Image..." : "Download Certificate (PNG)"}
+            </Button>
             <Button
               onClick={() => setCertificate(null)}
               variant="outline"
+              className="rounded-full"
             >
               <Plus className="mr-2 h-4 w-4" /> Generate Another Certificate
             </Button>
-            <Button asChild>
+            <Button asChild variant="outline" className="rounded-full">
               <Link href={`/verify/${certificate.id}`} target="_blank">
                 <Shield className="mr-2 h-4 w-4" />
                 Open Public Verification Page
@@ -640,7 +685,7 @@ export default function FasalCertificatePage() {
                   <Shield className="h-4 w-4" /> Tamper-Proof Trust
                 </h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Every certificate generates a unique SHA-256 digital fingerprint stored on the blockchain ledger. Anyone scanning the QR code can independently verify that the record hasn't been altered.
+                  Every certificate generates a unique SHA-256 digital fingerprint stored on the blockchain ledger. Anyone scanning the QR code can independently verify that the record has not been altered.
                 </p>
               </CardContent>
             </Card>

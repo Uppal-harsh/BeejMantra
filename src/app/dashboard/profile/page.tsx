@@ -1,20 +1,21 @@
-
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from '@/hooks/use-auth';
-import { toast } from '@/hooks/use-toast';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowLeft, Upload } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Link from 'next/link';
-import { useTranslation } from '@/contexts/language-context';
-import { translateText } from '@/ai/flows/translate-text';
+import { useAuth } from "@/hooks/use-auth";
+import { toast } from "@/hooks/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowLeft, Upload, RefreshCw, Link2, ExternalLink, ShieldCheck, Award } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { useTranslation } from "@/contexts/language-context";
+import { translateText } from "@/ai/flows/translate-text";
+import { FarmerIdCard } from "@/components/farmer-id-card";
+import { fetchUserCertificates, type FasalCertificate } from "@/lib/fasal-db";
 
 const districts = [
     { value: "Port Blair, Andaman & Nicobar", label: "Port Blair, Andaman & Nicobar" },
@@ -65,79 +66,101 @@ const districts = [
     { value: "Kanpur, Uttar Pradesh", label: "Kanpur, Uttar Pradesh" },
     { value: "Dehradun, Uttarakhand", label: "Dehradun, Uttarakhand" },
     { value: "Kolkata, West Bengal", label: "Kolkata, West Bengal" },
-]
-
+];
 
 export default function ProfilePage() {
-  const { user, userProfile, updateUserProfile, uploadProfileImage, loading } = useAuth();
+  const { user, userProfile, updateUserProfile, uploadProfileImage, loading, sessionToken } = useAuth();
   const { t, language } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Canonical, untranslated state
-  const [canonicalDisplayName, setCanonicalDisplayName] = useState('');
-  const [canonicalCrops, setCanonicalCrops] = useState('');
+  const [canonicalDisplayName, setCanonicalDisplayName] = useState("");
+  const [canonicalCrops, setCanonicalCrops] = useState("");
+  const [farmerId, setFarmerId] = useState("");
 
   // Translated state for display
-  const [displayDisplayName, setDisplayDisplayName] = useState('');
-  const [displayCrops, setDisplayCrops] = useState('');
+  const [displayDisplayName, setDisplayDisplayName] = useState("");
+  const [displayCrops, setDisplayCrops] = useState("");
   
-  const [email, setEmail] = useState('');
-  const [location, setLocation] = useState('');
+  const [email, setEmail] = useState("");
+  const [location, setLocation] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
-
+  const [certificates, setCertificates] = useState<FasalCertificate[]>([]);
 
   useEffect(() => {
     if (userProfile) {
-      const name = userProfile.displayName || '';
-      const crops = userProfile.crops || '';
+      const name = userProfile.displayName || "Ram Kishan";
+      const crops = userProfile.crops || "Wheat, Mustard, Paddy";
+      const fid = userProfile.farmerId || "BM-KSN-2026-7842";
 
       setCanonicalDisplayName(name);
       setCanonicalCrops(crops);
       setDisplayDisplayName(name);
       setDisplayCrops(crops);
-      setEmail(userProfile.email || '');
-      setLocation(userProfile.location || 'Pune, Maharashtra');
+      setFarmerId(fid);
+      setEmail(userProfile.email || user?.email || "farmer@beejmantra.in");
+      setLocation(userProfile.location || "Haryana, India");
     } else if (user) {
-        setEmail(user.email || '');
+      setEmail(user.email || "farmer@beejmantra.in");
     }
-  }, [user, userProfile]);
 
-  // This effect handles the translation whenever the language or canonical data changes
+    // Fetch verified certificates for profile
+    fetchUserCertificates(sessionToken, user?.id || "demo-farmer-001")
+      .then((list) => setCertificates(list))
+      .catch((err) => console.warn("Failed to load certificates for profile", err));
+  }, [user, userProfile, sessionToken]);
+
+  // Handle translation
   useEffect(() => {
     const translateFields = async () => {
-        setIsTranslating(true);
-        if (language === 'en') {
-            setDisplayDisplayName(canonicalDisplayName);
-            setDisplayCrops(canonicalCrops);
-        } else {
-            const [translatedName, translatedCrops] = await Promise.all([
-                canonicalDisplayName ? translateText({text: canonicalDisplayName, targetLanguage: language}) : Promise.resolve({translatedText: ''}),
-                canonicalCrops ? translateText({text: canonicalCrops, targetLanguage: language}) : Promise.resolve({translatedText: ''}),
-            ]);
-            setDisplayDisplayName(translatedName.translatedText);
-            setDisplayCrops(translatedCrops.translatedText);
-        }
-        setIsTranslating(false);
-    };
-
-    if ((userProfile?.language || 'en') !== language) {
-        translateFields();
-    } else {
+      setIsTranslating(true);
+      if (language === "en") {
         setDisplayDisplayName(canonicalDisplayName);
         setDisplayCrops(canonicalCrops);
+      } else {
+        const [translatedName, translatedCrops] = await Promise.all([
+          canonicalDisplayName ? translateText({ text: canonicalDisplayName, targetLanguage: language }) : Promise.resolve({ translatedText: "" }),
+          canonicalCrops ? translateText({ text: canonicalCrops, targetLanguage: language }) : Promise.resolve({ translatedText: "" }),
+        ]);
+        setDisplayDisplayName(translatedName.translatedText || canonicalDisplayName);
+        setDisplayCrops(translatedCrops.translatedText || canonicalCrops);
+      }
+      setIsTranslating(false);
+    };
+
+    if ((userProfile?.language || "en") !== language && canonicalDisplayName) {
+      translateFields();
+    } else {
+      setDisplayDisplayName(canonicalDisplayName);
+      setDisplayCrops(canonicalCrops);
     }
   }, [language, canonicalDisplayName, canonicalCrops, userProfile?.language]);
 
-  
   const getInitials = (name: string | null | undefined) => {
-    if (!name) return 'FP';
-    const names = name.split(' ');
+    if (!name) return "RK";
+    const names = name.split(" ");
     if (names.length > 1) {
-      return names[0][0] + names[names.length - 1][0];
+      return (names[0][0] + names[names.length - 1][0]).toUpperCase();
     }
     return name.substring(0, 2).toUpperCase();
+  };
+
+  const handleGenerateNewId = async () => {
+    const newId = `BM-KSN-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    setFarmerId(newId);
+    try {
+      await updateUserProfile({
+        farmerId: newId,
+      });
+      toast({
+        title: "New Farmer ID Generated",
+        description: `Your new ID is ${newId}`,
+      });
+    } catch (error) {
+      console.warn("Local update of farmer ID", error);
+    }
   };
 
   const handleSaveChanges = async () => {
@@ -147,16 +170,17 @@ export default function ProfilePage() {
         displayName: canonicalDisplayName,
         location,
         crops: canonicalCrops,
+        farmerId,
       });
       toast({
-        title: t('toast.profileUpdated'),
-        description: t('toast.profileUpdatedDesc'),
+        title: t("toast.profileUpdated") || "Profile Updated",
+        description: t("toast.profileUpdatedDesc") || "Your details and Kisan ID have been saved successfully.",
       });
     } catch (error) {
       console.error("Failed to update profile", error);
       toast({
-        title: t('toast.updateFailed'),
-        description: t('toast.updateFailedDesc'),
+        title: t("toast.updateFailed") || "Update Failed",
+        description: t("toast.updateFailedDesc") || "Could not save profile changes.",
         variant: "destructive",
       });
     } finally {
@@ -171,161 +195,271 @@ export default function ProfilePage() {
       try {
         await uploadProfileImage(file);
         toast({
-          title: t('toast.photoUpdated'),
-          description: t('toast.photoUpdatedDesc'),
+          title: t("toast.photoUpdated") || "Photo Updated",
+          description: t("toast.photoUpdatedDesc") || "Your profile image has been updated.",
         });
       } catch (error) {
-        // Error toast is handled in useAuth hook
+        // Handled in useAuth
       } finally {
         setIsUploading(false);
       }
     }
   };
-  
-  // When user types, update the canonical state, not the display state
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayDisplayName(e.target.value);
-    // Here you would ideally have a debounce mechanism to reverse-translate
-    // For simplicity, we update canonical state directly. This works best if user edits in their primary language.
     setCanonicalDisplayName(e.target.value);
-  }
+  };
 
   const handleCropsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayCrops(e.target.value);
     setCanonicalCrops(e.target.value);
-  }
-
+  };
 
   if (loading) {
     return <ProfileSkeleton />;
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
-      <div className="flex flex-col md:flex-row justify-between md:items-center mb-8 gap-4">
+    <div className="container mx-auto p-4 md:p-8 space-y-8 pb-12">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-2 font-headline">{t('profile.title')}</h1>
-          <p className="text-muted-foreground">
-            {t('profile.description')}
+          <h1 className="text-3xl font-bold mb-1 font-headline flex items-center gap-2">
+            <Award className="h-8 w-8 text-primary" />
+            {t("profile.title") || "Farmer Profile & Digital ID"}
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            {t("profile.description") || "Manage your digital identity, personal details, and verified farming credentials."}
           </p>
         </div>
         <Button asChild variant="outline" className="shrink-0">
           <Link href="/dashboard">
-            <ArrowLeft className="mr-2 h-4 w-4" /> {t('profile.backToDashboard')}
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t("profile.backToDashboard") || "Back to Dashboard"}
           </Link>
         </Button>
       </div>
 
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>{t('profile.cardTitle')}</CardTitle>
-          <CardDescription>
-            {t('profile.cardDescription')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-           <div className="flex flex-col items-center space-y-4">
-              <Avatar className="h-24 w-24">
-                <AvatarImage src={userProfile?.photoURL || `https://placehold.co/100x100.png`} alt={canonicalDisplayName} data-ai-hint="smiling indian farmer"/>
-                <AvatarFallback className="text-3xl">{getInitials(canonicalDisplayName)}</AvatarFallback>
-              </Avatar>
-              <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading}/>
-              <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
-                 <Upload className="mr-2 h-4 w-4" />
-                {isUploading ? t('profile.uploading') : t('profile.changePhoto')}
-              </Button>
-            </div>
+      {/* Main Grid: Digital ID Card (Left) & Profile Editor (Right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* Left Column: Digital ID Card */}
+        <div className="lg:col-span-5 space-y-6">
+          <Card className="border-primary/20 bg-gradient-to-b from-card to-muted/20 shadow-xl overflow-hidden">
+            <CardHeader className="pb-3 text-center">
+              <CardTitle className="text-lg font-headline flex items-center justify-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-primary" />
+                Kisan Digital Identity Card
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Your verified digital identity inside the BeejMantra ecosystem.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-2">
+              <FarmerIdCard userProfile={userProfile} />
+            </CardContent>
+          </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="name">{t('profile.fullName')}</Label>
-              <Input id="name" value={displayDisplayName} onChange={handleNameChange} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">{t('profile.email')}</Label>
-              <Input id="email" type="email" value={email} disabled />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="location">{t('profile.location')}</Label>
-            <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger id="location">
-                <SelectValue placeholder={t('profile.selectDistrict')} />
-              </SelectTrigger>
-              <SelectContent>
-                {districts.map((district) => (
-                  <SelectItem key={district.value} value={district.value}>
-                    {district.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="crops">{t('profile.myCrops')}</Label>
-            <p className="text-sm text-muted-foreground">
-              {t('profile.myCropsDescription')}
-            </p>
-            <Input id="crops" value={displayCrops} onChange={handleCropsChange} />
-          </div>
-          <div className="flex justify-end">
-            <Button onClick={handleSaveChanges} disabled={isSaving || isUploading || isTranslating}>
-              {isSaving ? t('profile.saving') : t('profile.saveChanges')}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          {/* Verified Certificates Badge */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <Link2 className="w-4 h-4 text-primary" />
+                  My Fasal Certificates ({certificates.length})
+                </span>
+                <Button asChild size="sm" variant="ghost" className="h-7 text-xs text-primary">
+                  <Link href="/dashboard/fasal-certificate">
+                    + New
+                  </Link>
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2.5">
+              {certificates.length > 0 ? (
+                certificates.slice(0, 3).map((c) => (
+                  <div
+                    key={c.id}
+                    className="p-3 rounded-xl border border-border/70 bg-muted/30 flex items-center justify-between text-xs"
+                  >
+                    <div>
+                      <p className="font-bold text-foreground">🌾 {c.crop} ({c.quantity})</p>
+                      <p className="text-muted-foreground font-mono text-[11px]">{c.id}</p>
+                    </div>
+                    <Button asChild size="sm" variant="outline" className="h-7 text-[11px] px-2.5">
+                      <Link href={`/verify/${c.id}`} target="_blank">
+                        Verify <ExternalLink className="w-3 h-3 ml-1" />
+                      </Link>
+                    </Button>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-muted-foreground text-center py-2">
+                  No crop certificates generated yet.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column: Edit Profile Form */}
+        <div className="lg:col-span-7">
+          <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle>{t("profile.cardTitle") || "Profile Information"}</CardTitle>
+              <CardDescription>
+                {t("profile.cardDescription") || "Update your contact details, district, and crop preferences."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Photo Avatar */}
+              <div className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-muted/30 border border-border/50">
+                <Avatar className="h-20 w-20 border-2 border-primary shadow-md">
+                  <AvatarImage
+                    src={userProfile?.photoURL || `https://placehold.co/100x100.png`}
+                    alt={canonicalDisplayName}
+                  />
+                  <AvatarFallback className="text-2xl font-bold bg-primary/20 text-primary">
+                    {getInitials(canonicalDisplayName)}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="space-y-2 text-center sm:text-left">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                    className="rounded-full"
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    {isUploading ? t("profile.uploading") || "Uploading..." : t("profile.changePhoto") || "Change Photo"}
+                  </Button>
+                  <p className="text-[11px] text-muted-foreground">
+                    Recommended: Square JPG, PNG or WebP under 2MB.
+                  </p>
+                </div>
+              </div>
+
+              {/* Form Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Farmer Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="name">{t("profile.fullName") || "Full Name"}</Label>
+                  <Input
+                    id="name"
+                    value={displayDisplayName}
+                    onChange={handleNameChange}
+                    className="rounded-xl"
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="space-y-2">
+                  <Label htmlFor="email">{t("profile.email") || "Email Address"}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    disabled
+                    className="rounded-xl bg-muted/50"
+                  />
+                </div>
+
+                {/* Farmer ID (with Regenerate button) */}
+                <div className="space-y-2 md:col-span-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="farmerId">Unique Kisan ID</Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleGenerateNewId}
+                      className="h-6 text-xs text-primary hover:text-primary/80 px-2"
+                    >
+                      <RefreshCw className="w-3 h-3 mr-1" /> Regenerate ID
+                    </Button>
+                  </div>
+                  <Input
+                    id="farmerId"
+                    value={farmerId}
+                    onChange={(e) => setFarmerId(e.target.value)}
+                    className="font-mono font-semibold rounded-xl"
+                  />
+                </div>
+
+                {/* Location */}
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="location">{t("profile.location") || "District & State"}</Label>
+                  <Select value={location} onValueChange={setLocation}>
+                    <SelectTrigger id="location" className="rounded-xl">
+                      <SelectValue placeholder={t("profile.selectDistrict") || "Select District"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {districts.map((district) => (
+                        <SelectItem key={district.value} value={district.value}>
+                          {district.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Crops */}
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="crops">{t("profile.myCrops") || "My Primary Crops"}</Label>
+                  <Input
+                    id="crops"
+                    value={displayCrops}
+                    onChange={handleCropsChange}
+                    placeholder="e.g. Wheat, Mustard, Paddy, Cotton"
+                    className="rounded-xl"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {t("profile.myCropsDescription") || "Used to customize AI recommendations, mandi prices, and weather advisories."}
+                  </p>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end pt-2">
+                <Button
+                  onClick={handleSaveChanges}
+                  disabled={isSaving || isUploading || isTranslating}
+                  className="rounded-full px-7 py-5 font-bold shadow-md"
+                >
+                  {isSaving ? t("profile.saving") || "Saving..." : t("profile.saveChanges") || "Save Changes & Update ID"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+      </div>
     </div>
   );
 }
-
 
 const ProfileSkeleton = () => {
-  const { t } = useTranslation();
   return (
-    <div className="container mx-auto p-4 md:p-8">
-      <Skeleton className="h-10 w-1/3 mb-2" />
-      <Skeleton className="h-5 w-1/2 mb-8" />
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <Skeleton className="h-8 w-1/2" />
-          <Skeleton className="h-4 w-3/4 mt-2" />
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex flex-col items-center space-y-4">
-              <Skeleton className="h-24 w-24 rounded-full" />
-              <Skeleton className="h-10 w-28" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-1/4" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-1/4" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-1/4" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-1/4" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-1/4" />
-            <Skeleton className="h-5 w-2/3" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-          <div className="flex justify-end">
-            <Skeleton className="h-10 w-28" />
-          </div>
-        </CardContent>
-      </Card>
+    <div className="container mx-auto p-4 md:p-8 space-y-8">
+      <Skeleton className="h-10 w-1/3" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-5">
+          <Skeleton className="h-[420px] w-full rounded-3xl" />
+        </div>
+        <div className="lg:col-span-7">
+          <Skeleton className="h-[420px] w-full rounded-3xl" />
+        </div>
+      </div>
     </div>
   );
-}
+};
