@@ -112,6 +112,7 @@ export function FarmerIdCard({ userProfile, className = "" }: FarmerIdCardProps)
     <div className={`space-y-4 ${className}`}>
       {/* Printable Card Area */}
       <div
+        id="printable-farmer-card"
         ref={cardRef}
         className="w-full max-w-md mx-auto rounded-3xl overflow-hidden shadow-2xl relative select-none"
         style={{
@@ -285,12 +286,13 @@ export function FarmerIdCard({ userProfile, className = "" }: FarmerIdCardProps)
 
         <Button
           type="button"
-          variant="ghost"
+          variant="outline"
           onClick={handlePrint}
-          className="rounded-full px-4"
+          className="rounded-full px-4 border-border/80"
+          title="Print or Save ID Card as PDF"
         >
           <Printer className="w-4 h-4 mr-1.5" />
-          Print
+          Print / PDF
         </Button>
       </div>
     </div>

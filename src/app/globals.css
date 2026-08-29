@@ -123,3 +123,86 @@ html.dark body {
 .animate-float {
   animation: float-subtle 4s ease-in-out infinite;
 }
+
+/* =========================================================
+   Print Stylesheet - Isolates ONLY the Certificate / ID Card
+   ========================================================= */
+@media print {
+  @page {
+    size: auto;
+    margin: 10mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Force background colors, gradients and borders to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide all elements on the page */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Make ONLY the printable card/certificate and its children visible */
+  #printable-farmer-card,
+  #printable-farmer-card *,
+  #printable-fasal-certificate,
+  #printable-fasal-certificate * {
+    visibility: visible !important;
+  }
+
+  /* Center the printable ID card cleanly on the page without clutter */
+  #printable-farmer-card {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 440px !important;
+    max-width: 90% !important;
+    margin: 0 auto !important;
+    border-radius: 24px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    z-index: 999999 !important;
+  }
+
+  /* Center the Fasal Certificate cleanly on the page */
+  #printable-fasal-certificate {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 480px !important;
+    max-width: 90% !important;
+    margin: 0 auto !important;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    z-index: 999999 !important;
+  }
+
+  /* Hide headers, sidebars, buttons, forms, tooltips, sheets */
+  header,
+  nav,
+  aside,
+  footer,
+  button,
+  .no-print {
+    display: none !important;
+  }
+}
+

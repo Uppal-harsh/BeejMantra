@@ -275,6 +275,7 @@ export default function FasalCertificatePage() {
         <div className="space-y-6 animate-in fade-in-50 duration-300">
           {/* Certificate Card */}
           <div
+            id="printable-fasal-certificate"
             ref={certRef}
             className="mx-auto max-w-lg rounded-2xl overflow-hidden shadow-2xl"
             style={{
@@ -430,6 +431,16 @@ export default function FasalCertificatePage() {
             >
               <Download className="mr-2 h-4 w-4" />
               {isDownloading ? "Generating Image..." : "Download Certificate (PNG)"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => window.print()}
+              className="rounded-full px-5 border-border/80"
+              title="Print or Save Certificate as PDF"
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Print / Save PDF
             </Button>
             <Button
               onClick={() => setCertificate(null)}
