@@ -35,9 +35,13 @@ const TextToSpeechOutputSchema = z.object({
 });
 export type TextToSpeechOutput = z.infer<typeof TextToSpeechOutputSchema>;
 
-// The exported wrapper function
 export async function generateSpeech(input: TextToSpeechInput): Promise<TextToSpeechOutput> {
-  return textToSpeechFlow(input);
+  try {
+    return await textToSpeechFlow(input);
+  } catch (err) {
+    console.warn("generateSpeech error, returning empty media:", err);
+    return { media: '' };
+  }
 }
 
 

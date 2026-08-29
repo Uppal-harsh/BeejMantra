@@ -146,7 +146,12 @@ const weatherTool = ai.defineTool(
 export async function getWeatherForecast(
   input: GetWeatherForecastInput
 ): Promise<GetWeatherForecastOutput> {
-  return getWeatherForecastFlow(input);
+  try {
+    return await getWeatherForecastFlow(input);
+  } catch (err) {
+    console.warn("getWeatherForecast error, returning generated forecast:", err);
+    return fetchWeatherForCity(input);
+  }
 }
 
 

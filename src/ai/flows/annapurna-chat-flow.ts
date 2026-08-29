@@ -226,6 +226,7 @@ function getOfflineFallbackResponse(query: string, language: string): AnnapurnaC
   const responseMap: Record<string, string> = {
     hi: responseHi,
     en: responseEn,
+    pa: responseHi,
     bho: responseHi,
     bn: responseEn,
     kn: responseEn,
