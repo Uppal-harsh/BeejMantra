@@ -13,6 +13,7 @@ import {
   PackageCheck,
   ShoppingBag,
   Link2,
+  BadgePercent,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/contexts/language-context";
@@ -129,6 +130,12 @@ export function Footer() {
                 <Link href="/dashboard/shop" className="hover:text-[#FDE047] transition-colors flex items-center gap-2">
                   <ShoppingBag className="h-3.5 w-3.5 text-[#4ADE80]" />
                   <span>{t("landing.footer.agriStore")}</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/pricing" className="hover:text-[#FDE047] transition-colors flex items-center gap-2">
+                  <BadgePercent className="h-3.5 w-3.5 text-[#4ADE80]" />
+                  <span>Pricing & Plans</span>
                 </Link>
               </li>
             </ul>
