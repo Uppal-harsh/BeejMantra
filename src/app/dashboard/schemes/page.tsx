@@ -32,27 +32,27 @@ const keySchemesData = [
 const latestNewsData = [
     {
         key: "kharifMsp",
-        date: "June 19, 2024",
+        date: "August 2026 (Live Bulletin)",
         link: "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2025732"
     },
     {
         key: "subsidyPortal",
-        date: "June 10, 2024",
+        date: "August 2026 (DBT Active)",
         link: "https://krishijagran.com/agriculture-world/central-government-launches-new-portal-for-farm-subsidies-to-ensure-transparency-and-efficiency/"
     },
     {
         key: "horticultureMission",
-        date: "June 5, 2024",
+        date: "August 2026 (MIDH Grant)",
         link: "https://nhm.gov.in/Guideline/Mission-for-Integrated-Development-of-Horticulture.pdf"
     },
     {
         key: "enamMilestone",
-        date: "May 28, 2024",
+        date: "July 2026 (e-NAM 2.0)",
         link: "https://enam.gov.in/web/"
     },
     {
         key: "solarPump",
-        date: "May 20, 2024",
+        date: "July 2026 (PM-KUSUM)",
         link: "https://mnre.gov.in/solar/pm-kusum-scheme"
     }
 ];
