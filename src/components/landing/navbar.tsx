@@ -21,14 +21,20 @@ export function Navbar({ onOpenAuth, onOpenVoice }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeNav, setActiveNav] = useState("home");
 
+  const getNavLabel = (key: string, fallback: string) => {
+    const val = t(`landing.nav.${key}`);
+    if (val && !val.startsWith("landing.nav.")) return val;
+    return fallback;
+  };
+
   const navLinks = [
-    { id: "home", label: t("landing.nav.home"), href: "#home" },
-    { id: "features", label: t("landing.nav.features"), href: "#features" },
-    { id: "how-it-works", label: t("landing.nav.howItWorks"), href: "#how-it-works" },
-    { id: "pricing", label: t("landing.nav.pricing") || "Pricing", href: "/pricing" },
-    { id: "languages", label: t("landing.nav.languages"), href: "#languages" },
-    { id: "for-farmers", label: t("landing.nav.forFarmers"), href: "#for-farmers" },
-    { id: "about-us", label: t("landing.nav.aboutUs"), href: "#about-us" },
+    { id: "home", label: getNavLabel("home", "Home"), href: "#home" },
+    { id: "features", label: getNavLabel("features", "Features"), href: "#features" },
+    { id: "how-it-works", label: getNavLabel("howItWorks", "How it Works"), href: "#how-it-works" },
+    { id: "pricing", label: getNavLabel("pricing", "Pricing"), href: "/pricing" },
+    { id: "languages", label: getNavLabel("languages", "Languages"), href: "#languages" },
+    { id: "for-farmers", label: getNavLabel("forFarmers", "For Farmers"), href: "#for-farmers" },
+    { id: "about-us", label: getNavLabel("aboutUs", "About Us"), href: "#about-us" },
   ];
 
   return (
