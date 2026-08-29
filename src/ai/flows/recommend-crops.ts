@@ -1,15 +1,16 @@
-
 'use server';
+
 /**
- * @fileOverview Recommends crops based on user input.
+ * @fileOverview Recommends crops based on user input with Groq, Gemini, and Regional Agronomy Engine.
  *
  * - recommendCrops - A function that handles the crop recommendation process.
  * - RecommendCropsInput - The input type for the recommendCrops function.
  * - RecommendCropsOutput - The return type for the recommendCrops function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { ai } from '@/ai/genkit';
+import { z } from 'genkit';
+import { isGroqConfigured, groqClient } from '@/ai/groq';
 
 const RecommendCropsInputSchema = z.object({
   location: z.string().describe("The user's location (e.g., district, state)."),
@@ -21,17 +22,17 @@ const RecommendCropsInputSchema = z.object({
   previousCrop: z.string().optional().describe('The crop grown in the previous season.'),
   budget: z.string().optional().describe('The approximate budget for cultivation.'),
   cropPreference: z.string().optional().describe('Any specific crop preference the user might have.'),
-  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn", "bn", "bho").'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn", "bn", "bho", "pa").'),
 });
 export type RecommendCropsInput = z.infer<typeof RecommendCropsInputSchema>;
 
 const RecommendedCropSchema = z.object({
-    cropName: z.string().describe("The name of the recommended crop."),
-    icon: z.enum(['Leaf', 'Sprout', 'Carrot', 'Wheat', 'Grape']).describe("A relevant Lucide icon name from the provided list for the crop. Use 'Leaf' as a default."),
-    plantingDates: z.string().describe("Recommended planting date range for the specified season and location, e.g., 'June 15 - July 30'."),
-    reasoning: z.string().min(1).describe("A short, one-sentence reason why this crop is a good choice, e.g., 'It is well-suited for your location's climate and has high market demand.'"),
-    benefits: z.array(z.string()).min(2).max(3).describe("A list of 2-3 key benefits of growing this crop, e.g., 'High market demand', 'Drought resistant'."),
-    imageHint: z.string().describe("Two or three specific keywords for a relevant image of the crop, e.g., 'pearl millet farm', 'ripe cotton crop', 'sugarcane field'."),
+  cropName: z.string().describe("The name of the recommended crop."),
+  icon: z.enum(['Leaf', 'Sprout', 'Carrot', 'Wheat', 'Grape']).describe("A relevant Lucide icon name."),
+  plantingDates: z.string().describe("Recommended planting date range."),
+  reasoning: z.string().describe("Why this crop is a good choice."),
+  benefits: z.array(z.string()).min(2).max(3).describe("Key benefits."),
+  imageHint: z.string().describe("Keywords for crop image."),
 });
 
 const RecommendCropsOutputSchema = z.object({
@@ -39,125 +40,232 @@ const RecommendCropsOutputSchema = z.object({
 });
 export type RecommendCropsOutput = z.infer<typeof RecommendCropsOutputSchema>;
 
-const DEFAULT_FALLBACK_RECOMMENDATIONS: RecommendCropsOutput = {
-  recommendations: [
-    {
-      cropName: "Soybean",
-      icon: "Leaf",
-      plantingDates: "June - July",
-      reasoning: "A robust and profitable Kharif crop suitable for many Indian climates.",
-      benefits: ["High market demand in your region", "Improves soil nitrogen for next season"],
-      imageHint: "soybean field",
+// Dynamic Regional Agronomy Rule Engine for smart fallback
+function getDynamicAgronomyRecommendations(input: RecommendCropsInput): RecommendCropsOutput {
+  const season = (input.season || "kharif").toLowerCase();
+  const isIrrigated = input.farmType === 'irrigated';
+  const lang = input.language || 'en';
+
+  if (season.includes("rabi") || season.includes("winter") || season.includes("रबी")) {
+    return {
+      recommendations: [
+        {
+          cropName: lang === 'hi' ? "उन्नत गेहूं (HD-3086 / PBW-550)" : lang === 'pa' ? "ਉੱਨਤ ਕਣਕ (PBW-550 / HD-3086)" : "High-Yield Wheat (HD-3086)",
+          icon: "Wheat",
+          plantingDates: "Oct 25 - Nov 20",
+          reasoning: lang === 'hi' 
+            ? `${input.location} में रबी मौसम के लिए सबसे भरोसेमंद फसल, सरकारी समर्थन मूल्य (MSP) पर सीधी खरीद उपलब्ध।`
+            : lang === 'pa'
+            ? `${input.location} ਵਿੱਚ ਹਾੜ੍ਹੀ ਦੀ ਸਭ ਤੋਂ ਲਾਹੇਵੰਦ ਫ਼ਸਲ, ਮੰਡੀ ਵਿੱਚ ਪੱਕੀ ਖਰੀਦ।`
+            : `Guaranteed government MSP procurement and ideal climate fit for ${input.location}.`,
+          benefits: [
+            lang === 'hi' ? "सरकारी एमएसपी ₹2,425/क्विंटल की गारंटी" : "Guaranteed MSP ₹2,425/quintal",
+            lang === 'hi' ? "दोमट मिट्टी में 22-25 क्विंटल प्रति एकड़ पैदावार" : "High yield of 22-25 quintals/acre",
+            lang === 'hi' ? "स्थिर बाजार मांग और कम जोखिम" : "Stable market demand and low risk"
+          ],
+          imageHint: "wheat golden field"
+        },
+        {
+          cropName: lang === 'hi' ? "पूसा सरसों (Mustard / Sarson)" : lang === 'pa' ? "ਪੂਸਾ ਸਰ੍ਹੋਂ (Mustard / Sarson)" : "Pusa Mustard (Brassica juncea)",
+          icon: "Leaf",
+          plantingDates: "Oct 1 - Oct 25",
+          reasoning: lang === 'hi'
+            ? "कम पानी और कम लागत में बंपर मुनाफा देने वाली नकदी फसल, गेहूं के साथ फसल चक्र के लिए सर्वोत्तम।"
+            : "High-margin cash crop requiring 60% less water than cereals, perfect for rotation.",
+          benefits: [
+            lang === 'hi' ? "कम सिंचाई (केवल 2-3 पानी की आवश्यकता)" : "Low water requirement (only 2-3 irrigations)",
+            lang === 'hi' ? "₹5,950/क्विंटल का ऊंचा सरकारी समर्थन मूल्य" : "High MSP support of ₹5,950/quintal",
+            lang === 'hi' ? "कम लागत में ₹40,000+ प्रति एकड़ शुद्ध मुनाफा" : "Net profit of ₹40,000+/acre with low input cost"
+          ],
+          imageHint: "mustard yellow blossom"
+        },
+        {
+          cropName: lang === 'hi' ? "देसी चना / काबुली चना (Chickpea)" : lang === 'pa' ? "ਦੇਸੀ ਛੋਲੇ (Gram / Chickpea)" : "Desi Chickpea / Gram",
+          icon: "Sprout",
+          plantingDates: "Oct 15 - Nov 10",
+          reasoning: lang === 'hi'
+            ? "दलहनी फसल जो मिट्टी में नाइट्रोजन जोड़कर भूमि की उपजाऊ शक्ति बढ़ाती है और रासायनिक खाद का खर्च घटाती है।"
+            : "Legume crop that fixes atmospheric nitrogen, restoring soil fertility and lowering fertilizer bills.",
+          benefits: [
+            lang === 'hi' ? "मिट्टी की उर्वरता और नाइट्रोजन में भारी सुधार" : "Rejuvenates soil health through biological nitrogen fixation",
+            lang === 'hi' ? "मंडी में हमेशा मजबूत और स्थिर मांग" : "Resilient commodity prices in local APMC mandis",
+            lang === 'hi' ? "कम पानी और सूखे के प्रति अत्यधिक सहनशील" : "Highly drought tolerant"
+          ],
+          imageHint: "chickpea crop farm"
+        }
+      ]
+    };
+  }
+
+  // Kharif / Summer Season
+  if (isIrrigated) {
+    return {
+      recommendations: [
+        {
+          cropName: lang === 'hi' ? "बासमती / उन्नत धान (Paddy PB-1509)" : lang === 'pa' ? "ਬਾਸਮਤੀ ਝੋਨਾ (Paddy PB-1509)" : "Basmati Paddy (Pusa 1509/1121)",
+          icon: "Sprout",
+          plantingDates: "June 15 - July 15",
+          reasoning: lang === 'hi'
+            ? `${input.location} में नहरी सिंचाई और दोमट मिट्टी के लिए सबसे उपयुक्त और अधिक कीमत देने वाली खरीफ फसल।`
+            : lang === 'pa'
+            ? `ਨਹਿਰੀ ਸਿੰਚਾਈ ਅਤੇ ਉਪਜਾਊ ਜ਼ਮੀਨ ਲਈ ਸਭ ਤੋਂ ਵੱਧ ਮੁਨਾਫ਼ਾ ਦੇਣ ਵਾਲੀ ਬਾਸਮਤੀ ਕਿਸਮ।`
+            : `High commercial realization in local and export mandis with available canal/borewell irrigation in ${input.location}.`,
+          benefits: [
+            lang === 'hi' ? "बाजार में ₹3,500-₹4,200/क्विंटल तक ऊंचा प्रीमियम" : "Premium market price (₹3,500 - ₹4,200/quintal)",
+            lang === 'hi' ? "120 दिन की कम अवधि वाली उन्नत किस्म" : "Early maturing 120-day cycle saving irrigation costs",
+            lang === 'hi' ? "गेहूं की समय पर बुवाई के लिए खेत जल्दी खाली" : "Clears field on time for winter wheat sowing"
+          ],
+          imageHint: "rice paddy lush field"
+        },
+        {
+          cropName: lang === 'hi' ? "बीटी कपास / नरमा (Cotton)" : lang === 'pa' ? "ਬੀਟੀ ਨਰਮਾ / ਕਪਾਹ (BT Cotton)" : "Hybrid BT Cotton",
+          icon: "Leaf",
+          plantingDates: "May 1 - May 31",
+          reasoning: lang === 'hi'
+            ? "मजबूत औद्योगिक मांग वाली प्रमुख नकदी फसल जो दोमट और उचित जल निकासी वाली भूमि में भरपूर लाभ देती है।"
+            : "High-value commercial cash crop with consistent textile mill procurement in North India.",
+          benefits: [
+            lang === 'hi' ? "₹7,500+/क्विंटल का आकर्षक बाजार भाव" : "Attractive market realization (₹7,500+/quintal)",
+            lang === 'hi' ? "गुलाबी सुंडी प्रतिरोधी उन्नत किस्में उपलब्ध" : "Pest-tolerant certified hybrid varieties",
+            lang === 'hi' ? "प्रति एकड़ ₹50,000+ का शुद्ध लाभ" : "High return on investment (₹50,000+/acre)"
+          ],
+          imageHint: "cotton field white bolls"
+        },
+        {
+          cropName: lang === 'hi' ? "हाइब्रिड मक्का (Hybrid Maize / Corn)" : lang === 'pa' ? "ਹਾਈਬ੍ਰਿਡ ਮੱਕੀ (Maize / Corn)" : "Hybrid Maize / Sweet Corn",
+          icon: "Wheat",
+          plantingDates: "June 20 - July 20",
+          reasoning: lang === 'hi'
+            ? "धान की तुलना में 70% कम पानी और पोल्ट्री/एथेनॉल उद्योगों से लगातार बढ़ती मांग वाली सुरक्षित फसल।"
+            : "Consumes 70% less water than paddy with skyrocketing demand from feed and food industries.",
+          benefits: [
+            lang === 'hi' ? "90-100 दिन में बंपर पैदावार (30 क्विंटल/एकड़)" : "Fast 90-100 day cycle yielding 30+ quintals/acre",
+            lang === 'hi' ? "धान से 70% कम पानी और कम बिजली खर्च" : "Saves 70% groundwater compared to traditional rice",
+            lang === 'hi' ? "फसल कटाई के तुरंत बाद आलू या सरसों की बुवाई संभव" : "Leaves soil rich for winter vegetable or mustard rotation"
+          ],
+          imageHint: "maize corn field"
+        }
+      ]
+    };
+  }
+
+  // Rainfed Kharif
+  return {
+    recommendations: [
+      {
+        cropName: lang === 'hi' ? "संकर बाजरा (Hybrid Pearl Millet)" : lang === 'pa' ? "ਹਾਈਬ੍ਰਿਡ ਬਾਜਰਾ (Bajra)" : "Hybrid Pearl Millet (Bajra)",
+        icon: "Wheat",
+        plantingDates: "July 1 - July 25",
+        reasoning: lang === 'hi'
+          ? "कम बारिश और सूखे के प्रति सबसे मजबूत फसल, पशु चारे और अनाज दोनों में दोहरा मुनाफा।"
+          : "Highly resilient to erratic rainfall with dual revenue from grain and nutritious fodder.",
+      benefits: [
+        lang === 'hi' ? "अत्यधिक सूखा प्रतिरोधी और न्यूनतम लागत" : "Survives harsh dry spells with minimal fertilizer",
+        lang === 'hi' ? "सरकारी एमएसपी ₹2,625/क्विंटल पर खरीद" : "MSP backing at ₹2,625/quintal",
+        lang === 'hi' ? "75-80 दिनों में पककर तैयार" : "Rapid harvest in 75-80 days"
+      ],
+      imageHint: "pearl millet field"
     },
     {
-      cropName: "Cotton",
-      icon: "Leaf",
-      plantingDates: "May - June",
-      reasoning: "High demand in the textile industry and grows well in drier conditions.",
-      benefits: ["Drought resistant, lower water needs", "High commercial cash crop value"],
-      imageHint: "ripe cotton crop",
+      cropName: lang === 'hi' ? "उड़द / मूंग (Moong / Black Gram)" : lang === 'pa' ? "ਮੂੰਗੀ / ਮਾਂਹ (Moong Dal)" : "Short-Duration Green Gram (Moong)",
+      icon: "Sprout",
+      plantingDates: "June 25 - July 20",
+      reasoning: lang === 'hi'
+        ? "कम समय (60 दिन) में तैयार होने वाली दलहनी फसल जो मिट्टी में 30-40 किलो नाइट्रोजन जोड़ती है।"
+        : "60-day catch crop that fixes nitrogen, generating fast cash flow with low water needs.",
+      benefits: [
+        lang === 'hi' ? "₹8,500+/क्विंटल का सबसे ऊंचा दाल बाजार भाव" : "Highest pulse price in mandis (₹8,500+/quintal)",
+        lang === 'hi' ? "मात्र 60 दिनों में पूरी फसल तैयार" : "Ultra-fast harvest in just 60 days",
+        lang === 'hi' ? "अगली फसल के लिए यूरिया की 25% बचत" : "Reduces next crop's chemical fertilizer costs by 25%"
+      ],
+      imageHint: "green gram moong farm"
     },
     {
-      cropName: "Maize",
-      icon: "Wheat",
-      plantingDates: "June - July",
-      reasoning: "A versatile crop used for food and animal feed, with good yield potential.",
-      benefits: ["Short growing cycle (90-110 days)", "Adaptable to various soil types"],
-      imageHint: "maize corn field",
+      cropName: lang === 'hi' ? "ग्वार (Cluster Bean / Guar)" : lang === 'pa' ? "ਗੁਆਰਾ (Guar)" : "Commercial Cluster Bean (Guar)",
+      icon: "Leaf",
+      plantingDates: "July 10 - July 31",
+      reasoning: lang === 'hi'
+        ? "सूखे क्षेत्रों के लिए वरदान नकदी फसल जिसकी अंतर्राष्ट्रीय बाजार में भारी औद्योगिक मांग है।"
+        : "Hardy industrial cash crop with strong gum export demand and zero irrigation requirement.",
+      benefits: [
+        lang === 'hi' ? "कम बारिश में भी शानदार उत्पादन" : "Thrives in rain-dependent arid soils",
+        lang === 'hi' ? "ग्वार गम की भारी निर्यात मांग" : "Lucrative industrial export demand",
+        lang === 'hi' ? "न्यूनतम कीटनाशक और खाद की आवश्यकता" : "Near-zero pesticide and minimal fertilizer input"
+      ],
+      imageHint: "cluster bean farm"
     }
   ]
 };
-
-export async function recommendCrops(input: RecommendCropsInput): Promise<RecommendCropsOutput> {
-  try {
-    const res = await recommendCropsFlow(input);
-    if (res && Array.isArray(res.recommendations) && res.recommendations.length === 3) {
-      return res;
-    }
-    return DEFAULT_FALLBACK_RECOMMENDATIONS;
-  } catch (err) {
-    console.warn("recommendCrops action error, returning default recommendations:", err);
-    return DEFAULT_FALLBACK_RECOMMENDATIONS;
-  }
 }
 
-const recommendCropsPrompt = ai.definePrompt({
-  name: 'recommendCropsPrompt',
-  input: {schema: RecommendCropsInputSchema},
-  output: {schema: RecommendCropsOutputSchema},
-  prompt: `You are an expert agricultural advisor in India. Your task is to recommend exactly 3 profitable and suitable crops for a farmer based on their specific inputs.
+export async function recommendCrops(input: RecommendCropsInput): Promise<RecommendCropsOutput> {
+  const { location, farmType, landSize, soilType, waterSource, season, previousCrop, budget, cropPreference, language } = input;
 
-  The farmer's preferred language is {{language}}. All of your text output (cropName, reasoning, benefits) MUST be in this language.
-
-  Farmer's Details:
-  - Location: {{location}}
-  - Farm Type: {{farmType}}
-  - Land Size: {{landSize}}
-  - Soil Type: {{#if soilType}}{{soilType}}{{else}}Not specified{{/if}}
-  - Water Source: {{#if waterSource}}{{waterSource}}{{else}}Not specified{{/if}}
-  - Season: {{#if season}}{{season}}{{else}}Not specified{{/if}}
-  - Previous Crop: {{#if previousCrop}} (Suggest crops that are good for rotation with {{previousCrop}}){{else}}Not specified{{/if}}
-  - Budget: {{#if budget}}{{budget}}{{else}}Not specified{{/if}}
-  - Farmer's Crop Preference: {{#if cropPreference}}{{cropPreference}}{{else}}None{{/if}}
-
-  Your recommendations must be well-reasoned and detailed. For each of the 3 recommended crops, provide the following:
-  1.  **cropName**: The name of the crop.
-  2.  **icon**: A relevant Lucide icon name from this list: ['Leaf', 'Sprout', 'Carrot', 'Wheat', 'Grape']. Use 'Leaf' as a generic default if none are a perfect fit. For example, for cotton or soybean, use 'Leaf'. For wheat or maize, use 'Wheat'. For vegetables, use 'Carrot'.
-  3.  **plantingDates**: A specific, recommended planting date range for the farmer's location and season. For example, "June 15 - July 30".
-  4.  **reasoning**: A short, one-sentence reason why this crop is a good choice based on the inputs provided. For example, "This crop is well-suited to your soil type and has strong market demand in your region."
-  5.  **benefits**: A list of 2 or 3 key benefits for the farmer. These should be concise and compelling, such as "High market demand in your region", "Drought resistant, lower water needs", or "Improves soil nitrogen for next season".
-  6.  **imageHint**: Two or three specific keywords for a relevant image of the crop. For example, for a pearl millet recommendation, the hint could be "pearl millet farm". For cotton, it could be "ripe cotton crop".
-
-  Generate a list of exactly 3 diverse and practical crop recommendations.
-  `,
-});
-
-const recommendCropsFlow = ai.defineFlow(
-  {
-    name: 'recommendCropsFlow',
-    inputSchema: RecommendCropsInputSchema,
-    outputSchema: RecommendCropsOutputSchema,
-  },
-  async input => {
+  // 1. Try Groq Cloud (Ultra-Fast Llama 3.3 70B with JSON Mode)
+  if (isGroqConfigured && groqClient) {
     try {
-      const {output} = await recommendCropsPrompt(input);
-      return output!;
-    } catch (error) {
-      console.error("Error in recommendCropsFlow, returning fallback.", error);
-      // Return a fallback response that satisfies the schema
-      const fallbackBenefits = [
-          `Good market value in ${input.location}`,
-          "Suitable for various soil types",
-      ];
+      const promptText = `You are a chief agronomist in India. Recommend exactly 3 highly profitable and realistic crops for a farmer in India.
+Farmer Details:
+- Location: ${location}
+- Farm Type: ${farmType} (${farmType === 'irrigated' ? 'Ample water/irrigation available' : 'Rainfed / dependent on monsoon'})
+- Land Size: ${landSize}
+- Soil Type: ${soilType || 'Loamy / Alluvial'}
+- Water Source: ${waterSource || 'Canal / Tube-well'}
+- Season: ${season || 'Kharif'}
+- Previous Crop: ${previousCrop || 'None'} (Recommend smart rotation benefits)
+- Budget: ${budget || 'Standard'}
+- Preference: ${cropPreference || 'None'}
+- Language: ${language}
 
-      return {
-        recommendations: [
-          {
-            cropName: "Soybean",
-            icon: "Leaf" as "Leaf" | "Sprout" | "Carrot" | "Wheat" | "Grape",
-            plantingDates: "June - July",
-            reasoning: "A robust and profitable Kharif crop suitable for many Indian climates.",
-            benefits: fallbackBenefits,
-            imageHint: "soybean field",
-          },
-          {
-            cropName: "Cotton",
-            icon: "Leaf" as "Leaf" | "Sprout" | "Carrot" | "Wheat" | "Grape",
-            plantingDates: "May - June",
-            reasoning: "High demand in the textile industry and grows well in drier conditions.",
-            benefits: fallbackBenefits,
-            imageHint: "ripe cotton crop",
-          },
-          {
-            cropName: "Maize",
-            icon: "Wheat" as "Leaf" | "Sprout" | "Carrot" | "Wheat" | "Grape",
-            plantingDates: "June - July",
-            reasoning: "A versatile crop used for both food and animal feed, with good yield potential.",
-            benefits: fallbackBenefits,
-            imageHint: "maize corn field",
-          }
-        ]
-      };
+CRITICAL RULES:
+1. All text (cropName, reasoning, benefits) MUST be written in the farmer's language: "${language}".
+2. Recommendations must be varied (not generic repeats) and specifically suited for ${location} in ${season} season with ${farmType} farming.
+3. Output MUST be valid JSON strictly matching this schema:
+{
+  "recommendations": [
+    {
+      "cropName": "Crop Name",
+      "icon": "Leaf" or "Sprout" or "Carrot" or "Wheat" or "Grape",
+      "plantingDates": "e.g. June 15 - July 15",
+      "reasoning": "1 clear sentence explaining why this crop is ideal for their soil, water, and season.",
+      "benefits": ["Distinct Benefit 1", "Distinct Benefit 2", "Distinct Benefit 3"],
+      "imageHint": "crop keyword"
+    }
+  ]
+}`;
+
+      const completion = await groqClient.chat.completions.create({
+        model: "llama-3.3-70b-versatile",
+        messages: [{ role: "user", content: promptText }],
+        temperature: 0.3,
+        response_format: { type: "json_object" },
+      });
+
+      const parsed = JSON.parse(completion.choices[0]?.message?.content || "{}");
+      if (parsed.recommendations && Array.isArray(parsed.recommendations) && parsed.recommendations.length === 3) {
+        return parsed as RecommendCropsOutput;
+      }
+    } catch (groqErr) {
+      console.warn("Groq crop recommendation failed, falling back to Genkit/Agronomy engine:", groqErr);
     }
   }
-);
+
+  // 2. Try Gemini via Genkit
+  try {
+    const recommendCropsPrompt = ai.definePrompt({
+      name: 'recommendCropsPromptDynamic',
+      input: { schema: RecommendCropsInputSchema },
+      output: { schema: RecommendCropsOutputSchema },
+      prompt: `You are an expert agricultural advisor in India. Recommend exactly 3 profitable crops for a farmer in {{location}} for season {{season}}. Preferred language is {{language}}.`,
+    });
+    const { output } = await recommendCropsPrompt(input);
+    if (output && Array.isArray(output.recommendations) && output.recommendations.length === 3) {
+      return output;
+    }
+  } catch (geminiErr) {
+    console.warn("Genkit flow failed, using dynamic agronomy engine:", geminiErr);
+  }
+
+  // 3. Guaranteed Dynamic Regional Agronomy Engine
+  return getDynamicAgronomyRecommendations(input);
+}

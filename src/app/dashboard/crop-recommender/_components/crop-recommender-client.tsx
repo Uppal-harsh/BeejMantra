@@ -35,11 +35,13 @@ type CropIcon = keyof typeof iconMap;
 
 function getCropImageUrl(cropName: string = ""): string {
   const name = cropName.toLowerCase();
-  if (name.includes("wheat") || name.includes("गेहूं") || name.includes("gehun")) return "/images/wheat_crop.jpg";
-  if (name.includes("mustard") || name.includes("सरसों") || name.includes("sarson")) return "/images/mustard_crop.jpg";
-  if (name.includes("rice") || name.includes("paddy") || name.includes("धान") || name.includes("dhaan")) return "/images/rice_paddy_crop.jpg";
-  if (name.includes("cotton") || name.includes("कपास") || name.includes("kapaas")) return "/images/cotton_crop.jpg";
-  return "/images/sunset_farm.jpg";
+  if (name.includes("wheat") || name.includes("गेहूं") || name.includes("gehun") || name.includes("ਕਣਕ") || name.includes("kanak")) return "/images/wheat_crop.jpg";
+  if (name.includes("mustard") || name.includes("सरसों") || name.includes("sarson") || name.includes("ਸਰ੍ਹੋਂ") || name.includes("sarhon")) return "/images/mustard_crop.jpg";
+  if (name.includes("rice") || name.includes("paddy") || name.includes("धान") || name.includes("dhaan") || name.includes("बासमती") || name.includes("basmati") || name.includes("ਚੌਲ") || name.includes("ਝੋਨਾ")) return "/images/rice_paddy_crop.jpg";
+  if (name.includes("cotton") || name.includes("कपास") || name.includes("kapaas") || name.includes("ਕਪਾਹ") || name.includes("ਨਰਮਾ") || name.includes("narma") || name.includes("बीटी")) return "/images/cotton_crop.jpg";
+  if (name.includes("maize") || name.includes("corn") || name.includes("मक्का") || name.includes("ਮੱਕੀ") || name.includes("bajra") || name.includes("बाजरा") || name.includes("ਬਾਜਰਾ")) return "/images/wheat_crop.jpg";
+  if (name.includes("soybean") || name.includes("सोयाबीन") || name.includes("pulse") || name.includes("moong") || name.includes("मूंग") || name.includes("चना") || name.includes("chana") || name.includes("छोले")) return "/images/mustard_crop.jpg";
+  return "/images/rice_paddy_crop.jpg";
 }
 
 
