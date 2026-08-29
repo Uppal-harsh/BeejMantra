@@ -41,11 +41,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn(inter.variable, playfair.variable, notoDevanagari.variable)} suppressHydrationWarning>
-      <body className={cn('font-body antialiased bg-[#F7EFD9] text-[#3B2A1B]')} suppressHydrationWarning>
+      <body className={cn('font-body antialiased bg-background text-foreground min-h-screen')} suppressHydrationWarning>
          <ThemeProvider
             attribute="class"
             defaultTheme="light"
-            enableSystem={false}
+            enableSystem={true}
             disableTransitionOnChange
           >
             <AuthProvider>
