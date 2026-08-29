@@ -312,7 +312,7 @@ export default function LearnPage() {
                                     <div className="flex flex-col sm:flex-row gap-4 p-4">
                                         <div className="relative w-full sm:w-48 sm:h-32 shrink-0 aspect-video sm:aspect-auto">
                                             <Image 
-                                                src={`https://placehold.co/600x400.png`} 
+                                                src={index % 2 === 0 ? "/images/wheat_crop.jpg" : "/images/mustard_crop.jpg"} 
                                                 alt={article.title} 
                                                 layout="fill" 
                                                 objectFit="cover" 
@@ -343,11 +343,20 @@ export default function LearnPage() {
                 <h3 className="text-xl font-bold mt-8 mb-4 font-headline">{t('learn.ourGuides')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredArticles.length > 0 ? (
-                    filteredArticles.map((article, index) => (
-                    <Card key={index} className="flex flex-col">
+                    filteredArticles.map((article, index) => {
+                      const guideImages = [
+                        "/images/sunset_farm.jpg",
+                        "/images/wheat_crop.jpg",
+                        "/images/mustard_crop.jpg",
+                        "/images/rice_paddy_crop.jpg",
+                        "/images/cotton_crop.jpg",
+                        "/images/gov_store.jpg"
+                      ];
+                      return (
+                      <Card key={index} className="flex flex-col">
                         <CardHeader className="p-0">
                         <div className="aspect-video relative">
-                            <Image src={`https://placehold.co/600x400.png`} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint} />
+                            <Image src={guideImages[index % guideImages.length]} alt={article.title} layout="fill" objectFit="cover" data-ai-hint={article.hint} />
                         </div>
                         </CardHeader>
                         <CardContent className="p-4 flex-grow">
@@ -361,8 +370,9 @@ export default function LearnPage() {
                             </Link>
                         </Button>
                         </CardFooter>
-                    </Card>
-                    ))
+                      </Card>
+                      );
+                    })
                 ) : showNoLocalResultsMessage ? (
                     <div className="md:col-span-2 lg:col-span-3">
                     <NoArticlesFoundAlert query={searchQuery} />
@@ -379,7 +389,7 @@ export default function LearnPage() {
                     <Card key={index} className="flex flex-col group">
                         <CardHeader className="p-0">
                         <button onClick={() => playVideo(video.videoId)} className="block aspect-video relative overflow-hidden rounded-t-lg w-full">
-                             <Image src={video.thumbnailUrl || "https://placehold.co/600x400.png"} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint}/>
+                             <Image src={video.thumbnailUrl || (index % 2 === 0 ? "/images/sunset_farm.jpg" : "/images/wheat_crop.jpg")} alt={video.title} layout="fill" objectFit="cover" data-ai-hint={video.hint}/>
                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <PlayCircle className="h-16 w-16 text-white/80"/>
                             </div>

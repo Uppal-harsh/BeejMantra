@@ -33,6 +33,15 @@ const iconMap = {
 };
 type CropIcon = keyof typeof iconMap;
 
+function getCropImageUrl(cropName: string = ""): string {
+  const name = cropName.toLowerCase();
+  if (name.includes("wheat") || name.includes("गेहूं") || name.includes("gehun")) return "/images/wheat_crop.jpg";
+  if (name.includes("mustard") || name.includes("सरसों") || name.includes("sarson")) return "/images/mustard_crop.jpg";
+  if (name.includes("rice") || name.includes("paddy") || name.includes("धान") || name.includes("dhaan")) return "/images/rice_paddy_crop.jpg";
+  if (name.includes("cotton") || name.includes("कपास") || name.includes("kapaas")) return "/images/cotton_crop.jpg";
+  return "/images/sunset_farm.jpg";
+}
+
 
 // Cannot be imported from a 'use server' file.
 const RecommendCropsInputClientSchema = z.object({
@@ -269,7 +278,7 @@ export function CropRecommenderClient() {
                 {result.recommendations.map((rec, index) => (
                 <Card key={index} className="overflow-hidden flex flex-col">
                     <div className="relative w-full h-40">
-                        <Image src={`https://placehold.co/400x300.png`} alt={rec.cropName} layout="fill" objectFit="cover" data-ai-hint={rec.imageHint} />
+                        <Image src={getCropImageUrl(rec.cropName)} alt={rec.cropName} layout="fill" objectFit="cover" data-ai-hint={rec.imageHint} />
                     </div>
                     <CardHeader className="flex flex-row items-start gap-4">
                         {iconMap[rec.icon as CropIcon] || iconMap.Leaf}

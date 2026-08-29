@@ -316,7 +316,7 @@ export default function ProfilePage() {
               <div className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-muted/30 border border-border/50">
                 <Avatar className="h-20 w-20 border-2 border-primary shadow-md">
                   <AvatarImage
-                    src={userProfile?.photoURL || `https://placehold.co/100x100.png`}
+                    src={userProfile?.photoURL || "/desi-farmer-hero.jpg"}
                     alt={canonicalDisplayName}
                   />
                   <AvatarFallback className="text-2xl font-bold bg-primary/20 text-primary">

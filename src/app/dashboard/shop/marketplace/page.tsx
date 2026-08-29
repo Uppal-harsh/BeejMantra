@@ -28,6 +28,21 @@ const productsData = [
   { key: "neemOil", price: "₹850", hint: "bottle of neem oil" },
 ];
 
+const productImages: Record<string, string> = {
+  organicFertilizer: "/images/mustard_crop.jpg",
+  pesticideSpray: "/images/cotton_crop.jpg",
+  highYieldSeeds: "/images/wheat_crop.jpg",
+  gardeningToolsSet: "/images/private_marketplace.jpg",
+  dripIrrigationKit: "/images/rice_paddy_crop.jpg",
+  soilTestKit: "/images/pm_kisan_scheme.jpg",
+  protectiveGloves: "/images/gov_store.jpg",
+  powerSprayer: "/images/private_marketplace.jpg",
+  greenhousePolythene: "/images/sunset_farm.jpg",
+  waterPump: "/images/rice_paddy_crop.jpg",
+  cowManure: "/images/mustard_crop.jpg",
+  neemOil: "/images/cotton_crop.jpg",
+};
+
 const SpeechRecognition =
   (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
 
@@ -146,7 +161,7 @@ export default function MarketplacePage() {
             <Card key={index} className="overflow-hidden">
               <CardHeader className="p-0">
                 <div className="aspect-square relative">
-                  <Image src={`https://placehold.co/400x400.png`} alt={product.name} layout="fill" objectFit="cover" data-ai-hint={product.hint} />
+                  <Image src={productImages[product.key] || "/images/private_marketplace.jpg"} alt={product.name} layout="fill" objectFit="cover" data-ai-hint={product.hint} />
                 </div>
               </CardHeader>
               <CardContent className="p-4">

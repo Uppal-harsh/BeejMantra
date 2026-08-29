@@ -53,6 +53,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
   signUpWithEmail: (email: string, pass: string) => Promise<void>;
+  signInAsDemoFarmer: () => Promise<void>;
   signOut: () => Promise<void>;
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>;
   uploadProfileImage: (file: File) => Promise<void>;
@@ -200,6 +201,104 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await signInWithEmail(email, pass);
   };
 
+  const signInAsDemoFarmer = async () => {
+    setLoading(true);
+    const demoUser: AppUser = {
+      id: "demo-farmer-ramesh",
+      email: "ramesh.kisan@beejmantra.in",
+      displayName: "रामेश कुमार (Ramesh Kumar)",
+      photoURL: "/desi-farmer-hero.jpg",
+    };
+    const demoProfile: UserProfile = {
+      uid: "demo-farmer-ramesh",
+      email: "ramesh.kisan@beejmantra.in",
+      displayName: "रामेश कुमार (Ramesh Kumar)",
+      photoURL: "/desi-farmer-hero.jpg",
+      location: "Karnal, Haryana",
+      language: "hi",
+      crops: "Wheat (गेहूं), Mustard (सरसों), Rice (धान)",
+    };
+    const demoTransactions: Transaction[] = [
+      {
+        id: "tx-1",
+        description: "Mustard Crop Sale (सरसों बिक्री)",
+        amount: 48500,
+        type: "income",
+        category: "Crop Sale",
+        date: {
+          seconds: Math.floor((Date.now() - 86400000 * 2) / 1000),
+          nanoseconds: 0,
+          toDate: () => new Date(Date.now() - 86400000 * 2),
+          toMillis: () => Date.now() - 86400000 * 2,
+        } as any,
+      },
+      {
+        id: "tx-2",
+        description: "DAP Fertilizer Purchase (डीएपी खाद)",
+        amount: 2700,
+        type: "expense",
+        category: "Fertilizers",
+        date: {
+          seconds: Math.floor((Date.now() - 86400000 * 5) / 1000),
+          nanoseconds: 0,
+          toDate: () => new Date(Date.now() - 86400000 * 5),
+          toMillis: () => Date.now() - 86400000 * 5,
+        } as any,
+      },
+      {
+        id: "tx-3",
+        description: "PM-Kisan Samman Nidhi (पीएम-किसान किस्त)",
+        amount: 2000,
+        type: "income",
+        category: "Gov Scheme",
+        date: {
+          seconds: Math.floor((Date.now() - 86400000 * 10) / 1000),
+          nanoseconds: 0,
+          toDate: () => new Date(Date.now() - 86400000 * 10),
+          toMillis: () => Date.now() - 86400000 * 10,
+        } as any,
+      },
+      {
+        id: "tx-4",
+        description: "Tractor Diesel (डीजल खर्च)",
+        amount: 3200,
+        type: "expense",
+        category: "Fuel",
+        date: {
+          seconds: Math.floor((Date.now() - 86400000 * 14) / 1000),
+          nanoseconds: 0,
+          toDate: () => new Date(Date.now() - 86400000 * 14),
+          toMillis: () => Date.now() - 86400000 * 14,
+        } as any,
+      },
+    ];
+
+    const demoSession = {
+      access_token: "demo-session-token-beejmantra",
+      refresh_token: "demo-refresh-token",
+      expires_at: Date.now() + 86400000 * 30,
+      user: {
+        id: "demo-farmer-ramesh",
+        email: "ramesh.kisan@beejmantra.in",
+        user_metadata: {
+          full_name: "रामेश कुमार (Ramesh Kumar)",
+          avatar_url: "/desi-farmer-hero.jpg",
+        },
+      },
+    };
+
+    try {
+      localStorage.setItem("beejmantra.supabase.session", JSON.stringify(demoSession));
+      localStorage.setItem("beejmantra_preferred_lang", "hi");
+    } catch {}
+
+    setUser(demoUser);
+    setUserProfile(demoProfile);
+    setTransactions(demoTransactions);
+    setSessionToken("demo-session-token-beejmantra");
+    setLoading(false);
+  };
+
   const signOut = async () => {
     setLoading(true);
     try {
@@ -209,11 +308,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.warn("Sign-out failed", error);
     }
+<<<<<<< HEAD
     setUser(DEFAULT_DEMO_USER);
     setUserProfile(DEFAULT_DEMO_PROFILE);
     setSessionToken("demo-session-token");
     setLoading(false);
   };
+=======
+    clearStoredSession();
+    setUser(null);
+    setUserProfile(null);
+    setSessionToken(null);
+    setTransactions([]);
+    setLoading(false);
+  };
+
+  const updateUserProfile = async (data: Partial<UserProfile>) => {
+    if (!user || !sessionToken) {
+       throw new Error("No user is currently signed in.");
+    }
+>>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
 
   const updateUserProfile = async (data: Partial<UserProfile>) => {
     const nextProfile: UserProfile = {
@@ -228,6 +342,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       memberSince: data.memberSince ?? userProfile?.memberSince ?? "2026",
     };
 
+<<<<<<< HEAD
     if (supabaseConfigured && sessionToken && user) {
       try {
         await updateAuthMetadata(sessionToken, {
@@ -243,16 +358,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (user) {
       setUser({ ...user, displayName: nextProfile.displayName, photoURL: nextProfile.photoURL });
     }
+=======
+    if (sessionToken !== "demo-session-token-beejmantra") {
+      await updateAuthMetadata(sessionToken, {
+        displayName: nextProfile.displayName,
+        photoURL: nextProfile.photoURL,
+      });
+      await upsertProfile(sessionToken, nextProfile);
+    }
+
+    setUser({ ...user, displayName: nextProfile.displayName, photoURL: nextProfile.photoURL });
+>>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
     setUserProfile(nextProfile);
   };
 
   const uploadProfileImage = async (file: File): Promise<void> => {
+<<<<<<< HEAD
+=======
+    if (!supabaseConfigured && sessionToken !== "demo-session-token-beejmantra") {
+       toast({
+        variant: "destructive",
+        title: "Supabase Not Configured",
+        description:
+          "Image upload requires a configured Supabase project. Please set your .env.local values.",
+      });
+      throw new Error("Supabase not configured");
+    }
+
+>>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
     if (!user || !sessionToken) {
       throw new Error("No user is currently signed in.");
     }
 
     try {
+<<<<<<< HEAD
       if (supabaseConfigured) {
+=======
+        if (sessionToken === "demo-session-token-beejmantra") {
+          await updateUserProfile({ photoURL: "/desi-farmer-hero.jpg" });
+          return;
+        }
+>>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
         const downloadURL = await uploadProfileImageRequest(sessionToken, user.id, file);
         await updateUserProfile({ photoURL: downloadURL });
         return;
@@ -267,6 +413,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Transaction Management
   const addTransaction = async (data: TransactionData) => {
+<<<<<<< HEAD
     const newTx: Transaction = {
       id: "tx-" + Date.now(),
       description: data.description,
@@ -304,6 +451,49 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
 
+=======
+    if (!user || !sessionToken) throw new Error("User not authenticated");
+    if (sessionToken === "demo-session-token-beejmantra") {
+      const newTx: Transaction = {
+        id: `tx-${Date.now()}`,
+        description: data.description,
+        amount: data.amount,
+        type: data.type,
+        category: data.category,
+        date: {
+          seconds: Math.floor(data.date.getTime() / 1000),
+          nanoseconds: 0,
+          toDate: () => data.date,
+          toMillis: () => data.date.getTime(),
+        } as any,
+      };
+      setTransactions((current) => [newTx, ...current]);
+      return;
+    }
+    const created = await createSupabaseTransaction(sessionToken, user.id, data);
+    setTransactions((current) => [created, ...current].sort((a, b) => b.date.toMillis() - a.date.toMillis()));
+  };
+
+  const updateTransaction = async (id: string, data: Partial<TransactionData>) => {
+    if (!user || !sessionToken) throw new Error("User not authenticated");
+    if (sessionToken === "demo-session-token-beejmantra") {
+      setTransactions((current) =>
+        current.map((tx) =>
+          tx.id === id
+            ? {
+                ...tx,
+                description: data.description ?? tx.description,
+                amount: data.amount ?? tx.amount,
+                type: data.type ?? tx.type,
+                category: data.category ?? tx.category,
+              }
+            : tx
+        )
+      );
+      return;
+    }
+    const updated = await updateSupabaseTransaction(sessionToken, id, data);
+>>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
     setTransactions((current) =>
       current.map((tx) =>
         tx.id === id
@@ -321,6 +511,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteTransaction = async (id: string) => {
+<<<<<<< HEAD
     if (supabaseConfigured && sessionToken && user) {
       try {
         await deleteSupabaseTransaction(sessionToken, id);
@@ -329,6 +520,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
 
+=======
+    if (!user || !sessionToken) throw new Error("User not authenticated");
+    if (sessionToken === "demo-session-token-beejmantra") {
+      setTransactions((current) => current.filter((tx) => tx.id !== id));
+      return;
+    }
+    await deleteSupabaseTransaction(sessionToken, id);
+>>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
     setTransactions((current) => current.filter((transaction) => transaction.id !== id));
   };
 
@@ -349,6 +548,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     signInWithGoogle,
     signInWithEmail,
     signUpWithEmail,
+    signInAsDemoFarmer,
     signOut,
     updateUserProfile,
     uploadProfileImage,

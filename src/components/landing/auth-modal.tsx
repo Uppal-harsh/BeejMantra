@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,7 +28,8 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const { signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
+  const router = useRouter();
+  const { signInWithEmail, signUpWithEmail, signInWithGoogle, signInAsDemoFarmer } = useAuth();
   const { t } = useTranslation();
   const [isSignUp, setIsSignUp] = useState(false);
 
@@ -84,6 +86,50 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           </DialogDescription>
         </DialogHeader>
 
+        {/* 1-Click Demo Farmer Login (Dev Mode) */}
+        <div className="bg-[#FAF5E8] p-3.5 rounded-2xl border-2 border-[#245B35]/40 bg-gradient-to-br from-[#FAF5E8] to-[#EAF4EC] shadow-sm text-left">
+          <div className="flex items-center justify-between gap-2 mb-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#245B35] bg-[#D4EAD9] px-2 py-0.5 rounded-md">
+              🌾 1-Click Demo Mode (Dev)
+            </span>
+            <span className="text-[11px] text-[#5D4A3A] font-medium">Karnal, Haryana</span>
+          </div>
+          <p className="text-xs text-[#3F2918] mb-2.5 leading-tight">
+            Instant full access as <strong className="text-[#245B35]">रामेश कुमार (Ramesh Kumar)</strong> with pre-loaded crop data, mandi history & certificates.
+          </p>
+          <Button
+            type="button"
+            onClick={async () => {
+              try {
+                await signInAsDemoFarmer();
+                toast({
+                  title: "लॉगिन सफल (Demo Farmer)",
+                  description: "Welcome Ramesh Kumar ji! Loading your kheti dashboard...",
+                });
+                onClose();
+                router.push("/dashboard");
+              } catch (err: any) {
+                toast({ title: "Demo login failed", description: err?.message, variant: "destructive" });
+              }
+            }}
+            className="w-full bg-[#245B35] hover:bg-[#1A4A28] text-[#FAF5E8] font-bold rounded-xl py-4 shadow-sm border border-[#194A28] flex items-center justify-center gap-2 text-xs sm:text-sm"
+          >
+            <Sprout className="w-4 h-4 text-[#FAF5E8]" />
+            <span>🌾 1-Click Demo Login (Ramesh Kumar) →</span>
+          </Button>
+        </div>
+
+        <div className="relative my-2">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-[#D8CABA]" />
+          </div>
+          <div className="relative flex justify-center text-[10px] uppercase">
+            <span className="bg-[#FAF5E8] px-2 text-[#756653] font-semibold">
+              or sign in with credentials
+            </span>
+          </div>
+        </div>
+
         {/* Google OAuth Button */}
         <Button
           type="button"
@@ -95,16 +141,16 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               toast({ title: "Google Sign In Failed", description: err?.message, variant: "destructive" });
             }
           }}
-          className="w-full mt-2 font-bold border-[#D8CABA] bg-[#FFFFFF] hover:bg-[#E8F3EB] text-[#281E15] rounded-xl py-5 shadow-xs"
+          className="w-full font-bold border-[#D8CABA] bg-[#FFFFFF] hover:bg-[#E8F3EB] text-[#281E15] rounded-xl py-4 shadow-xs text-xs sm:text-sm"
         >
-          <span className="mr-2 font-bold text-base text-[#245B35]">G</span> {t("landing.authModal.google")}
+          <span className="mr-2 font-bold text-sm text-[#245B35]">G</span> {t("landing.authModal.google")}
         </Button>
 
-        <div className="relative my-3">
+        <div className="relative my-2">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t border-[#D8CABA]" />
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
+          <div className="relative flex justify-center text-[10px] uppercase">
             <span className="bg-[#FAF5E8] px-2 text-[#756653] font-semibold">
               {t("landing.authModal.orContinueWith")}
             </span>
@@ -112,7 +158,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         </div>
 
         {/* Credentials Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <div className="space-y-1.5 text-left">
             <Label htmlFor="email" className="text-xs font-bold text-[#281E15]">
               {t("landing.authModal.emailLabel")}

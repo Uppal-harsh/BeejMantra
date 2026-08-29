@@ -49,6 +49,15 @@ const iconMap = {
   Droplets,
 };
 
+function getCropImageUrl(cropName: string = ""): string {
+  const name = cropName.toLowerCase();
+  if (name.includes("wheat") || name.includes("गेहूं") || name.includes("gehun")) return "/images/wheat_crop.jpg";
+  if (name.includes("mustard") || name.includes("सरसों") || name.includes("sarson")) return "/images/mustard_crop.jpg";
+  if (name.includes("rice") || name.includes("paddy") || name.includes("धान") || name.includes("dhaan")) return "/images/rice_paddy_crop.jpg";
+  if (name.includes("cotton") || name.includes("कपास") || name.includes("kapaas")) return "/images/cotton_crop.jpg";
+  return "/images/sunset_farm.jpg";
+}
+
 export default function DashboardPage() {
   const { user, userProfile } = useAuth();
   const { t, language } = useTranslation();
@@ -251,7 +260,7 @@ export default function DashboardPage() {
                            recommendations.recommendations.slice(0,2).map(rec => (
                             <Card key={rec.cropName} className="overflow-hidden">
                                 <div className="flex items-start gap-4 p-4">
-                                    <Image src={`https://placehold.co/100x100.png`} alt={rec.cropName} width={80} height={80} className="rounded-lg object-cover" data-ai-hint={rec.imageHint}/>
+                                    <Image src={getCropImageUrl(rec.cropName)} alt={rec.cropName} width={80} height={80} className="rounded-lg object-cover" data-ai-hint={rec.imageHint}/>
                                     <div className="flex-1">
                                         <h4 className="font-semibold text-base">{rec.cropName}</h4>
                                         <p className="text-xs text-muted-foreground mt-1 mb-2 line-clamp-2">{rec.reasoning}</p>

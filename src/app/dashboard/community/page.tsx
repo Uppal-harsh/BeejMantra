@@ -70,9 +70,16 @@ export default function CommunityPage() {
     ],
   }), [t]);
 
+  const farmerAvatars = [
+    "/desi-farmer-hero.jpg",
+    "/desi-farmer-calling.jpg",
+    "/desi-woman-farmer.jpg",
+    "/annapurna-avatar.jpg",
+  ];
+
   const [rooms] = useState<Room[]>(initialRooms.map(r => ({...r, name: t(`community.rooms.${r.id}`)})));
   const [activeRoom, setActiveRoom] = useState<Room>(rooms[0]);
-  const [messages, setMessages] = useState<Message[]>(allMessages[activeRoom.id].map((m: any) => ({ ...m, avatar: `https://placehold.co/40x40.png` })));
+  const [messages, setMessages] = useState<Message[]>(allMessages[activeRoom.id].map((m: any, idx: number) => ({ ...m, avatar: farmerAvatars[idx % farmerAvatars.length] })));
   const [newMessage, setNewMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
@@ -81,7 +88,7 @@ export default function CommunityPage() {
 
   const handleRoomChange = (room: Room) => {
     setActiveRoom(room);
-    setMessages(allMessages[room.id].map((m: any) => ({ ...m, avatar: `https://placehold.co/40x40.png` })) || []);
+    setMessages(allMessages[room.id].map((m: any, idx: number) => ({ ...m, avatar: farmerAvatars[idx % farmerAvatars.length] })) || []);
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -90,7 +97,7 @@ export default function CommunityPage() {
 
     const messageToSend: Message = {
       user: t('community.you'),
-      avatar: `https://placehold.co/40x40.png`,
+      avatar: "/desi-farmer-hero.jpg",
       text: newMessage,
       attachment: attachmentPreview,
       isSelf: true,
@@ -102,7 +109,7 @@ export default function CommunityPage() {
     
     // This part would be a database call in a real app
     // We update a mutable object for demo purposes
-    const translatedMessages = allMessages[activeRoom.id].map((m: any) => ({ ...m, avatar: `https://placehold.co/40x40.png` }));
+    const translatedMessages = allMessages[activeRoom.id].map((m: any, idx: number) => ({ ...m, avatar: farmerAvatars[idx % farmerAvatars.length] }));
     allMessages[activeRoom.id] = [...translatedMessages.slice(0, translatedMessages.length), { user: t('community.you'), text: newMessage, isSelf: true, hint: 'farmer looking at phone' }];
     
     setNewMessage("");
