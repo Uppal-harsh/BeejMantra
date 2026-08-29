@@ -8,7 +8,6 @@ import hi from '@/locales/hi.json';
 import kn from '@/locales/kn.json';
 import bn from '@/locales/bn.json';
 import bho from '@/locales/bho.json';
-import { SplashScreen } from '@/components/splash-screen';
 
 const translations: Record<string, any> = { en, hi, kn, bn, bho };
 
@@ -27,7 +26,6 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const { userProfile, loading: authLoading } = useAuth();
   const [language, setLanguageState] = useState<Language>('hi');
-  const [isLoading, setIsLoading] = useState(true);
 
   // 1. Initial hydration from localStorage on client
   useEffect(() => {
@@ -51,7 +49,6 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
           localStorage.setItem(LANGUAGE_STORAGE_KEY, preferredLanguage);
         } catch {}
       }
-      setIsLoading(false);
     }
   }, [userProfile, authLoading]);
 
@@ -103,10 +100,6 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     setLanguage,
     t
   };
-
-  if (isLoading && authLoading) {
-    return <SplashScreen />;
-  }
 
   return (
     <LanguageContext.Provider value={value}>
