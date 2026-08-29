@@ -308,13 +308,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.warn("Sign-out failed", error);
     }
-<<<<<<< HEAD
-    setUser(DEFAULT_DEMO_USER);
-    setUserProfile(DEFAULT_DEMO_PROFILE);
-    setSessionToken("demo-session-token");
-    setLoading(false);
-  };
-=======
     clearStoredSession();
     setUser(null);
     setUserProfile(null);
@@ -322,12 +315,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setTransactions([]);
     setLoading(false);
   };
-
-  const updateUserProfile = async (data: Partial<UserProfile>) => {
-    if (!user || !sessionToken) {
-       throw new Error("No user is currently signed in.");
-    }
->>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
 
   const updateUserProfile = async (data: Partial<UserProfile>) => {
     const nextProfile: UserProfile = {
@@ -342,8 +329,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       memberSince: data.memberSince ?? userProfile?.memberSince ?? "2026",
     };
 
-<<<<<<< HEAD
-    if (supabaseConfigured && sessionToken && user) {
+    if (supabaseConfigured && sessionToken && sessionToken !== "demo-session-token-beejmantra" && user) {
       try {
         await updateAuthMetadata(sessionToken, {
           displayName: nextProfile.displayName,
@@ -358,47 +344,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (user) {
       setUser({ ...user, displayName: nextProfile.displayName, photoURL: nextProfile.photoURL });
     }
-=======
-    if (sessionToken !== "demo-session-token-beejmantra") {
-      await updateAuthMetadata(sessionToken, {
-        displayName: nextProfile.displayName,
-        photoURL: nextProfile.photoURL,
-      });
-      await upsertProfile(sessionToken, nextProfile);
-    }
-
-    setUser({ ...user, displayName: nextProfile.displayName, photoURL: nextProfile.photoURL });
->>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
     setUserProfile(nextProfile);
   };
 
   const uploadProfileImage = async (file: File): Promise<void> => {
-<<<<<<< HEAD
-=======
-    if (!supabaseConfigured && sessionToken !== "demo-session-token-beejmantra") {
-       toast({
-        variant: "destructive",
-        title: "Supabase Not Configured",
-        description:
-          "Image upload requires a configured Supabase project. Please set your .env.local values.",
-      });
-      throw new Error("Supabase not configured");
+    if (sessionToken === "demo-session-token-beejmantra") {
+      await updateUserProfile({ photoURL: "/desi-farmer-hero.jpg" });
+      return;
     }
 
->>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
     if (!user || !sessionToken) {
       throw new Error("No user is currently signed in.");
     }
 
     try {
-<<<<<<< HEAD
       if (supabaseConfigured) {
-=======
-        if (sessionToken === "demo-session-token-beejmantra") {
-          await updateUserProfile({ photoURL: "/desi-farmer-hero.jpg" });
-          return;
-        }
->>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
         const downloadURL = await uploadProfileImageRequest(sessionToken, user.id, file);
         await updateUserProfile({ photoURL: downloadURL });
         return;
@@ -413,7 +373,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Transaction Management
   const addTransaction = async (data: TransactionData) => {
-<<<<<<< HEAD
     const newTx: Transaction = {
       id: "tx-" + Date.now(),
       description: data.description,
@@ -422,6 +381,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       category: data.category,
       date: AppTimestamp.fromDate(data.date),
     };
+
+    if (sessionToken === "demo-session-token-beejmantra") {
+      setTransactions((current) => [newTx, ...current]);
+      return;
+    }
 
     if (supabaseConfigured && sessionToken && user) {
       try {
@@ -437,6 +401,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateTransaction = async (id: string, data: Partial<TransactionData>) => {
+    if (sessionToken === "demo-session-token-beejmantra") {
+      setTransactions((current) =>
+        current.map((tx) =>
+          tx.id === id
+            ? {
+                ...tx,
+                description: data.description ?? tx.description,
+                amount: data.amount ?? tx.amount,
+                type: data.type ?? tx.type,
+                category: data.category ?? tx.category,
+                date: data.date ? AppTimestamp.fromDate(data.date) : tx.date,
+              }
+            : tx
+        )
+      );
+      return;
+    }
+
     if (supabaseConfigured && sessionToken && user) {
       try {
         const updated = await updateSupabaseTransaction(sessionToken, id, data);
@@ -451,49 +433,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
 
-=======
-    if (!user || !sessionToken) throw new Error("User not authenticated");
-    if (sessionToken === "demo-session-token-beejmantra") {
-      const newTx: Transaction = {
-        id: `tx-${Date.now()}`,
-        description: data.description,
-        amount: data.amount,
-        type: data.type,
-        category: data.category,
-        date: {
-          seconds: Math.floor(data.date.getTime() / 1000),
-          nanoseconds: 0,
-          toDate: () => data.date,
-          toMillis: () => data.date.getTime(),
-        } as any,
-      };
-      setTransactions((current) => [newTx, ...current]);
-      return;
-    }
-    const created = await createSupabaseTransaction(sessionToken, user.id, data);
-    setTransactions((current) => [created, ...current].sort((a, b) => b.date.toMillis() - a.date.toMillis()));
-  };
-
-  const updateTransaction = async (id: string, data: Partial<TransactionData>) => {
-    if (!user || !sessionToken) throw new Error("User not authenticated");
-    if (sessionToken === "demo-session-token-beejmantra") {
-      setTransactions((current) =>
-        current.map((tx) =>
-          tx.id === id
-            ? {
-                ...tx,
-                description: data.description ?? tx.description,
-                amount: data.amount ?? tx.amount,
-                type: data.type ?? tx.type,
-                category: data.category ?? tx.category,
-              }
-            : tx
-        )
-      );
-      return;
-    }
-    const updated = await updateSupabaseTransaction(sessionToken, id, data);
->>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
     setTransactions((current) =>
       current.map((tx) =>
         tx.id === id
@@ -511,7 +450,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteTransaction = async (id: string) => {
-<<<<<<< HEAD
+    if (sessionToken === "demo-session-token-beejmantra") {
+      setTransactions((current) => current.filter((tx) => tx.id !== id));
+      return;
+    }
+
     if (supabaseConfigured && sessionToken && user) {
       try {
         await deleteSupabaseTransaction(sessionToken, id);
@@ -520,14 +463,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
 
-=======
-    if (!user || !sessionToken) throw new Error("User not authenticated");
-    if (sessionToken === "demo-session-token-beejmantra") {
-      setTransactions((current) => current.filter((tx) => tx.id !== id));
-      return;
-    }
-    await deleteSupabaseTransaction(sessionToken, id);
->>>>>>> fdfbab1 (feat: add 1-click Demo Farmer Login and replace all placeholder images with authentic agricultural assets)
     setTransactions((current) => current.filter((transaction) => transaction.id !== id));
   };
 
