@@ -30,11 +30,39 @@ export function VoiceModal({ isOpen, onClose }: VoiceModalProps) {
   const [response, setResponse] = useState<string | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
+  const getSample = (key: string, fallbackEn: string, fallbackHi: string, fallbackPa: string) => {
+    const val = t(`landing.voiceModal.${key}`);
+    if (val && !val.startsWith("landing.voiceModal.")) return val;
+    if (language === "hi") return fallbackHi;
+    if (language === "pa") return fallbackPa;
+    return fallbackEn;
+  };
+
   const sampleQueries = [
-    t("landing.voiceModal.sample1"),
-    t("landing.voiceModal.sample2"),
-    t("landing.voiceModal.sample3"),
-    t("landing.voiceModal.sample4"),
+    getSample(
+      "sample1",
+      "🌾 What is the current market price of Wheat in my area?",
+      "🌾 मेरे क्षेत्र में आज गेहूं का ताजा मंडी भाव क्या है?",
+      "🌾 ਮੇਰੇ ਇਲਾਕੇ ਵਿੱਚ ਅੱਜ ਕਣਕ ਦਾ ਤਾਜ਼ਾ ਮੰਡੀ ਭਾਅ ਕੀ ਹੈ?"
+    ),
+    getSample(
+      "sample2",
+      "🐛 How do I treat yellow leaf spots on my paddy crop?",
+      "🐛 धान के पत्तों पर पीले धब्बों का क्या इलाज है?",
+      "🐛 ਝੋਨੇ ਦੇ ਪੱਤਿਆਂ 'ਤੇ ਪੀਲੇ ਧੱਬਿਆਂ ਦਾ ਕੀ ਇਲਾਜ ਹੈ?"
+    ),
+    getSample(
+      "sample3",
+      "🏛️ Am I eligible for PM-Kisan 6,000 yearly scheme?",
+      "🏛️ क्या मैं पीएम-किसान योजना के लिए पात्र हूँ?",
+      "🏛️ ਕੀ ਮੈਂ ਪੀਐਮ-ਕਿਸਾਨ ਯੋਜਨਾ ਲਈ ਯੋਗ ਹਾਂ?"
+    ),
+    getSample(
+      "sample4",
+      "🌦️ Will it rain in the next 3 days for spraying pesticide?",
+      "🌦️ क्या अगले 3 दिनों में बारिश होने की संभावना है?",
+      "🌦️ ਕੀ ਅਗਲੇ 3 ਦਿਨਾਂ ਵਿੱਚ ਮੀਂਹ ਪੈਣ ਦੀ ਸੰਭਾਵਨਾ ਹੈ?"
+    ),
   ];
 
   const activeVoiceLang = langVoiceMap[language] || "en-IN";

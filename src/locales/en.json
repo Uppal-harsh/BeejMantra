@@ -865,7 +865,11 @@
             "youAsked": "You asked:",
             "annapurnaReply": "Annapurna AI response:",
             "tryAsking": "Or tap a sample question:",
-            "openChat": "Open Full Chat in Dashboard"
+            "openChat": "Open Full Chat in Dashboard",
+            "sample1": "🌾 What is the current market price of Wheat in my area?",
+            "sample2": "🐛 How do I treat yellow leaf spots on my paddy crop?",
+            "sample3": "🏛️ Am I eligible for PM-Kisan 6,000 yearly scheme?",
+            "sample4": "🌦️ Will it rain in the next 3 days for spraying pesticide?"
         },
         "authModal": {
             "createAccount": "Create Farmer Account",
