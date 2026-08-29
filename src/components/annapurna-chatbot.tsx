@@ -48,6 +48,8 @@ const intentToRouteMap: Record<string, string> = {
     navigate_recommender: '/dashboard/crop-recommender',
     navigate_profile: '/dashboard/profile',
     navigate_settings: '/dashboard/settings',
+    navigate_fasal_certificate: '/dashboard/fasal-certificate',
+    navigate_traceability: '/dashboard/traceability',
     query_market_prices: '/dashboard/market-analyst',
     query_schemes: '/dashboard/schemes',
     query_crop_recommendation: '/dashboard/crop-recommender'
