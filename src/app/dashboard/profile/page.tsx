@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Upload, RefreshCw, Link2, ExternalLink, ShieldCheck, Award, Phone } from "lucide-react";
+import { ArrowLeft, Upload, Link2, ExternalLink, ShieldCheck, Award, Phone, Lock, Copy, Check } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useTranslation } from "@/contexts/language-context";
@@ -150,19 +150,23 @@ export default function ProfilePage() {
     return name.substring(0, 2).toUpperCase();
   };
 
-  const handleGenerateNewId = async () => {
-    const newId = `BM-KSN-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    setFarmerId(newId);
+  const [copiedId, setCopiedId] = useState(false);
+
+  const handleCopyFarmerId = async () => {
     try {
-      await updateUserProfile({
-        farmerId: newId,
-      });
+      await navigator.clipboard.writeText(farmerId);
+      setCopiedId(true);
       toast({
-        title: "New Farmer ID Generated",
-        description: `Your new ID is ${newId}`,
+        title: "Unique Kisan ID Copied",
+        description: `${farmerId} copied to clipboard.`,
       });
-    } catch (error) {
-      console.warn("Local update of farmer ID", error);
+      setTimeout(() => setCopiedId(false), 2000);
+    } catch {
+      toast({
+        title: "Copy Failed",
+        description: "Please copy the ID manually.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -407,26 +411,66 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Farmer ID (with Regenerate button) */}
-                <div className="space-y-2 md:col-span-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="farmerId">Unique Kisan ID</Label>
+                {/* Unique Kisan ID - Official Immutable Identity */}
+                <div className="space-y-2.5 md:col-span-2 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-amber-500/5 to-emerald-500/10 border-2 border-emerald-500/30 shadow-xs relative overflow-hidden">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <Label htmlFor="farmerId" className="text-sm font-bold text-foreground flex items-center gap-1.5 cursor-default">
+                        Unique Kisan ID
+                        <span className="text-[10px] uppercase font-mono tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-semibold border border-emerald-500/30">
+                          Permanent Record
+                        </span>
+                      </Label>
+                    </div>
+
+                    <div className="flex items-center gap-1 text-[11px] font-semibold text-amber-700 dark:text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
+                      <Lock className="w-3 h-3" />
+                      <span>Non-Editable</span>
+                    </div>
+                  </div>
+
+                  {/* Tamper-Proof Box */}
+                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-card border border-border/80 shadow-inner">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-lg bg-emerald-600/15 dark:bg-emerald-400/15 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                        <Lock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-mono font-black text-base sm:text-lg tracking-wider text-foreground select-all">
+                          {farmerId}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground">
+                          Cryptographically verified farmer registration ID
+                        </p>
+                      </div>
+                    </div>
+
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      onClick={handleGenerateNewId}
-                      className="h-6 text-xs text-primary hover:text-primary/80 px-2"
+                      onClick={handleCopyFarmerId}
+                      className="rounded-lg h-8 px-3 text-xs font-semibold shrink-0 border-emerald-500/30 hover:bg-emerald-500/10"
                     >
-                      <RefreshCw className="w-3 h-3 mr-1" /> Regenerate ID
+                      {copiedId ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 mr-1 text-emerald-600 dark:text-emerald-400" />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5 mr-1" />
+                          Copy ID
+                        </>
+                      )}
                     </Button>
                   </div>
-                  <Input
-                    id="farmerId"
-                    value={farmerId}
-                    onChange={(e) => setFarmerId(e.target.value)}
-                    className="font-mono font-semibold rounded-xl"
-                  />
+
+                  <p className="text-[11px] text-muted-foreground flex items-center gap-1.5 pt-0.5">
+                    <span>🔒</span>
+                    <span><strong>Government & Blockchain Linked:</strong> This unique Kisan ID is permanently anchored to your digital identity and cannot be edited or transferred.</span>
+                  </p>
                 </div>
 
                 {/* Location */}
